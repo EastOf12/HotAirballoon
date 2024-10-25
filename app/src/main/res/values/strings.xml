@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">AirBalloon</string>
+    <string name="game_play_activity">GamePlayActivity</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="play_button_text">Играть</string>
+    <string name="todo">TODO</string>
+    <string name="_0">0</string>
+</resources>
