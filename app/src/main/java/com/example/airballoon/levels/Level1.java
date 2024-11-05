@@ -8,15 +8,22 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.example.airballoon.MainActivity;
+import com.example.airballoon.managers.ObjectsGeneration;
 import com.example.airballoon.RewardedAdActivity;
-import com.example.airballoon.Managers.GamePlayManager;
+import com.example.airballoon.managers.GamePlayManager;
 import com.example.airballoon.managers.MenuActions;
 import com.example.airballoon.managers.SaveManager;
 
 @SuppressLint("ViewConstructor")
 public class Level1 extends BaseLevel implements Runnable{
+    //Для теста
+    ObjectsGeneration objectsGeneration;
+
+
     public Level1(Activity activity) {
         super(activity);
+
+        objectsGeneration = new ObjectsGeneration(activity, displayMetrics, gamePlayManager.getAirBalloon() );
     }
 
 
@@ -24,6 +31,9 @@ public class Level1 extends BaseLevel implements Runnable{
     @Override
     public void run() {
         gamePlayManager.startMusic();
+
+        System.out.println("Смотрим, что у нас получилось в методе генераций");
+//        objectsGeneration.createUsedObjects();
 
         while (running) {
             if (managerFPS.lockFPS()) {

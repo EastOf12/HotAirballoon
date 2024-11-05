@@ -1,4 +1,4 @@
-package com.example.airballoon.Managers;
+package com.example.airballoon.managers;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -10,7 +10,6 @@ import android.media.MediaPlayer;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 
-import com.example.airballoon.exceptions.SaveException;
 import com.example.airballoon.game_objects.AirBalloonObject;
 import com.example.airballoon.game_objects.BackGround;
 import com.example.airballoon.game_objects.Coin;
@@ -21,24 +20,9 @@ import com.example.airballoon.R;
 import com.example.airballoon.models.AirBalloon;
 import com.example.airballoon.models.User;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.time.LocalTime;
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.Random;
-import com.example.airballoon.managers.GameStatus;
-
-import com.google.gson.Gson;
 
 public class GamePlayManager {
     Activity activity;
@@ -54,9 +38,11 @@ public class GamePlayManager {
 
     int distance = 0;
     LocalTime currentTime;
+
     AirBalloonObject airBalloon;
     BackGround backGround;
     GearWheel gearWheel;
+
     AirBalloon airBalloonInfo;
     MediaPlayer mediaPlayer;
     static GameStatus gameStatus;
@@ -226,4 +212,7 @@ public class GamePlayManager {
         return distance;
     }
 
+    public AirBalloonObject getAirBalloon() {
+        return airBalloon;
+    }
 }

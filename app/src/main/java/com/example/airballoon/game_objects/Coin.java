@@ -5,7 +5,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.util.DisplayMetrics;
 
-import com.example.airballoon.Managers.GamePlayManager;
+import com.example.airballoon.managers.GamePlayManager;
 import com.example.airballoon.R;
 
 import java.util.Random;

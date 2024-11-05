@@ -10,15 +10,13 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 
-import com.example.airballoon.Managers.GamePlayManager;
+import com.example.airballoon.managers.GamePlayManager;
 import com.example.airballoon.game_objects.BackGround;
 import com.example.airballoon.game_objects.GearWheel;
 import com.example.airballoon.managers.ManagerFPS;
 import com.example.airballoon.managers.MenuActions;
 import com.example.airballoon.managers.SaveManager;
 import com.example.airballoon.models.User;
-
-import java.io.File;
 
 @SuppressLint("ViewConstructor")
 class GameView extends SurfaceView implements Runnable {
