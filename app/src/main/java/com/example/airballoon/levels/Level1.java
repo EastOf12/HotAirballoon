@@ -17,6 +17,9 @@ import com.example.airballoon.managers.SaveManager;
 public class Level1 extends BaseLevel implements Runnable{
     public Level1(Activity activity) {
         super(activity);
+
+        //Уникальные настройки для уровня
+        gamePlayManager.setEndDistance(1500); //Финальная дистанация
     }
 
 
@@ -33,6 +36,7 @@ public class Level1 extends BaseLevel implements Runnable{
                     Canvas canvas = surfaceHolder.lockCanvas();
                     synchronized (getHolder()) {
 
+                        //Отрисовка основных объектов
                         gamePlayManager.drawBackGround(canvas);
                         gamePlayManager.drawAirBalloon(canvas);
                         gamePlayManager.drawCoins(canvas);
@@ -41,10 +45,12 @@ public class Level1 extends BaseLevel implements Runnable{
                         gamePlayManager.drawHp(canvas, displayMetrics);
                         gamePlayManager.drawDistance(canvas, displayMetrics);
 
+                        //Управление состояниями игры
                         if(isPaused) {
                             gamePlayManager.drawGamePlayMenu(canvas);
+                        } else if (gamePlayManager.levelEnd()) {
+                            gamePlayManager.drawLevelEnd();
                         } else {
-                            //Увеличиваем скорость игры
                             gamePlayManager.speedUp();
                         }
 

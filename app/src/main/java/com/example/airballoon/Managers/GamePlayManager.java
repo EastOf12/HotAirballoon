@@ -62,6 +62,7 @@ public class GamePlayManager {
     static GameStatus gameStatus;
     private User user;
     private Bitmap image;
+    private int endDistance;
 
     public GamePlayManager(Activity activity, DisplayMetrics displayMetrics, User user) {
         this.activity = activity;
@@ -224,6 +225,21 @@ public class GamePlayManager {
 
     public int getDistance() {
         return distance;
+    }
+
+    public boolean levelEnd() {
+        if(endDistance >= distance) {
+            return true;
+        }
+        return false;
+    }
+
+    public void setEndDistance(int endDistance) {
+        this.endDistance = endDistance;
+    }
+
+    public void drawLevelEnd() {
+        System.out.println("Рисуем конец уровня");
     }
 
 }
