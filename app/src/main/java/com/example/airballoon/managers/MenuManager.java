@@ -1,4 +1,4 @@
-package com.example.airballoon.Managers;
+package com.example.airballoon.managers;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -8,12 +8,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.example.airballoon.GamePlayActivity;
-import com.example.airballoon.managers.SaveManager;
 import com.example.airballoon.R;
 import com.example.airballoon.SelectLevelActivity;
 import com.example.airballoon.models.User;

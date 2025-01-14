@@ -16,12 +16,12 @@ import com.example.airballoon.managers.ObjectsGeneration;
 import com.example.airballoon.managers.SaveManager;
 
 @SuppressLint("ViewConstructor")
-public class Level1 extends BaseLevel implements Runnable{
-    public Level1(Activity activity) {
+public class Level2 extends BaseLevel implements Runnable{
+    public Level2(Activity activity) {
         super(activity);
 
         //Уникальные настройки для уровня
-        gamePlayManager.setEndDistance(1000); //Финальная дистанация
+        gamePlayManager.setEndDistance(200); //Финальная дистанация
     }
 
 
@@ -95,14 +95,14 @@ public class Level1 extends BaseLevel implements Runnable{
                     @SuppressLint("ClickableViewAccessibility")
                     @Override
                     public boolean onTouch(View view, MotionEvent event) {
-                        if(gamePlayStatus != GamePlayStatus.END && gamePlayManager.onTouchGearWheel(event) && gamePlayStatus != GamePlayStatus.PAUSE && gamePlayManager.getHpAirBalloon() > 0) {
-                            switchGameStatus(GamePlayStatus.PAUSE);
+                        if(gamePlayManager.onTouchGearWheel(event) && gamePlayStatus != GamePlayStatus.PAUSE && gamePlayManager.getHpAirBalloon() > 0) {
+                            switchGameStatus(GamePlayStatus.PlAY);
                         }
 
                         //Обрабатываем нажатия в меню.
-                        if(gamePlayStatus != GamePlayStatus.END && gamePlayManager.getGamePlayMenu().onTouch(event) == MenuActions.RESUME) {
+                        if(gamePlayManager.getGamePlayMenu().onTouch(event) == MenuActions.RESUME) {
                             switchGameStatus(GamePlayStatus.PlAY);
-                        } else if((gamePlayManager.getHpAirBalloon() <= 0 || gamePlayStatus == GamePlayStatus.PAUSE || gamePlayStatus == GamePlayStatus.END) && gamePlayManager.getGamePlayMenu().onTouch(event) == MenuActions.EXIT) {
+                        } else if((gamePlayManager.getHpAirBalloon() <= 0 || gamePlayStatus == GamePlayStatus.PAUSE) && gamePlayManager.getGamePlayMenu().onTouch(event) == MenuActions.EXIT) {
                             //Останавливаем поток
                             running = false;
 
@@ -122,7 +122,7 @@ public class Level1 extends BaseLevel implements Runnable{
                             activity.startActivity(intent);
                         }
 
-                        if(gamePlayStatus != GamePlayStatus.END && gamePlayStatus != GamePlayStatus.PAUSE && gamePlayManager.getHpAirBalloon()> 0) {
+                        if(gamePlayStatus != GamePlayStatus.PAUSE && gamePlayManager.getHpAirBalloon()> 0) {
                             return gamePlayManager.onTouchAirBalloon(event);
                         } else {
                             return true;

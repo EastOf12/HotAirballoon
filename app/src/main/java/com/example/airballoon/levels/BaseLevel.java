@@ -2,13 +2,12 @@ package com.example.airballoon.levels;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
-import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import com.example.airballoon.Managers.GamePlayManager;
+import com.example.airballoon.managers.GamePlayManager;
+import com.example.airballoon.managers.GamePlayStatus;
 import com.example.airballoon.managers.ManagerFPS;
 import com.example.airballoon.managers.SaveManager;
 import com.example.airballoon.models.User;
@@ -27,7 +26,7 @@ abstract class BaseLevel extends SurfaceView implements Runnable{
 
     //Поля состояний (В целом можно когда-нибудь вынести в отдельный класс)
     protected volatile boolean running = false;
-    protected boolean isPaused = false;
+    protected GamePlayStatus gamePlayStatus = GamePlayStatus.PlAY;
     int startSpeed = 15;
     boolean needSave = true;
 
@@ -53,10 +52,12 @@ abstract class BaseLevel extends SurfaceView implements Runnable{
 
 
     //Меняем статус игры
-    public void switchGameStatus() {
-        isPaused = !isPaused;
+    public void switchGameStatus(GamePlayStatus status) {
+        gamePlayStatus = status;
 
-        if(isPaused) {
+        if(status == GamePlayStatus.PAUSE) {
+            GamePlayManager.speed = 0;
+        } else if (status == GamePlayStatus.END) {
             GamePlayManager.speed = 0;
         } else {
             GamePlayManager.speed = 15;

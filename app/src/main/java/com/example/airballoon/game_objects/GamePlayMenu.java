@@ -17,6 +17,10 @@ public class GamePlayMenu {
     Bitmap buttonResume;
     Bitmap buttonExit;
     Bitmap buttonMarketing;
+    Bitmap levelEndImage;
+
+    int xPositionLevelEndImage;
+    int yPositionLevelEndImage;
     int xPositionButtonResume;
     int yPositionButtonResume;
 
@@ -31,6 +35,8 @@ public class GamePlayMenu {
     double heightButtonExit;
     double widthButtonMarketing;
     double heightButtonMarketing;
+    double widthLevelEndImage;
+    double heightLevelEndImage;
     GameStatus gameStatus;
 
     public GamePlayMenu(Activity activity, DisplayMetrics displayMetrics, GameStatus gameStatus) {
@@ -40,6 +46,7 @@ public class GamePlayMenu {
 
         buttonResume = BitmapFactory.decodeResource(activity.getResources(), R.drawable.resume);
         buttonExit = BitmapFactory.decodeResource(activity.getResources(), R.drawable.exit_game_play);
+        levelEndImage = BitmapFactory.decodeResource(activity.getResources(), R.drawable.level_end);
         buttonMarketing = BitmapFactory.decodeResource(activity.getResources(),
                 R.drawable.button_marketing);
 
@@ -68,6 +75,13 @@ public class GamePlayMenu {
         heightButtonMarketing = widthButtonMarketing / proportion;
         buttonMarketing = Bitmap.createScaledBitmap(buttonMarketing
                 , (int) widthButtonMarketing, (int) heightButtonMarketing, true);
+
+        //Для нотификации о прохождении уровня
+        widthLevelEndImage = displayMetrics.widthPixels * 0.70;
+        proportion = (double) levelEndImage.getWidth() / levelEndImage.getHeight();
+        heightLevelEndImage = widthLevelEndImage / proportion;
+        levelEndImage = Bitmap.createScaledBitmap(levelEndImage
+                , (int) widthLevelEndImage, (int) heightLevelEndImage, true);
     }
 
     private void calculateStartPosition() {
@@ -79,6 +93,9 @@ public class GamePlayMenu {
 
         xPositionButtonMarketing = (int) (displayMetrics.widthPixels * 0.4);
         yPositionButtonMarketing = (int) (displayMetrics.heightPixels * 0.6);
+
+        xPositionLevelEndImage = (int) (displayMetrics.widthPixels * 0.15);
+        yPositionLevelEndImage = (int) (displayMetrics.heightPixels * 0.35);
     }
 
     public void drawMenuButtons(Canvas canvas) {
@@ -86,13 +103,22 @@ public class GamePlayMenu {
         canvas.drawBitmap(buttonExit, xPositionButtonExit, yPositionButtonExit, null);
     } //Рисуем кнопки в меню во время паузы.
 
-    public void drawMenuEnd(Canvas canvas) {
+    public void drawMenuEndLose(Canvas canvas) {
         //Кнопка выхода в меню
         canvas.drawBitmap(buttonExit, xPositionButtonExit, yPositionButtonExit, null);
 
         //Кнопка рекламы
         canvas.drawBitmap(buttonMarketing, xPositionButtonMarketing, yPositionButtonMarketing,
                 null);
+    } //Рисуем кнопки, когда игра завершена.
+
+    public void drawMenuEndFinish(Canvas canvas) {
+        //Фон завершения уровня
+        canvas.drawBitmap(levelEndImage, xPositionLevelEndImage, yPositionLevelEndImage, null);
+
+        //Кнопка выхода в меню
+        yPositionButtonExit = (int) (displayMetrics.heightPixels * 0.65);
+        canvas.drawBitmap(buttonExit, xPositionButtonExit, yPositionButtonExit, null);
     } //Рисуем кнопки, когда игра завершена.
 
     public Enum onTouch(MotionEvent event) {

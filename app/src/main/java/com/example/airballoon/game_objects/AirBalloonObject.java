@@ -2,14 +2,11 @@ package com.example.airballoon.game_objects;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 
-import com.example.airballoon.R;
-import com.example.airballoon.Managers.GamePlayManager;
 import com.example.airballoon.models.AirBalloon;
 
 public class AirBalloonObject extends GameObject{

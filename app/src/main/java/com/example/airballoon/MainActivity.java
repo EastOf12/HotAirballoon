@@ -5,7 +5,7 @@ import android.view.Window;
 import android.view.WindowManager;
 
 import androidx.appcompat.app.AppCompatActivity;
-import com.example.airballoon.Managers.MenuManager;
+import com.example.airballoon.managers.MenuManager;
 
 public class MainActivity extends AppCompatActivity {
     @Override
