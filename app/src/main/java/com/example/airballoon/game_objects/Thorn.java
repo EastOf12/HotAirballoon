@@ -23,11 +23,13 @@ public class Thorn {
     double width;
     double height;
     AirBalloonObject airBalloon;
+    private boolean needDraw;
 
     public Thorn(Activity activity, DisplayMetrics displayMetrics, AirBalloonObject airBalloon) {
         this.activity = activity;
         this.displayMetrics = displayMetrics;
         this.airBalloon = airBalloon;
+        needDraw = true;
         thornImage = BitmapFactory.decodeResource(activity.getResources(), R.drawable.thorn);
         calculateSize();
         calculateStartPosition();
@@ -43,7 +45,8 @@ public class Thorn {
                 , (int) width, (int) height, true);
     }
 
-    private void calculateStartPosition() {
+    public void calculateStartPosition() {
+        needDraw = true;
         Random random = new Random();
         xPosition = random.nextInt((int) (displayMetrics.widthPixels - width));
         yPosition = -50;
@@ -56,17 +59,22 @@ public class Thorn {
             yPosition = -1500;
             Random random = new Random();
             xPosition = random.nextInt((int) (displayMetrics.widthPixels - width));
+            needDraw = !needDraw;
         }
 
         rect.left = xPosition;
         rect.top = yPosition;
         rect.right = (int) (xPosition + width);
         rect.bottom = (int) (yPosition + height);
+
     }
 
     public void drawThorn(Canvas canvas) {
-        calculateNewPosition(canvas);
-        canvas.drawBitmap(thornImage, xPosition, yPosition, null);
+        if(needDraw) {
+            calculateNewPosition(canvas);
+
+            canvas.drawBitmap(thornImage, xPosition, yPosition, null);
+        }
     } //Рисуем монетку.
 
     public void setYPosition(int yPosition) {
@@ -82,5 +90,9 @@ public class Thorn {
         }
 
         return result;
+    }
+
+    public boolean isNeedDraw() {
+        return needDraw;
     }
 }

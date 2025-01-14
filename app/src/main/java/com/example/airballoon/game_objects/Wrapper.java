@@ -1,22 +1,40 @@
 package com.example.airballoon.game_objects;
 
+import android.app.Activity;
+import android.graphics.Canvas;
+import android.util.DisplayMetrics;
+
+import androidx.annotation.NonNull;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Random;
 
 //Обертка для всех объектов, которые будут генироваться в игре
 public class Wrapper {
+    private final Activity activity;
+    private final DisplayMetrics displayMetrics;
+    private final AirBalloonObject airBalloonObject;
 
-    private int maxCount; //Максимальное количество повторений
-    private int minCount; //Минимальное количество повторений
-    private int drawCount; //Сколько раз должен отрисовываться объект в рамках одной игровой итерации.
-    private final String type; //Название объекта
-    private final Object object; //Сам игровой объект
+    private int maxCount; //Максимальное количество объектов
+    private int minCount; //Минимальное количество объектов
+    private int drawCount; //Общее количество доступных объектов на отрисовку в рамках игровой итерации
+    private final String type; //Название объектов
+
+    private ArrayList<Object> objects; //Игровые объекты, например монетки
+    private boolean newIteration;
+
     Random random;
 
-    public Wrapper(String type, Object object) {
+    public Wrapper(String type, Activity activity, DisplayMetrics displayMetrics, AirBalloonObject airBalloonObject) {
         this.type = type;
-        this.object = object;
+        this.activity = activity;
+        this.displayMetrics = displayMetrics;
+        this.airBalloonObject = airBalloonObject;
         random = new Random();
         generateMaxMin();
+        generateGameObjects();
+        newIteration = true;
     }
 
     public void generateRandomCount() {
@@ -26,8 +44,8 @@ public class Wrapper {
     private void generateMaxMin() {
         switch (type) {
             case "coin":
-                maxCount = 20;
-                minCount = 10;
+                maxCount = 5;
+                minCount = 5;
                 break;
             case "thorn":
                 maxCount = 15;
@@ -35,6 +53,27 @@ public class Wrapper {
                 break;
         }
     } //Генерирует максимальное и минимальное количество объектов в зависимости от их типа.
+
+    private void generateGameObjects() {
+        objects = new ArrayList<>();
+
+        switch (type) {
+            case "coin":
+
+                //Создаем необходимое количество объектов монет
+                for(int i = 0; i <= maxCount; i++) {
+                    objects.add(new Coin(activity, displayMetrics, airBalloonObject));
+                }
+
+                break;
+            case "thorn":
+                //Создаем необходимое количество объектов шипов
+                for(int i = 0; i <= maxCount; i++) {
+                    objects.add(new Thorn(activity, displayMetrics, airBalloonObject));
+                }
+                break;
+        }
+    } //Генерирует игровые объекты
 
     public int getDrawCount() {
         return drawCount;
@@ -46,10 +85,6 @@ public class Wrapper {
 
     public String getType() {
         return type;
-    }
-
-    public Object getObject() {
-        return object;
     }
 
     public int getMaxCount() {
@@ -66,5 +101,55 @@ public class Wrapper {
 
     public void setMinCount(int minCount) {
         this.minCount = minCount;
+    }
+    public boolean drawObjects(Canvas canvas, Integer count, String wrapperType) {
+
+        newIteration = true;
+
+
+
+        //Не даем отрисовать больше чем можем.
+        if(count > drawCount) {
+            count = drawCount;
+        }
+
+        if(wrapperType.equals("coin")) {
+            for(int i = 0; i <= count; i++ ) {
+                Coin coin = (Coin) objects.get(i);
+                coin.draw(canvas);
+
+                if(coin.isNeedDraw()) {
+                    newIteration = false;
+                }
+            }
+        } else if (wrapperType.equals("thorn")) {
+            for(int i = 0; i <= count; i++ ) {
+                Thorn thorn = (Thorn) objects.get(i);
+                thorn.drawThorn(canvas);
+
+                if(thorn.isNeedDraw()) {
+                    newIteration = false;
+                }
+            }
+        }
+
+
+        return newIteration;
+    }
+
+    public ArrayList<Object> getObjects() {
+        return objects;
+    }
+
+    @NonNull
+    @Override
+    public String toString() {
+        return "Wrapper{" +
+                "maxCount=" + maxCount +
+                ", minCount=" + minCount +
+                ", drawCount=" + drawCount +
+                ", type='" + type + '\'' +
+                ", random=" + random +
+                '}';
     }
 }

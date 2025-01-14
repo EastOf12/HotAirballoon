@@ -17,12 +17,15 @@ import com.example.airballoon.game_objects.GamePlayMenu;
 import com.example.airballoon.game_objects.GearWheel;
 import com.example.airballoon.game_objects.Thorn;
 import com.example.airballoon.R;
+import com.example.airballoon.game_objects.Wrapper;
 import com.example.airballoon.models.AirBalloon;
 import com.example.airballoon.models.User;
 
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 public class GamePlayManager {
     Activity activity;
@@ -49,6 +52,17 @@ public class GamePlayManager {
     private User user;
     private Bitmap image;
 
+    //Все что относится к генерации
+    private ObjectsGeneration objectsGeneration;
+    private final ArrayList<Wrapper> usedObjects;
+    private LocalDateTime oldTimeGenerate;
+    private LocalDateTime newTimeGenerate;
+    boolean needZeroCoins;
+    boolean needZeroThorn;
+
+    Integer countCoins = 0; //Счетчик количества монет, которые запросили отрисовать.
+    Integer countThorn = 0 ;
+
     public GamePlayManager(Activity activity, DisplayMetrics displayMetrics, User user) {
         this.activity = activity;
         this.displayMetrics = displayMetrics;
@@ -58,7 +72,6 @@ public class GamePlayManager {
         gearWheel = new GearWheel(activity, displayMetrics);
 
         //Получаем изображение шарика, которое выбрал пользователь.
-        System.out.println("Будем рисовать шарик с id " + user.getSelectAirBalloon());
         switch (user.getSelectAirBalloon()) {
             case 1:
                 image = BitmapFactory.decodeResource(activity.getResources(), R.drawable.air_balloon_1);
@@ -93,6 +106,66 @@ public class GamePlayManager {
 
         //Добавляем объект рекламы
 //        rewardedAdActivity = new RewardedAdActivity();
+
+
+        //Все что относится к генерации
+        objectsGeneration =  new ObjectsGeneration(activity, displayMetrics, getAirBalloon());
+        usedObjects = objectsGeneration.getUsedObjects();
+
+        oldTimeGenerate = LocalDateTime.now();
+        newTimeGenerate = LocalDateTime.now().plusSeconds(3);
+    }
+
+    public void startObjectsGeneration(Canvas canvas) {
+        if(objectsGeneration.checkAvailabilityCoins() && objectsGeneration.checkAvailabilityThorns()) { //Доступны все объекты
+
+
+            //Определяем, что нужно добавить на отрисовку еще один объект Wrapper
+            if (newTimeGenerate.isBefore(oldTimeGenerate)) { //Запоминаем, что пришло время рисовать еще один объект
+//                Время через которое нужно будет снова отобразить объект.
+
+                if (objectsGeneration.getUsedObjects().get(0).getDrawCount() > countCoins) {
+                    countCoins++; //Добавляем монетку в игровую итерацию
+                    newTimeGenerate = generateTime(0.3, 2.0);
+                } else if (objectsGeneration.getUsedObjects().get(1).getDrawCount() > countThorn) {
+                    countThorn++;
+                    newTimeGenerate = generateTime(1.0, 2.0);
+                }
+
+            }
+
+            oldTimeGenerate = LocalDateTime.now();
+
+            //Рисуем все монетки на отрисовку
+            needZeroCoins = usedObjects.get(0).drawObjects(canvas, countCoins, "coin");
+
+            if (needZeroCoins) { //Обнуляем счетчик монет
+
+                countCoins = 0;
+
+                //Определяем новую позицию для монет
+                ArrayList<Object> coins = usedObjects.get(0).getObjects();
+
+                for (Object ob : coins) {
+                    Coin coin = (Coin) ob;
+                    coin.calculateStartPosition();
+                }
+            }
+
+            //Рисуем все шипы на отрисовку
+            needZeroThorn = usedObjects.get(1).drawObjects(canvas, countThorn, "thorn");
+
+            if (needZeroThorn) {
+                countThorn = 0;
+
+                ArrayList<Object> thorns = usedObjects.get(1).getObjects();
+
+                for (Object ob : thorns) {
+                    Thorn thorn = (Thorn) ob;
+                    thorn.calculateStartPosition();
+                }
+            }
+        }
     }
 
 
@@ -214,5 +287,15 @@ public class GamePlayManager {
 
     public AirBalloonObject getAirBalloon() {
         return airBalloon;
+    }
+
+    public static LocalDateTime generateTime(double minSeconds, double maxSeconds) {
+        // Генерируем случайное значение времени в заданных пределах
+        double randomSeconds = minSeconds + Math.random() * (maxSeconds - minSeconds);
+
+        // Генерируем новое время
+        LocalDateTime newTimeGenerate = LocalDateTime.now().plusSeconds((long) randomSeconds);
+
+        return newTimeGenerate;
     }
 }
