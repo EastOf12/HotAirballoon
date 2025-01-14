@@ -7,10 +7,7 @@ import android.view.WindowManager;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.airballoon.Managers.MenuManager;
 
-
-
 public class MainActivity extends AppCompatActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,7 +18,5 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
         MenuManager menuManager = new MenuManager(this);
-
     }
 }
-
