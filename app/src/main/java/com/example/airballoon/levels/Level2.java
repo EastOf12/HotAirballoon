@@ -1,64 +1,39 @@
-package com.example.airballoon;
+package com.example.airballoon.levels;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Canvas;
-import android.util.DisplayMetrics;
 import android.view.MotionEvent;
-import android.view.SurfaceHolder;
-import android.view.SurfaceView;
 import android.view.View;
 
+import com.example.airballoon.MainActivity;
+import com.example.airballoon.managers.ObjectsGeneration;
+import com.example.airballoon.RewardedAdActivity;
 import com.example.airballoon.managers.GamePlayManager;
-import com.example.airballoon.game_objects.BackGround;
-import com.example.airballoon.game_objects.GearWheel;
-import com.example.airballoon.managers.ManagerFPS;
 import com.example.airballoon.managers.MenuActions;
 import com.example.airballoon.managers.SaveManager;
-import com.example.airballoon.models.User;
 
 @SuppressLint("ViewConstructor")
-class GameView extends SurfaceView implements Runnable {
-    private final SurfaceHolder surfaceHolder;
-    Activity activity;
-    DisplayMetrics displayMetrics;
-    ManagerFPS managerFPS;
-    GamePlayManager gamePlayManager;
-    private volatile boolean running = false;
-    private boolean isPaused = false;
-    int startSpeed = 15;
-
-    //Временный порядок
-    User user;
-
-    boolean needSave = true;
+public class Level2 extends BaseLevel implements Runnable{
+    //Для теста
+    ObjectsGeneration objectsGeneration;
 
 
-    @SuppressLint("UseCompatLoadingForDrawables")
-    public GameView(Activity activity) {
+    public Level2(Activity activity) {
         super(activity);
-        this.activity = activity;
 
-        //Получаем пользователя.
-        user = SaveManager.readFromFile(activity);
-        surfaceHolder = getHolder();
-
-        displayMetrics = new DisplayMetrics();
-        activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-
-        managerFPS = new ManagerFPS();
-        gamePlayManager = new GamePlayManager(activity, displayMetrics, user);
+        objectsGeneration = new ObjectsGeneration(activity, displayMetrics, gamePlayManager.getAirBalloon() );
     }
 
+
+    //Основной цикл игры.
     @Override
     public void run() {
-        // Создаем объекты
-        BackGround backGround = new BackGround(activity, displayMetrics, R.drawable.game_bg);
-
-        //Убрать в менеджер
-        GearWheel gearWheel = new GearWheel(activity, displayMetrics);
         gamePlayManager.startMusic();
+
+        System.out.println("Смотрим, что у нас получилось в методе генераций");
+        objectsGeneration.createUsedObjects();
 
         while (running) {
             if (managerFPS.lockFPS()) {
@@ -68,7 +43,7 @@ class GameView extends SurfaceView implements Runnable {
                     Canvas canvas = surfaceHolder.lockCanvas();
                     synchronized (getHolder()) {
 
-                        backGround.drawBackgroundImage(canvas);
+                        gamePlayManager.drawBackGround(canvas);
                         gamePlayManager.drawAirBalloon(canvas);
                         gamePlayManager.drawCoins(canvas);
                         gamePlayManager.drawThorn(canvas);
@@ -83,7 +58,7 @@ class GameView extends SurfaceView implements Runnable {
                             gamePlayManager.speedUp();
                         }
 
-                        gearWheel.drawGearWheel(canvas);
+                        gamePlayManager.drawGearWheel(canvas);
 
                         //Проверяем количество здоровья
                         if(gamePlayManager.getHpAirBalloon() <= 0) {
@@ -109,7 +84,7 @@ class GameView extends SurfaceView implements Runnable {
                     @SuppressLint("ClickableViewAccessibility")
                     @Override
                     public boolean onTouch(View view, MotionEvent event) {
-                        if(gearWheel.onTouch(event) && !isPaused && gamePlayManager.getHpAirBalloon() > 0) {
+                        if(gamePlayManager.onTouchGearWheel(event) && !isPaused && gamePlayManager.getHpAirBalloon() > 0) {
                             switchGameStatus();
                         }
 
@@ -139,7 +114,7 @@ class GameView extends SurfaceView implements Runnable {
                         if(!isPaused && gamePlayManager.getHpAirBalloon()> 0) {
                             return gamePlayManager.onTouchAirBalloon(event);
                         } else {
-                           return true;
+                            return true;
                         }
                     }
                 });
@@ -147,22 +122,5 @@ class GameView extends SurfaceView implements Runnable {
         }
 
         gamePlayManager.releaseMusic();
-    }
-
-    public void start() {
-        running = true;
-        GamePlayManager.speed = startSpeed;
-        Thread gameThread = new Thread(this);
-        gameThread.start();
-    }
-
-    public void switchGameStatus() {
-        isPaused = !isPaused;
-
-        if(isPaused) {
-            GamePlayManager.speed = 0;
-        } else {
-            GamePlayManager.speed = 15;
-        }
     }
 }

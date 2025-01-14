@@ -7,6 +7,7 @@ import android.view.WindowManager;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.airballoon.levels.Level1;
+import com.example.airballoon.levels.Level2;
 
 public class GamePlayActivity extends AppCompatActivity {
 

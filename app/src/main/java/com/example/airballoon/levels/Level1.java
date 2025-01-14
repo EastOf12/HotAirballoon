@@ -9,8 +9,9 @@ import android.view.View;
 
 import com.example.airballoon.MainActivity;
 import com.example.airballoon.RewardedAdActivity;
-import com.example.airballoon.Managers.GamePlayManager;
+import com.example.airballoon.managers.GamePlayManager;
 import com.example.airballoon.managers.MenuActions;
+import com.example.airballoon.managers.ObjectsGeneration;
 import com.example.airballoon.managers.SaveManager;
 
 @SuppressLint("ViewConstructor")
@@ -33,13 +34,18 @@ public class Level1 extends BaseLevel implements Runnable{
                     Canvas canvas = surfaceHolder.lockCanvas();
                     synchronized (getHolder()) {
 
-                        gamePlayManager.drawBackGround(canvas);
-                        gamePlayManager.drawAirBalloon(canvas);
-                        gamePlayManager.drawCoins(canvas);
-                        gamePlayManager.drawThorn(canvas);
-                        gamePlayManager.drawCountCoins(canvas, displayMetrics);
-                        gamePlayManager.drawHp(canvas, displayMetrics);
-                        gamePlayManager.drawDistance(canvas, displayMetrics);
+                        gamePlayManager.drawBackGround(canvas); //Добавить фон
+                        gamePlayManager.drawAirBalloon(canvas); //Добавить шарик
+
+                        gamePlayManager.startObjectsGeneration(canvas); //Добавить генерацию игровых объектов
+
+//                        gamePlayManager.drawCoins(canvas); Старый вариант генераций
+//                        gamePlayManager.drawThorn(canvas);
+
+
+                        gamePlayManager.drawCountCoins(canvas, displayMetrics); //Отрисовать количество монет
+                        gamePlayManager.drawHp(canvas, displayMetrics); //Отрисовать количество здоровья
+                        gamePlayManager.drawDistance(canvas, displayMetrics); //Отрисовать дистанцию
 
                         if(isPaused) {
                             gamePlayManager.drawGamePlayMenu(canvas);
@@ -48,7 +54,7 @@ public class Level1 extends BaseLevel implements Runnable{
                             gamePlayManager.speedUp();
                         }
 
-                        gamePlayManager.drawGearWheel(canvas);
+                        gamePlayManager.drawGearWheel(canvas); //Отрисовать кнопку настроек
 
                         //Проверяем количество здоровья
                         if(gamePlayManager.getHpAirBalloon() <= 0) {
@@ -70,7 +76,7 @@ public class Level1 extends BaseLevel implements Runnable{
                 }
 
                 // Обработка касаний
-                setOnTouchListener(new View.OnTouchListener() {
+                setOnTouchListener(new OnTouchListener() {
                     @SuppressLint("ClickableViewAccessibility")
                     @Override
                     public boolean onTouch(View view, MotionEvent event) {
