@@ -64,7 +64,7 @@ public class Level1 extends BaseLevel implements Runnable{
                             gamePlayManager.drawGamePlayMenu(canvas);
                         } else if (gamePlayManager.levelEnd()) {
                             switchGameStatus(GamePlayStatus.END);
-                            gamePlayManager.drawLevelEnd(canvas);
+                            gamePlayManager.drawMenuEndFinish(canvas);
                         } else {
                             gamePlayManager.speedUp();
                         }

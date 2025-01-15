@@ -21,7 +21,7 @@ public class Level2 extends BaseLevel implements Runnable{
         super(activity);
 
         //Уникальные настройки для уровня
-        gamePlayManager.setEndDistance(200); //Финальная дистанация
+        gamePlayManager.setEndDistance(1000); //Финальная дистанация
     }
 
 
@@ -64,7 +64,7 @@ public class Level2 extends BaseLevel implements Runnable{
                             gamePlayManager.drawGamePlayMenu(canvas);
                         } else if (gamePlayManager.levelEnd()) {
                             switchGameStatus(GamePlayStatus.END);
-                            gamePlayManager.drawLevelEnd(canvas);
+                            gamePlayManager.drawMenuEndFinish(canvas);
                         } else {
                             gamePlayManager.speedUp();
                         }
@@ -95,14 +95,14 @@ public class Level2 extends BaseLevel implements Runnable{
                     @SuppressLint("ClickableViewAccessibility")
                     @Override
                     public boolean onTouch(View view, MotionEvent event) {
-                        if(gamePlayManager.onTouchGearWheel(event) && gamePlayStatus != GamePlayStatus.PAUSE && gamePlayManager.getHpAirBalloon() > 0) {
-                            switchGameStatus(GamePlayStatus.PlAY);
+                        if(gamePlayStatus != GamePlayStatus.END && gamePlayManager.onTouchGearWheel(event) && gamePlayStatus != GamePlayStatus.PAUSE && gamePlayManager.getHpAirBalloon() > 0) {
+                            switchGameStatus(GamePlayStatus.PAUSE);
                         }
 
                         //Обрабатываем нажатия в меню.
-                        if(gamePlayManager.getGamePlayMenu().onTouch(event) == MenuActions.RESUME) {
+                        if(gamePlayStatus != GamePlayStatus.END && gamePlayManager.getGamePlayMenu().onTouch(event) == MenuActions.RESUME) {
                             switchGameStatus(GamePlayStatus.PlAY);
-                        } else if((gamePlayManager.getHpAirBalloon() <= 0 || gamePlayStatus == GamePlayStatus.PAUSE) && gamePlayManager.getGamePlayMenu().onTouch(event) == MenuActions.EXIT) {
+                        } else if((gamePlayManager.getHpAirBalloon() <= 0 || gamePlayStatus == GamePlayStatus.PAUSE || gamePlayStatus == GamePlayStatus.END) && gamePlayManager.getGamePlayMenu().onTouch(event) == MenuActions.EXIT) {
                             //Останавливаем поток
                             running = false;
 
@@ -122,7 +122,7 @@ public class Level2 extends BaseLevel implements Runnable{
                             activity.startActivity(intent);
                         }
 
-                        if(gamePlayStatus != GamePlayStatus.PAUSE && gamePlayManager.getHpAirBalloon()> 0) {
+                        if(gamePlayStatus != GamePlayStatus.END && gamePlayStatus != GamePlayStatus.PAUSE && gamePlayManager.getHpAirBalloon()> 0) {
                             return gamePlayManager.onTouchAirBalloon(event);
                         } else {
                             return true;

@@ -233,8 +233,12 @@ public class GamePlayManager {
         gamePlayMenu.drawMenuButtons(canvas);
     }
 
-    public void drawMenuEnd(Canvas canvas) {
-        gamePlayMenu.drawMenuEnd(canvas);
+    public void drawMenuEndLose(Canvas canvas) {
+        gamePlayMenu.drawMenuEndLose(canvas);
+    }
+
+    public void drawMenuEndFinish(Canvas canvas) {
+        gamePlayMenu.drawMenuEndFinish(canvas);
     }
 
     public void drawBackGround(Canvas canvas) {
@@ -287,7 +291,7 @@ public class GamePlayManager {
     }
 
     public boolean levelEnd() {
-        if(endDistance >= distance) {
+        if(endDistance <= (distance / 100)) {
             return true;
         }
         return false;
