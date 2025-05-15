@@ -8,18 +8,18 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.example.airballoon.GamePlayActivity;
 import com.example.airballoon.R;
-import com.example.airballoon.SelectLevelActivity;
 import com.example.airballoon.models.User;
 
 import java.time.Instant;
 
 public class MenuManager {
     Activity activity;
-    private ImageButton selectLevel;
     private ImageButton buttonSetting;
     private final View view;
     private final User user;
@@ -27,6 +27,7 @@ public class MenuManager {
     //Тут хранится количество уровней
     private final byte COUNT_AIRBALLOON;
     private int selectAirballoon = 1;
+    private final ImageButton buttonStart;
 
 
     @SuppressLint("ClickableViewAccessibility")
@@ -36,10 +37,9 @@ public class MenuManager {
 
         user = SaveManager.readFromFile(activity);
         view = activity.getWindow().getDecorView();
+        buttonStart = addButtonStart(view);
 
-        selectLevel = addButtonPlay();
-        useButtonSelectLevel();
-
+        useButtonStart(activity);
         drawDesiredAirballoon();
         drawCoins();
         drawSettingButton();
@@ -50,8 +50,7 @@ public class MenuManager {
 
     @SuppressLint("WrongViewCast")
     private ImageButton addButtonPlay() {
-        selectLevel = view.findViewById(R.id.button_start);
-        return selectLevel;
+        return view.findViewById(R.id.button_start);
     }
 
     private void drawCoins() {
@@ -59,52 +58,31 @@ public class MenuManager {
         coinCountView.setText(String.valueOf(user.getCoins()));
     }
 
-    //Логика с переходом в игру сразу
-//    private void useButtonPlay() {
-//        buttonStart.setOnClickListener(new View.OnClickListener(){
-//            @Override
-//            public void onClick(View v) {
-//                // Отобразить ProgressBar
-//                ProgressBar progressBar = view.findViewById(R.id.progress_bar);
-//                progressBar.setVisibility(View.VISIBLE);
-//
-//                //Скрыть кнопку
-//                buttonStart.setVisibility(View.INVISIBLE);
-//
-//                // Запустить игру
-//                Intent intent = new Intent(activity, GamePlayActivity.class);
-//                activity.startActivity(intent);
-//
-//                // Завершить текущую активность
-//                activity.finish();
-//            }
-//        });
-//    }
-
-
-        //Переход на экран выбор уровня
-        private void useButtonSelectLevel() {
-            selectLevel.setOnClickListener(new View.OnClickListener(){
+    //Переходим к первому уровню сразу при нажатии кнопки играть
+    private void useButtonStart(Activity activity) {
+        buttonStart.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                // Отобразить ProgressBar
-//                ProgressBar progressBar = view.findViewById(R.id.progress_bar);
-//                progressBar.setVisibility(View.VISIBLE);
-//
-//                Скрыть кнопку
-//                selectLevel.setVisibility(View.INVISIBLE);
+                    // Отобразить ProgressBar
+                    ProgressBar progressBar = view.findViewById(R.id.progress_bar);
+                    progressBar.setVisibility(View.VISIBLE);
 
-                // Запустить игру
-                Intent intent = new Intent(activity, SelectLevelActivity.class);
-                activity.startActivity(intent);
+                    // Запустить игру
+                    Intent intent = new Intent(activity, GamePlayActivity.class);
+                    activity.startActivity(intent);
 
-                //Убираем анимацию перехода.
-                activity.overridePendingTransition(0, 0);
+                    //Убираем анимацию перехода.
+                    activity.overridePendingTransition(0, 0);
 
-                // Завершить текущую активность
-                activity.finish();
+                    // Завершить текущую активность
+                    activity.finish();
             }
         });
+    }
+
+    @SuppressLint("WrongViewCast")
+    private ImageButton addButtonStart(View view) {
+        return view.findViewById(R.id.button_start);
     }
 
     @SuppressLint("ClickableViewAccessibility")
