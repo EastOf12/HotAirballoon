@@ -6,8 +6,7 @@ import android.view.WindowManager;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.airballoon.levels.Level1;
-import com.example.airballoon.levels.Level2;
+import com.example.airballoon.levels.FreeLevel;
 
 public class GamePlayActivity extends AppCompatActivity {
 
@@ -22,19 +21,8 @@ public class GamePlayActivity extends AppCompatActivity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-
-        //Тут запускается нужный уровень
-
-
-        //Старый вариант
-//        GameView gameView = new GameView(this);
-//        setContentView(gameView);
-//
-//        gameView.start();
-
-
-        //Новый вариант
-        Level1 level1 = new Level1(this);
+        //Запускаем уровень
+        FreeLevel level1 = new FreeLevel(this);
         setContentView(level1);
         level1.start();
     }

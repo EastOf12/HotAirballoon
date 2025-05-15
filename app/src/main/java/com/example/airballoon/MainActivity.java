@@ -7,8 +7,6 @@ import android.view.WindowManager;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.airballoon.managers.MenuManager;
 
-
-
 public class MainActivity extends AppCompatActivity {
 
     @Override
@@ -21,7 +19,6 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
         MenuManager menuManager = new MenuManager(this);
-
     }
 }
 

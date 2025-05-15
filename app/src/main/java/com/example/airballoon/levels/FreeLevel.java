@@ -11,15 +11,13 @@ import com.example.airballoon.MainActivity;
 import com.example.airballoon.RewardedAdActivity;
 import com.example.airballoon.managers.GamePlayManager;
 import com.example.airballoon.managers.MenuActions;
-import com.example.airballoon.managers.ObjectsGeneration;
 import com.example.airballoon.managers.SaveManager;
 
 @SuppressLint("ViewConstructor")
-public class Level1 extends BaseLevel implements Runnable{
-    public Level1(Activity activity) {
+public class FreeLevel extends BaseLevel implements Runnable{
+    public FreeLevel(Activity activity) {
         super(activity);
     }
-
 
     //Основной цикл игры.
     @Override
@@ -34,37 +32,28 @@ public class Level1 extends BaseLevel implements Runnable{
                     Canvas canvas = surfaceHolder.lockCanvas();
                     synchronized (getHolder()) {
 
-                        gamePlayManager.drawBackGround(canvas); //Добавить фон
-                        gamePlayManager.drawAirBalloon(canvas); //Добавить шарик
-
-                        gamePlayManager.startObjectsGeneration(canvas); //Добавить генерацию игровых объектов
-
-//                        gamePlayManager.drawCoins(canvas); Старый вариант генераций
-//                        gamePlayManager.drawThorn(canvas);
-
-
-                        gamePlayManager.drawCountCoins(canvas, displayMetrics); //Отрисовать количество монет
-                        gamePlayManager.drawHp(canvas, displayMetrics); //Отрисовать количество здоровья
-                        gamePlayManager.drawDistance(canvas, displayMetrics); //Отрисовать дистанцию
+                        gamePlayManager.drawBackGround(canvas); //Добавляем фон
+                        gamePlayManager.drawAirBalloon(canvas); //Добавляем шарик
+                        gamePlayManager.startObjectsGeneration(canvas); //Добавляем генерацию игровых объектов
+                        gamePlayManager.drawCountCoins(canvas, displayMetrics); //Добавляем количество монет
+                        gamePlayManager.drawHp(canvas, displayMetrics); //Добавляем количество здоровья
+                        gamePlayManager.drawDistance(canvas, displayMetrics); //Добавляем дистанцию
 
                         if(isPaused) {
                             gamePlayManager.drawGamePlayMenu(canvas);
                         } else {
-                            //Увеличиваем скорость игры
-                            gamePlayManager.speedUp();
+                            gamePlayManager.speedUp(); //Увеличиваем скорость игры
                         }
 
-                        gamePlayManager.drawGearWheel(canvas); //Отрисовать кнопку настроек
+                        gamePlayManager.drawGearWheel(canvas); //Добавляем кнопку настроек
 
-                        //Проверяем количество здоровья
-                        if(gamePlayManager.getHpAirBalloon() <= 0) {
+                        if(gamePlayManager.getHpAirBalloon() <= 0) { //Проверяем количество здоровья
                             GamePlayManager.speed = 0;
 
                             if(needSave) {
-                                //Сохраняем прогресс в файл.
                                 user.addCoins(gamePlayManager.getCollectedCoins());
                                 user.addMaxDistanceLevelFirst(gamePlayManager.getDistance());
-                                SaveManager.save(activity, user);
+                                SaveManager.save(activity, user); //Сохраняем прогресс в файл.
                                 needSave = false;
                             }
 
@@ -75,8 +64,7 @@ public class Level1 extends BaseLevel implements Runnable{
                     getHolder().unlockCanvasAndPost(canvas);
                 }
 
-                // Обработка касаний
-                setOnTouchListener(new OnTouchListener() {
+                setOnTouchListener(new OnTouchListener() { // Обрабатываем касания
                     @SuppressLint("ClickableViewAccessibility")
                     @Override
                     public boolean onTouch(View view, MotionEvent event) {
@@ -84,12 +72,11 @@ public class Level1 extends BaseLevel implements Runnable{
                             switchGameStatus();
                         }
 
-                        //Обрабатываем нажатия в меню.
-                        if(gamePlayManager.getGamePlayMenu().onTouch(event) == MenuActions.RESUME) {
+                        if(gamePlayManager.getGamePlayMenu().onTouch(event) == MenuActions.RESUME) { //Обрабатываем нажатия в меню.
                             switchGameStatus();
-                        } else if((gamePlayManager.getHpAirBalloon() <= 0 || isPaused) && gamePlayManager.getGamePlayMenu().onTouch(event) == MenuActions.EXIT) {
-                            //Останавливаем поток
-                            running = false;
+                        } else if((gamePlayManager.getHpAirBalloon() <= 0 || isPaused)
+                                && gamePlayManager.getGamePlayMenu().onTouch(event) == MenuActions.EXIT) {
+                            running = false; //Останавливаем поток
 
                             //Создаем новую активность.
                             Intent intent = new Intent(activity, MainActivity.class);
@@ -99,11 +86,9 @@ public class Level1 extends BaseLevel implements Runnable{
                             activity.finish();
                         } else if(gamePlayManager.getHpAirBalloon() <= 0 && gamePlayManager.
                                 getGamePlayMenu().onTouch(event) == MenuActions.MARKETING) {
-                            // Отображаем рекламу
                             running = false;
 
-                            //Создаем активность с рекламой
-                            Intent intent = new Intent(activity, RewardedAdActivity.class);
+                            Intent intent = new Intent(activity, RewardedAdActivity.class); //Создаем активность с рекламой
                             activity.startActivity(intent);
                         }
 

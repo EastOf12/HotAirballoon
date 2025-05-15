@@ -237,7 +237,7 @@ public class GamePlayManager {
     }
 
     public void drawBackGround(Canvas canvas) {
-        backGround.drawBackgroundImage(canvas);
+        backGround.drawBackgroundImage(canvas, speed);
     }
 
     public void drawGearWheel(Canvas canvas) {

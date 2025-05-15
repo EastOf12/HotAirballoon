@@ -8,20 +8,37 @@ import android.graphics.Color;
 import android.util.DisplayMetrics;
 
 public class BackGround {
-    Bitmap backGroundImage;
+    Bitmap backGroundImagePiece1;
+    Bitmap backGroundImagePiece2;
+    private int heightPixels;
+    private final int weightPixels = 0;
+    private final int displayMetricsHeight;
+    private final int coefficient = 2; //Во сколько раз высота картинки должна быть больше, чем высота экрана
 
     public BackGround(Activity activity, DisplayMetrics displayMetrics, int idImage) {
-        backGroundImage = BitmapFactory.decodeResource(activity.getResources(), idImage);
-        backGroundImage = Bitmap.createScaledBitmap(backGroundImage, displayMetrics.widthPixels
-                , (int) (displayMetrics.heightPixels * 1.1), true);
+        displayMetricsHeight = displayMetrics.heightPixels;
+
+        backGroundImagePiece1 = BitmapFactory.decodeResource(activity.getResources(), idImage);
+        backGroundImagePiece2 = BitmapFactory.decodeResource(activity.getResources(), idImage);
+
+        backGroundImagePiece1 = Bitmap.createScaledBitmap(backGroundImagePiece1, displayMetrics.widthPixels * coefficient
+                , (int) (displayMetricsHeight * coefficient), true);
+
+        backGroundImagePiece2 = Bitmap.createScaledBitmap(backGroundImagePiece2, displayMetrics.widthPixels * coefficient
+                , (int) (displayMetricsHeight * coefficient), true);
+
+
+        heightPixels = -displayMetricsHeight * (coefficient - 1);
     }
 
-    public void drawBackgroundImage(Canvas canvas) {
-        canvas.drawBitmap(backGroundImage, 0, 0, null);
-    } //Рисуем фон из картинки
+    public void drawBackgroundImage(Canvas canvas, int speed) {
+        heightPixels += speed;
+        canvas.drawBitmap(backGroundImagePiece1, weightPixels, heightPixels, null);
+        canvas.drawBitmap(backGroundImagePiece2, weightPixels, (heightPixels - displayMetricsHeight * coefficient), null);
 
-    public void drawBackgroundFillColor(Canvas canvas) {
-        int fillColor = Color.parseColor("#87CEFA");
-        canvas.drawColor(fillColor);
-    } //Рисуем фон залитый сплошным текстом.
+        if (heightPixels >= displayMetricsHeight) {
+            heightPixels = -displayMetricsHeight * (coefficient - 1);
+        }
+
+    } //Рисуем фон
 }
