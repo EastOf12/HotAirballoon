@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.media.MediaPlayer;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
@@ -33,7 +34,10 @@ public class GamePlayManager {
     ArrayList<Coin> coins;
     ArrayList<Thorn> thorns;
     Paint textPaint;
+    Paint textPaintEndGame;
+    Paint textPaintDistance;
     public static int speed = 15;
+    public final int initialSpeed = 15;
     private final int boost = 3;
     GamePlayMenu gamePlayMenu;
     Random random = new Random();
@@ -54,7 +58,7 @@ public class GamePlayManager {
 
     //Все что относится к генерации
     private ObjectsGeneration objectsGeneration;
-    private final ArrayList<Wrapper> usedObjects;
+    private ArrayList<Wrapper> usedObjects;
     private LocalDateTime oldTimeGenerate;
     private LocalDateTime newTimeGenerate;
     boolean needZeroCoins;
@@ -66,6 +70,7 @@ public class GamePlayManager {
     public GamePlayManager(Activity activity, DisplayMetrics displayMetrics, User user) {
         this.activity = activity;
         this.displayMetrics = displayMetrics;
+        this.user = user;
         gamePlayMenu = new GamePlayMenu(activity, displayMetrics, gameStatus);
 
         backGround = new BackGround(activity, displayMetrics, R.drawable.game_bg); //В дальнейшем нужно будет доработать, тк фон для разных уровней может быть разным.
@@ -95,6 +100,21 @@ public class GamePlayManager {
         textPaint.setColor(Color.WHITE);
         textPaint.setTextSize(50);
         textPaint.setTextAlign(Paint.Align.CENTER);
+
+        textPaintEndGame = new Paint();
+        textPaintEndGame.setColor(Color.parseColor("#800000"));
+        textPaintEndGame.setTextSize(150);
+        textPaintEndGame.setTextAlign(Paint.Align.CENTER);
+        // Устанавливаем стиль текста
+        textPaintEndGame.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD)); // Устанавливаем жирный
+        textPaintEndGame.setTextSkewX(-0.25f); //Наклон текста
+
+        textPaintDistance = new Paint();
+        textPaintDistance.setColor(Color.BLACK);
+        textPaintDistance.setTextSize(70);
+        textPaintDistance.setTextAlign(Paint.Align.RIGHT);
+        // Устанавливаем стиль текста
+        textPaintDistance.setTextSkewX(-0.25f); //Наклон текста
 
         //Устанавлияем первое время ускорения.
         currentTime =  LocalTime.now().plusSeconds(speedUpInterval);
@@ -228,6 +248,38 @@ public class GamePlayManager {
                 , (int) (displayMetrics.heightPixels * 0.2), textPaint);
     }
 
+    public void drawGameOver(Canvas canvas, DisplayMetrics displayMetrics) {
+
+        canvas.save();
+
+        // Поворачиваем Canvas на 45 градусов
+        canvas.rotate(-5, (int) (displayMetrics.heightPixels * 0.26),
+                (int) (displayMetrics.widthPixels * 0.64));
+
+        canvas.drawText("Конец игры !"
+                , (int) (displayMetrics.widthPixels * 0.5)
+                , (int) (displayMetrics.heightPixels * 0.4), textPaintEndGame);
+
+
+        canvas.drawText("Набранная высота: " + (distance / 100)
+                , (int) (displayMetrics.widthPixels * 0.73)
+                , (int) (displayMetrics.heightPixels * 0.45), textPaintDistance);
+
+        long maxDistance;
+
+        if(distance / 100 > user.getMaxDistanceLevelFirst()) {
+            maxDistance = distance / 100;
+        } else {
+            maxDistance = user.getMaxDistanceLevelFirst();
+        }
+
+        canvas.drawText("Рекорд высоты: " + maxDistance
+                , (int) (displayMetrics.widthPixels * 0.73)
+                , (int) (displayMetrics.heightPixels * 0.49), textPaintDistance);
+
+        canvas.restore();
+    }
+
     public void drawGamePlayMenu(Canvas canvas) {
         gamePlayMenu.drawMenuButtons(canvas);
     }
@@ -297,5 +349,36 @@ public class GamePlayManager {
         LocalDateTime newTimeGenerate = LocalDateTime.now().plusSeconds((long) randomSeconds);
 
         return newTimeGenerate;
+    }
+
+    public void restartAirballoon() {
+        airBalloon.restartAirBalloon();
+    } //Устанавливает дефолтные параметры для шарика
+
+    public void restartSpeed() {
+        speed = initialSpeed;
+    } //Устанавливает дефолтную скорость игры
+
+    public void restartDistance() {
+        distance = 0;
+    }
+
+    public void restartCoins() {
+        airBalloon.resetCoins();
+    }
+
+    public void restartGeneration() {
+        objectsGeneration =  new ObjectsGeneration(activity, displayMetrics, getAirBalloon());
+        usedObjects = objectsGeneration.getUsedObjects();
+
+        countCoins = 0;
+        countThorn = 0;
+
+        oldTimeGenerate = LocalDateTime.now();
+        newTimeGenerate = LocalDateTime.now().plusSeconds(3);
+    }
+
+    public void restartBackGround() {
+        backGround.restartBackground();
     }
 }

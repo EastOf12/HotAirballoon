@@ -26,9 +26,7 @@ public class ManagerFPS {
         currentSecond = (int) (System.currentTimeMillis() / 1000);
 
         if (currentSecond != previousSecond) {
-            counterFPS++;
             previousSecond = currentSecond;
-//            System.out.println("FPS: " + counterFPS);
             counterFPS = 0;
         } else {
             counterFPS++;

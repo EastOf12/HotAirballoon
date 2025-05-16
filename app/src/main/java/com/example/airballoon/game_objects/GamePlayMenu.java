@@ -16,21 +16,21 @@ public class GamePlayMenu {
     DisplayMetrics displayMetrics;
     Bitmap buttonResume;
     Bitmap buttonExit;
-    Bitmap buttonMarketing;
+    Bitmap buttonRestart;
     int xPositionButtonResume;
     int yPositionButtonResume;
 
     int xPositionButtonExit;
     int yPositionButtonExit;
-    int xPositionButtonMarketing;
-    int yPositionButtonMarketing;
+    int xPositionButtonRestart;
+    int yPositionButtonRestart;
     double percentage = 0.25; // Размер изображения относительно экрана
     double widthButtonResume;
     double heightButtonResume;
     double widthButtonExit;
     double heightButtonExit;
-    double widthButtonMarketing;
-    double heightButtonMarketing;
+    double widthButtonRestart;
+    double heightButtonRestart;
     GameStatus gameStatus;
 
     public GamePlayMenu(Activity activity, DisplayMetrics displayMetrics, GameStatus gameStatus) {
@@ -40,8 +40,8 @@ public class GamePlayMenu {
 
         buttonResume = BitmapFactory.decodeResource(activity.getResources(), R.drawable.resume);
         buttonExit = BitmapFactory.decodeResource(activity.getResources(), R.drawable.exit_game_play);
-        buttonMarketing = BitmapFactory.decodeResource(activity.getResources(),
-                R.drawable.button_marketing);
+        buttonRestart = BitmapFactory.decodeResource(activity.getResources(),
+                R.drawable.button_restart);
 
         calculateSize();
         calculateStartPosition();
@@ -63,39 +63,40 @@ public class GamePlayMenu {
                 , (int) widthButtonExit, (int) heightButtonExit, true);
 
         //Для кнопки рекламы
-        widthButtonMarketing = displayMetrics.widthPixels * percentage;
-        proportion = (double) buttonMarketing.getWidth() / buttonMarketing.getHeight();
-        heightButtonMarketing = widthButtonMarketing / proportion;
-        buttonMarketing = Bitmap.createScaledBitmap(buttonMarketing
-                , (int) widthButtonMarketing, (int) heightButtonMarketing, true);
+        widthButtonRestart = displayMetrics.widthPixels * percentage;
+        proportion = (double) buttonRestart.getWidth() / buttonRestart.getHeight();
+        heightButtonRestart = widthButtonRestart / proportion;
+        buttonRestart = Bitmap.createScaledBitmap(buttonRestart
+                , (int) widthButtonRestart, (int) heightButtonRestart, true);
     }
 
     private void calculateStartPosition() {
         xPositionButtonResume = (int) (displayMetrics.widthPixels * 0.4);
         yPositionButtonResume = (int) (displayMetrics.heightPixels * 0.25);
 
-        xPositionButtonExit = (int) (displayMetrics.widthPixels * 0.4);
-        yPositionButtonExit = (int) (displayMetrics.heightPixels * 0.4);
+        xPositionButtonExit = (int) (displayMetrics.widthPixels * 0.25);
+        yPositionButtonExit = (int) (displayMetrics.heightPixels * 0.7);
 
-        xPositionButtonMarketing = (int) (displayMetrics.widthPixels * 0.4);
-        yPositionButtonMarketing = (int) (displayMetrics.heightPixels * 0.6);
+        xPositionButtonRestart = (int) (displayMetrics.widthPixels * 0.55);
+        yPositionButtonRestart = (int) (displayMetrics.heightPixels * 0.6);
     }
 
     public void drawMenuButtons(Canvas canvas) {
         canvas.drawBitmap(buttonResume, xPositionButtonResume, yPositionButtonResume, null);
-        canvas.drawBitmap(buttonExit, xPositionButtonExit, yPositionButtonExit, null);
+        canvas.drawBitmap(buttonExit, (int) (displayMetrics.widthPixels * 0.4),
+                (int) (displayMetrics.heightPixels * 0.4), null);
     } //Рисуем кнопки в меню во время паузы.
 
     public void drawMenuEnd(Canvas canvas) {
         //Кнопка выхода в меню
         canvas.drawBitmap(buttonExit, xPositionButtonExit, yPositionButtonExit, null);
 
-        //Кнопка рекламы
-        canvas.drawBitmap(buttonMarketing, xPositionButtonMarketing, yPositionButtonMarketing,
+        //Кнопка перезапуска
+        canvas.drawBitmap(buttonRestart, xPositionButtonRestart, yPositionButtonRestart,
                 null);
     } //Рисуем кнопки, когда игра завершена.
 
-    public Enum onTouch(MotionEvent event) {
+    public Enum onTouch(MotionEvent event, boolean isPaused) {
         float touchX = event.getX();
         float touchY = event.getY();
 
@@ -105,15 +106,21 @@ public class GamePlayMenu {
                 return MenuActions.RESUME;
             }
 
-            if (touchX >= xPositionButtonExit && touchX < (xPositionButtonExit + widthButtonExit) &&
-                    touchY >= yPositionButtonExit && touchY < (yPositionButtonExit + heightButtonExit)) {
+            if (touchX >= (int) (displayMetrics.widthPixels * 0.4) && touchX < ((int) (displayMetrics.widthPixels * 0.4) + widthButtonResume) &&
+                    touchY >= (int) (displayMetrics.heightPixels * 0.4) && touchY < ((int) (displayMetrics.heightPixels * 0.4) + heightButtonResume)
+            && isPaused) {
                 return MenuActions.EXIT;
             }
 
-            if(touchX >= xPositionButtonMarketing && touchX <(xPositionButtonMarketing
-                    + widthButtonMarketing) && touchY >= yPositionButtonMarketing &&
-                    touchY < (yPositionButtonMarketing + heightButtonMarketing)) {
-                return MenuActions.MARKETING;
+            if (touchX >= xPositionButtonExit && touchX < (xPositionButtonExit + widthButtonExit) &&
+                    touchY >= yPositionButtonExit && touchY < (yPositionButtonExit + heightButtonExit) && !isPaused) {
+                return MenuActions.EXIT;
+            }
+
+            if(touchX >= xPositionButtonRestart && touchX <(xPositionButtonRestart
+                    + widthButtonRestart) && touchY >= yPositionButtonRestart &&
+                    touchY < (yPositionButtonRestart + heightButtonRestart)) {
+                return MenuActions.RESTART;
             }
         }
 

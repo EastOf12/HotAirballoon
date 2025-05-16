@@ -23,8 +23,6 @@ public class MenuManager {
     private ImageButton buttonSetting;
     private final View view;
     private final User user;
-
-    //Тут хранится количество уровней
     private final byte COUNT_AIRBALLOON;
     private int selectAirballoon = 1;
     private final ImageButton buttonStart;
@@ -58,7 +56,6 @@ public class MenuManager {
         coinCountView.setText(String.valueOf(user.getCoins()));
     }
 
-    //Переходим к первому уровню сразу при нажатии кнопки играть
     private void useButtonStart(Activity activity) {
         buttonStart.setOnClickListener(new View.OnClickListener(){
             @Override

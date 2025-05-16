@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.util.DisplayMetrics;
 
 public class BackGround {
@@ -32,7 +31,7 @@ public class BackGround {
     }
 
     public void drawBackgroundImage(Canvas canvas, int speed) {
-        heightPixels += speed;
+        heightPixels += (speed / 3);
         canvas.drawBitmap(backGroundImagePiece1, weightPixels, heightPixels, null);
         canvas.drawBitmap(backGroundImagePiece2, weightPixels, (heightPixels - displayMetricsHeight * coefficient), null);
 
@@ -41,4 +40,8 @@ public class BackGround {
         }
 
     } //Рисуем фон
+
+    public void restartBackground() {
+        heightPixels = -displayMetricsHeight * (coefficient - 1);
+    }
 }

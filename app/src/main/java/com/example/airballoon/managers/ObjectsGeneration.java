@@ -35,8 +35,6 @@ public class ObjectsGeneration {
         usedObjects = new ArrayList<>();
         usedObjects.addAll(allObjects);
         updateCount();
-
-        System.out.println("Список объектов, который получили " + usedObjects);
     } //Определяет список объектов для отрисовки
 
 

@@ -7,6 +7,7 @@ import android.graphics.Canvas;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.example.airballoon.GamePlayActivity;
 import com.example.airballoon.MainActivity;
 import com.example.airballoon.RewardedAdActivity;
 import com.example.airballoon.managers.GamePlayManager;
@@ -50,6 +51,8 @@ public class FreeLevel extends BaseLevel implements Runnable{
                         if(gamePlayManager.getHpAirBalloon() <= 0) { //Проверяем количество здоровья
                             GamePlayManager.speed = 0;
 
+                            gamePlayManager.drawGameOver(canvas, displayMetrics); //Выводим сообщение о конце игры
+
                             if(needSave) {
                                 user.addCoins(gamePlayManager.getCollectedCoins());
                                 user.addMaxDistanceLevelFirst(gamePlayManager.getDistance());
@@ -72,10 +75,10 @@ public class FreeLevel extends BaseLevel implements Runnable{
                             switchGameStatus();
                         }
 
-                        if(gamePlayManager.getGamePlayMenu().onTouch(event) == MenuActions.RESUME) { //Обрабатываем нажатия в меню.
+                        if(gamePlayManager.getGamePlayMenu().onTouch(event, isPaused) == MenuActions.RESUME) { //Обрабатываем нажатия в меню.
                             switchGameStatus();
                         } else if((gamePlayManager.getHpAirBalloon() <= 0 || isPaused)
-                                && gamePlayManager.getGamePlayMenu().onTouch(event) == MenuActions.EXIT) {
+                                && gamePlayManager.getGamePlayMenu().onTouch(event, isPaused) == MenuActions.EXIT) {
                             running = false; //Останавливаем поток
 
                             //Создаем новую активность.
@@ -85,12 +88,20 @@ public class FreeLevel extends BaseLevel implements Runnable{
                             // Завершить текущую активность
                             activity.finish();
                         } else if(gamePlayManager.getHpAirBalloon() <= 0 && gamePlayManager.
+                                getGamePlayMenu().onTouch(event, isPaused) == MenuActions.RESTART) {
+
+                            restartGame();
+                        }
+
+/*
+                        else if(gamePlayManager.getHpAirBalloon() <= 0 && gamePlayManager.
                                 getGamePlayMenu().onTouch(event) == MenuActions.MARKETING) {
                             running = false;
 
                             Intent intent = new Intent(activity, RewardedAdActivity.class); //Создаем активность с рекламой
                             activity.startActivity(intent);
-                        }
+                        } //Логика запуска рекламы
+*/
 
                         if(!isPaused && gamePlayManager.getHpAirBalloon()> 0) {
                             return gamePlayManager.onTouchAirBalloon(event);
@@ -104,4 +115,14 @@ public class FreeLevel extends BaseLevel implements Runnable{
 
         gamePlayManager.releaseMusic();
     }
+
+    private void restartGame() {
+        gamePlayManager.restartAirballoon();
+        gamePlayManager.restartSpeed();
+        gamePlayManager.restartDistance();
+        gamePlayManager.restartCoins();
+        gamePlayManager.restartGeneration();
+        gamePlayManager.restartBackGround();
+
+    } //Перезапуск уровня.
 }
