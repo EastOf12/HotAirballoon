@@ -123,6 +123,7 @@ public class FreeLevel extends BaseLevel implements Runnable{
         gamePlayManager.restartCoins();
         gamePlayManager.restartGeneration();
         gamePlayManager.restartBackGround();
+        needSave = true;
 
     } //Перезапуск уровня.
 }

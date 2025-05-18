@@ -102,7 +102,7 @@ public class GamePlayMenu {
 
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
             if (touchX >= xPositionButtonResume && touchX < (xPositionButtonResume + widthButtonResume) &&
-                    touchY >= yPositionButtonResume && touchY < (yPositionButtonResume + heightButtonResume)) {
+                    touchY >= yPositionButtonResume && touchY < (yPositionButtonResume + heightButtonResume) && isPaused) {
                 return MenuActions.RESUME;
             }
 

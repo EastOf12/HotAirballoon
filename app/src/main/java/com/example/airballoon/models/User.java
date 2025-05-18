@@ -1,14 +1,8 @@
 package com.example.airballoon.models;
 
-import android.app.Activity;
-import android.graphics.BitmapFactory;
-
 import androidx.annotation.NonNull;
-
-import com.example.airballoon.R;
-
-import java.util.HashMap;
-import java.util.Objects;
+import java.util.ArrayList;
+import java.util.List;
 
 public class User {
 
@@ -18,8 +12,11 @@ public class User {
     private long maxDistanceLevelFirst = 0;
 
     private int selectAirBalloon;
+    private List<Integer> availableBalls;
 
     public User() {
+        availableBalls = new ArrayList<>();
+        availableBalls.add(1);
         selectAirBalloon = 1;
     }
 
@@ -40,6 +37,23 @@ public class User {
         this.coins += coins;
         lastCoins = (int) coins;
     }
+
+    public boolean takeCoins(int coins) {
+        if(this.coins >= coins) {
+            this.coins -= coins;
+            return true;
+        }
+
+        return false;
+    }
+
+    public void addAirBalloon(Integer idAirballoon) {
+        availableBalls.add(idAirballoon);
+    } //Добавляем шарик в доступные пользователю
+
+    public List<Integer> getAvailableBalls() {
+        return availableBalls;
+    } //Возвращает шарики, которые есть у пользователя
 
     public void addMaxDistanceLevelFirst(int distance) {
         //Переводим дистацию в адекватный формат.

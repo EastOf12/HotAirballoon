@@ -21,11 +21,12 @@ import java.time.Instant;
 public class MenuManager {
     Activity activity;
     private ImageButton buttonSetting;
+    private final ImageButton buttonStart;
+    private final ImageButton buttonBuy;
     private final View view;
     private final User user;
     private final byte COUNT_AIRBALLOON;
     private int selectAirballoon = 1;
-    private final ImageButton buttonStart;
 
 
     @SuppressLint("ClickableViewAccessibility")
@@ -36,14 +37,21 @@ public class MenuManager {
         user = SaveManager.readFromFile(activity);
         view = activity.getWindow().getDecorView();
         buttonStart = addButtonStart(view);
+        buttonBuy = addButtonBuy(view);
 
+        selectAirballoon = user.getSelectAirBalloon();
+    }
+
+    public void startGame() {
         useButtonStart(activity);
+        useButtonBuy(activity);
         drawDesiredAirballoon();
         drawCoins();
         drawSettingButton();
         useSettingButton();
-
         selectAirballoon();
+
+        changStatusButtonStartBuy();
     }
 
     @SuppressLint("WrongViewCast")
@@ -57,6 +65,7 @@ public class MenuManager {
     }
 
     private void useButtonStart(Activity activity) {
+
         buttonStart.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
@@ -77,9 +86,30 @@ public class MenuManager {
         });
     }
 
+    private void useButtonBuy(Activity activity) {
+
+        buttonBuy.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+
+                if(user.getCoins() > 10) {
+                    user.takeCoins(10);
+                    user.addAirBalloon(selectAirballoon);
+                    changStatusButtonStartBuy();
+                    drawCoins(); //Обновляем оставшиеся деньги
+                } //Производим покупку, если денег пользователя достаточно и открыаем доступ к шарику.
+            }
+        });
+    }
+
     @SuppressLint("WrongViewCast")
     private ImageButton addButtonStart(View view) {
         return view.findViewById(R.id.button_start);
+    }
+
+    @SuppressLint("WrongViewCast")
+    private ImageButton addButtonBuy(View view) {
+        return view.findViewById(R.id.button_buy);
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -165,7 +195,6 @@ public class MenuManager {
 
                         //Сохраняем в файле выбранный шарик
                         SaveManager.save(activity, user);
-                        System.out.println("Выбрали шарик с id " + selectAirballoon);
 
                         scrollView.post(new Runnable() {
                             public void run() {
@@ -177,6 +206,9 @@ public class MenuManager {
                                     scrollView.smoothScrollTo((int) linearLayout3StartW, 0);
                                 }
                             }});
+
+                        //Отображаем нужную кнопку в зависимости от доступности шарика
+                        changStatusButtonStartBuy();
                         break;
                     case MotionEvent.ACTION_DOWN:
                         //Получаем время нажатия на шарик
@@ -228,6 +260,20 @@ public class MenuManager {
                 System.out.println("Нажали на кнопку настроек.");
             }
         });
+    }
+
+    private boolean checkAvailableAirBalloon() {
+        return user.getAvailableBalls().contains(selectAirballoon);
+    } //Проверяем доступен ли шарик пользователю
+
+    private void changStatusButtonStartBuy() {
+        if(checkAvailableAirBalloon()) {
+            buttonStart.setVisibility(View.VISIBLE);
+            buttonBuy.setVisibility(View.GONE);
+        } else {
+            buttonStart.setVisibility(View.GONE);
+            buttonBuy.setVisibility(View.VISIBLE);
+        }
     }
 
 }
