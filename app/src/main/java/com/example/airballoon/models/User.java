@@ -28,6 +28,7 @@ public class User {
                 ", maxDistanceLevelFirst=" + maxDistanceLevelFirst +
                 ", lastCoins=" + lastCoins +
                 ", selectAirBalloon=" + selectAirBalloon +
+                ", availableBalls=" + availableBalls +
                 '}';
     }
 
@@ -45,6 +46,10 @@ public class User {
         }
 
         return false;
+    }
+
+    public void setCoins(int coins) {
+        this.coins = coins;
     }
 
     public void addAirBalloon(Integer idAirballoon) {

@@ -11,6 +11,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Optional;
 
 public class SaveManager {
     public static void save(Activity activity, User user) {
@@ -68,4 +69,20 @@ public class SaveManager {
 
         return user;
     } //Читает файл с сохранением
+
+    public static boolean delete(Activity activity) {
+        String filename = "save.txt"; // имя файла, который нужно удалить
+        boolean result = false;
+
+        try {
+            File file = new File(activity.getFilesDir(), filename);
+            if (file.exists()) {
+                result = file.delete();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
 }

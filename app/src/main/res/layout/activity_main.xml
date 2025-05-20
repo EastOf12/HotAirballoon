@@ -165,5 +165,21 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.075" />
 
+    <TextView
+        android:id="@+id/price_airballoon"
+        android:layout_width="137dp"
+        android:layout_height="60dp"
+        android:gravity="center"
+        android:text="@string/_0"
+        android:textColor="@color/white"
+        android:textSize="45sp"
+        android:textStyle="normal"
+        app:layout_constraintBottom_toBottomOf="@+id/button_buy"
+        app:layout_constraintEnd_toEndOf="@+id/button_buy"
+        app:layout_constraintHorizontal_bias="0.505"
+        app:layout_constraintStart_toStartOf="@+id/button_buy"
+        app:layout_constraintTop_toTopOf="@+id/button_buy"
+        app:layout_constraintVertical_bias="0.428" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

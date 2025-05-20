@@ -27,6 +27,9 @@ public class MenuManager {
     private final User user;
     private final byte COUNT_AIRBALLOON;
     private int selectAirballoon = 1;
+    private final TextView priceAirballoonView;
+    private final int priceAirballoon1 = 5000;
+    private final int priceAirballoon2 = 15000;
 
 
     @SuppressLint("ClickableViewAccessibility")
@@ -38,6 +41,7 @@ public class MenuManager {
         view = activity.getWindow().getDecorView();
         buttonStart = addButtonStart(view);
         buttonBuy = addButtonBuy(view);
+        priceAirballoonView = view.findViewById(R.id.price_airballoon);
 
         selectAirballoon = user.getSelectAirBalloon();
     }
@@ -62,6 +66,26 @@ public class MenuManager {
     private void drawCoins() {
         TextView coinCountView = view.findViewById(R.id.coin_count);
         coinCountView.setText(String.valueOf(user.getCoins()));
+    }
+
+    @SuppressLint("SetTextI18n")
+    private void setAirballoonPrice(int price) {
+        priceAirballoonView.setText(String.valueOf(price));
+    }
+
+    private void choosePrice() {
+        if(checkAvailableAirBalloon()) {
+            priceAirballoonView.setVisibility(View.GONE);
+        } else {
+
+            if(selectAirballoon == 2) {
+                setAirballoonPrice(priceAirballoon1);
+            } else {
+                setAirballoonPrice(priceAirballoon2);
+            }
+
+            priceAirballoonView.setVisibility(View.VISIBLE);
+        }
     }
 
     private void useButtonStart(Activity activity) {
@@ -92,15 +116,26 @@ public class MenuManager {
             @Override
             public void onClick(View v) {
 
-                if(user.getCoins() > 10) {
-                    user.takeCoins(10);
-                    user.addAirBalloon(selectAirballoon);
-                    changStatusButtonStartBuy();
-                    drawCoins(); //Обновляем оставшиеся деньги
-                } //Производим покупку, если денег пользователя достаточно и открыаем доступ к шарику.
+                if(selectAirballoon == 2) {
+                    if(user.getCoins() >= priceAirballoon1) {
+                        user.takeCoins(priceAirballoon1);
+                        user.addAirBalloon(selectAirballoon);
+                        changStatusButtonStartBuy();
+                        drawCoins(); //Обновляем оставшиеся деньги
+                        SaveManager.save(activity, user);
+                    }
+                } else if (selectAirballoon == 3) {
+                    if(user.getCoins() >= priceAirballoon2) {
+                        user.takeCoins(priceAirballoon2);
+                        user.addAirBalloon(selectAirballoon);
+                        changStatusButtonStartBuy();
+                        drawCoins(); //Обновляем оставшиеся деньги
+                        SaveManager.save(activity, user);
+                    }
+                }
             }
         });
-    }
+    } //Производим покупку, если денег пользователя достаточно и открыаем доступ к шарику.
 
     @SuppressLint("WrongViewCast")
     private ImageButton addButtonStart(View view) {
@@ -274,6 +309,8 @@ public class MenuManager {
             buttonStart.setVisibility(View.GONE);
             buttonBuy.setVisibility(View.VISIBLE);
         }
+
+        choosePrice();
     }
 
 }
