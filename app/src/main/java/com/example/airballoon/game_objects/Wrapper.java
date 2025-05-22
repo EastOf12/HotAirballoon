@@ -5,8 +5,6 @@ import android.graphics.Canvas;
 import android.util.DisplayMetrics;
 
 import androidx.annotation.NonNull;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -17,7 +15,6 @@ public class Wrapper {
     private final AirBalloonObject airBalloonObject;
 
     private int maxCount; //Максимальное количество объектов
-    private int minCount; //Минимальное количество объектов
     private int drawCount; //Общее количество доступных объектов на отрисовку в рамках игровой итерации
     private final String type; //Название объектов
 
@@ -38,21 +35,19 @@ public class Wrapper {
     }
 
     public void generateRandomCount() {
-        drawCount = random.nextInt(maxCount - minCount + 1) + minCount;
-    } //Генерирует случайное количество повторений объекта в игровой итерации
+        drawCount = maxCount - 1;
+    } //Генерирует количество повторений объекта в игровой итерации. Когда 0, будет 1 объект, а если -1, то объекта не будет.
 
     private void generateMaxMin() {
         switch (type) {
             case "coin":
-                maxCount = 5;
-                minCount = 5;
+                maxCount = 30;
                 break;
             case "thorn":
-                maxCount = 15;
-                minCount = 5;
+                maxCount = 9;
                 break;
         }
-    } //Генерирует максимальное и минимальное количество объектов в зависимости от их типа.
+    } //Максимальное количество возможных объектов в пуле
 
     private void generateGameObjects() {
         objects = new ArrayList<>();
@@ -94,19 +89,9 @@ public class Wrapper {
     public void setMaxCount(int maxCount) {
         this.maxCount = maxCount;
     }
-
-    public int getMinCount() {
-        return minCount;
-    }
-
-    public void setMinCount(int minCount) {
-        this.minCount = minCount;
-    }
     public boolean drawObjects(Canvas canvas, Integer count, String wrapperType) {
 
         newIteration = true;
-
-
 
         //Не даем отрисовать больше чем можем.
         if(count > drawCount) {
@@ -146,7 +131,6 @@ public class Wrapper {
     public String toString() {
         return "Wrapper{" +
                 "maxCount=" + maxCount +
-                ", minCount=" + minCount +
                 ", drawCount=" + drawCount +
                 ", type='" + type + '\'' +
                 ", random=" + random +

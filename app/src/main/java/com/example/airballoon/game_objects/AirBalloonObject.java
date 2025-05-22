@@ -55,10 +55,6 @@ public class AirBalloonObject extends GameObject{
                 // Рассчитываем новую позицию шарика в соответствии с перемещением пальца
                 newX = event.getRawX() + offsetX;
 
-                System.out.println("newX " + newX);
-                System.out.println("event.getRawX() " + event.getRawX());
-
-
                 // Обновляем позицию шарика с учетом ограничений экрана
                 if (newX >= 0 && newX <= (displayMetrics.widthPixels - width)) {
                     xPosition = (int) newX;

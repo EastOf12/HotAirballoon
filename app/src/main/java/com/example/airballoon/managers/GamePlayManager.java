@@ -26,7 +26,6 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Random;
-import java.util.concurrent.TimeUnit;
 
 public class GamePlayManager {
     Activity activity;
@@ -59,13 +58,16 @@ public class GamePlayManager {
     //Все что относится к генерации
     private ObjectsGeneration objectsGeneration;
     private ArrayList<Wrapper> usedObjects;
-    private LocalDateTime oldTimeGenerate;
-    private LocalDateTime newTimeGenerate;
     boolean needZeroCoins;
     boolean needZeroThorn;
+    private int minDistanceAdditionObject = 150; //Минимальная пройденная дистанция, после которой можно добавить новый объект в пул
+    private int maxDistanceAdditionObject = 250; //Максимальная пройденная дистанция, после которой можно добавить новый объект в пул
+    private int distanceAdditionObject = 35; //Дистацния при достижении которой добавляем новый объект в пул
+    private int pullCoinsCount = 0; //Число монеток подряд добавленных в пул.
+    private final int pullCoinsCountMax = 4; //Максимальное количество монет, которые могут быть сгенерированы подряд
 
-    Integer countCoins = 0; //Счетчик количества монет, которые запросили отрисовать.
-    Integer countThorn = 0 ;
+    Integer countCoins = -1; //Счетчик количества монет, которые запросили отрисовать.
+    Integer countThorn = -1;
 
     public GamePlayManager(Activity activity, DisplayMetrics displayMetrics, User user) {
         this.activity = activity;
@@ -94,8 +96,6 @@ public class GamePlayManager {
 
         coins = new ArrayList<>();
         thorns = new ArrayList<>();
-        generateCoins();
-        generateThorns();
         textPaint = new Paint();
         textPaint.setColor(Color.WHITE);
         textPaint.setTextSize(50);
@@ -131,37 +131,41 @@ public class GamePlayManager {
         //Все что относится к генерации
         objectsGeneration =  new ObjectsGeneration(activity, displayMetrics, getAirBalloon());
         usedObjects = objectsGeneration.getUsedObjects();
-
-        oldTimeGenerate = LocalDateTime.now();
-        newTimeGenerate = LocalDateTime.now().plusSeconds(3);
     }
 
     public void startObjectsGeneration(Canvas canvas) {
         if(objectsGeneration.checkAvailabilityCoins() && objectsGeneration.checkAvailabilityThorns()) { //Доступны все объекты
 
+            //Определяем что нужно добавить в пул объектов на отрисовку.
+            if (distance >= distanceAdditionObject) { //Проверяем, что дистанция на отрисовку достигнута
+                int b = random.nextInt(4);; //Случайно выбираем, что будем добавлять в пул
 
-            //Определяем, что нужно добавить на отрисовку еще один объект Wrapper
-            if (newTimeGenerate.isBefore(oldTimeGenerate)) { //Запоминаем, что пришло время рисовать еще один объект
-//                Время через которое нужно будет снова отобразить объект.
-
-                if (objectsGeneration.getUsedObjects().get(0).getDrawCount() > countCoins) {
-                    countCoins++; //Добавляем монетку в игровую итерацию
-                    newTimeGenerate = generateTime(0.3, 2.0);
+                if (objectsGeneration.getUsedObjects().get(0).getDrawCount() > countCoins && b < 3 && pullCoinsCount <= pullCoinsCountMax) {
+                    countCoins++; //Добавляем монетку в пул
+                    pullCoinsCount++;
+                    distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
                 } else if (objectsGeneration.getUsedObjects().get(1).getDrawCount() > countThorn) {
-                    countThorn++;
-                    newTimeGenerate = generateTime(1.0, 2.0);
+                    countThorn++; //Добавляем шип в пул
+                    distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+                    pullCoinsCount = 0;
+                } else {
+                    //Нет того элемента, который хотели отрисовать, рисуем, что осталось
+                    if(objectsGeneration.getUsedObjects().get(0).getDrawCount() > countCoins) {
+                        countCoins++; //Добавляем монетку в пул
+                        distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+                    } else {
+                        countThorn++; //Добавляем шип в пул если нет монет
+                        distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+                    }
                 }
 
             }
 
-            oldTimeGenerate = LocalDateTime.now();
-
-            //Рисуем все монетки на отрисовку
+            //Отрисовываем монетки из пула
             needZeroCoins = usedObjects.get(0).drawObjects(canvas, countCoins, "coin");
 
             if (needZeroCoins) { //Обнуляем счетчик монет
-
-                countCoins = 0;
+                countCoins = -1;
 
                 //Определяем новую позицию для монет
                 ArrayList<Object> coins = usedObjects.get(0).getObjects();
@@ -172,11 +176,11 @@ public class GamePlayManager {
                 }
             }
 
-            //Рисуем все шипы на отрисовку
+            //Отрисовываем шипы из пула
             needZeroThorn = usedObjects.get(1).drawObjects(canvas, countThorn, "thorn");
 
             if (needZeroThorn) {
-                countThorn = 0;
+                countThorn = -1;
 
                 ArrayList<Object> thorns = usedObjects.get(1).getObjects();
 
@@ -188,44 +192,8 @@ public class GamePlayManager {
         }
     }
 
-
-    public void generateCoins() {
-        int yPosition = random.nextInt(2500) - 3500;
-
-        for (int i = 0; i <= 5; i++) {
-            Coin coin = new Coin(activity, displayMetrics, airBalloon);
-
-            yPosition += random.nextInt(500);
-
-            coin.setYPosition(yPosition);
-            coins.add(coin);
-        }
-    }
-
-    public void generateThorns() {
-        int yPosition = random.nextInt(2500) - 3500;
-        for (int i = 0; i <= 3; i++) {
-            Thorn thorn = new Thorn(activity, displayMetrics, airBalloon);
-            yPosition += random.nextInt(500);
-            thorn.setYPosition(yPosition);
-            thorns.add(thorn);
-        }
-    }
-
     public void drawAirBalloon(Canvas canvas) {
         airBalloon.draw(canvas);
-    }
-
-    public void drawCoins(Canvas canvas) {
-        for (Coin coin : coins) {
-            coin.draw(canvas);
-        }
-    }
-
-    public void drawThorn(Canvas canvas) {
-        for (Thorn thorn : thorns) {
-            thorn.drawThorn(canvas);
-        }
     }
 
     public void drawCountCoins(Canvas canvas, DisplayMetrics displayMetrics) {
@@ -341,15 +309,9 @@ public class GamePlayManager {
         return airBalloon;
     }
 
-    public static LocalDateTime generateTime(double minSeconds, double maxSeconds) {
-        // Генерируем случайное значение времени в заданных пределах
-        double randomSeconds = minSeconds + Math.random() * (maxSeconds - minSeconds);
-
-        // Генерируем новое время
-        LocalDateTime newTimeGenerate = LocalDateTime.now().plusSeconds((long) randomSeconds);
-
-        return newTimeGenerate;
-    }
+    public static int getNewDistanceAdditionObject(int minDistanceAdditionObject, int maxDistanceAdditionObject, int distance) {
+        return (int) (minDistanceAdditionObject + Math.random() * (maxDistanceAdditionObject - minDistanceAdditionObject)) + distance;
+    } // Генерируем новую дистацию для добавления объекта в пул
 
     public void restartAirballoon() {
         airBalloon.restartAirBalloon();
@@ -371,11 +333,10 @@ public class GamePlayManager {
         objectsGeneration =  new ObjectsGeneration(activity, displayMetrics, getAirBalloon());
         usedObjects = objectsGeneration.getUsedObjects();
 
-        countCoins = 0;
-        countThorn = 0;
+        countCoins = -1;
+        countThorn = -1;
 
-        oldTimeGenerate = LocalDateTime.now();
-        newTimeGenerate = LocalDateTime.now().plusSeconds(3);
+        distanceAdditionObject = 35;
     }
 
     public void restartBackGround() {
