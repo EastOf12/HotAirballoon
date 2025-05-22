@@ -146,7 +146,7 @@ public class GamePlayManager {
                     distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
                 } else if (objectsGeneration.getUsedObjects().get(1).getDrawCount() > countThorn) {
                     countThorn++; //Добавляем шип в пул
-                    distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+                    distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject * 2), (maxDistanceAdditionObject * 2), distance);
                     pullCoinsCount = 0;
                 } else {
                     //Нет того элемента, который хотели отрисовать, рисуем, что осталось
@@ -155,7 +155,7 @@ public class GamePlayManager {
                         distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
                     } else {
                         countThorn++; //Добавляем шип в пул если нет монет
-                        distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+                        distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject * 2), (maxDistanceAdditionObject * 2), distance);
                     }
                 }
 
