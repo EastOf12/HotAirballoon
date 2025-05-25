@@ -10,16 +10,17 @@ import android.util.DisplayMetrics;
 import com.example.airballoon.managers.GamePlayManager;
 import com.example.airballoon.R;
 
+import java.util.Objects;
 import java.util.Random;
 
 public class Thorn {
-    Activity activity;
-    DisplayMetrics displayMetrics;
-    Bitmap thornImage;
-    Rect rect;
-    int xPosition;
-    int yPosition;
-    double percentage = 0.2; // Размер изображения относительно экрана
+    protected Activity activity;
+    private DisplayMetrics displayMetrics;
+    protected Bitmap thornImage;
+    private final Rect rect;
+    private int xPosition;
+    private int yPosition;
+    protected double percentage; // Размер изображения относительно экрана
     double width;
     double height;
     AirBalloonObject airBalloon;
@@ -30,7 +31,8 @@ public class Thorn {
         this.displayMetrics = displayMetrics;
         this.airBalloon = airBalloon;
         needDraw = true;
-        thornImage = BitmapFactory.decodeResource(activity.getResources(), R.drawable.thorn);
+        calculatePercentage();
+        loadThornImage();
         calculateSize();
         calculateStartPosition();
         rect = new Rect(xPosition, yPosition, (int) (xPosition + width)
@@ -44,6 +46,14 @@ public class Thorn {
         thornImage = Bitmap.createScaledBitmap(thornImage
                 , (int) width, (int) height, true);
     }
+
+    protected void loadThornImage() {
+        thornImage = BitmapFactory.decodeResource(activity.getResources(), R.drawable.thorn);
+    }
+
+    protected void calculatePercentage() {
+        percentage = 0.2;
+    } //Определяем насколько большим по отношению к экрана должен быть шип
 
     public void calculateStartPosition() {
         needDraw = true;
@@ -75,7 +85,7 @@ public class Thorn {
 
             canvas.drawBitmap(thornImage, xPosition, yPosition, null);
         }
-    } //Рисуем монетку.
+    } //Рисуем шип
 
     public void setYPosition(int yPosition) {
         this.yPosition = yPosition;
@@ -94,5 +104,18 @@ public class Thorn {
 
     public boolean isNeedDraw() {
         return needDraw;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Thorn thorn = (Thorn) o;
+        return xPosition == thorn.xPosition && yPosition == thorn.yPosition && Double.compare(thorn.percentage, percentage) == 0 && Double.compare(thorn.width, width) == 0 && Double.compare(thorn.height, height) == 0 && needDraw == thorn.needDraw && Objects.equals(activity, thorn.activity) && Objects.equals(displayMetrics, thorn.displayMetrics) && Objects.equals(thornImage, thorn.thornImage) && Objects.equals(rect, thorn.rect) && Objects.equals(airBalloon, thorn.airBalloon);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(activity, displayMetrics, thornImage, rect, xPosition, yPosition, percentage, width, height, airBalloon, needDraw);
     }
 }

@@ -16,13 +16,15 @@ import com.example.airballoon.game_objects.BackGround;
 import com.example.airballoon.game_objects.Coin;
 import com.example.airballoon.game_objects.GamePlayMenu;
 import com.example.airballoon.game_objects.GearWheel;
+import com.example.airballoon.game_objects.LongThorn;
 import com.example.airballoon.game_objects.Thorn;
 import com.example.airballoon.R;
 import com.example.airballoon.game_objects.Wrapper;
-import com.example.airballoon.models.AirBalloon;
 import com.example.airballoon.models.User;
 
-import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
+
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Random;
@@ -30,26 +32,20 @@ import java.util.Random;
 public class GamePlayManager {
     Activity activity;
     DisplayMetrics displayMetrics;
-    ArrayList<Coin> coins;
-    ArrayList<Thorn> thorns;
     Paint textPaint;
     Paint textPaintEndGame;
     Paint textPaintDistance;
-    public static int speed = 15;
-    public final int initialSpeed = 15;
-    private final int boost = 3;
+    public static int speed = 15; //Стартовая скорость
+    public final int initialSpeed = speed; //Скорость при перезапуске
     GamePlayMenu gamePlayMenu;
     Random random = new Random();
     private final int speedUpInterval = 15;
-
     int distance = 0;
     LocalTime currentTime;
 
     AirBalloonObject airBalloon;
     BackGround backGround;
     GearWheel gearWheel;
-
-    AirBalloon airBalloonInfo;
     MediaPlayer mediaPlayer;
     static GameStatus gameStatus;
     private User user;
@@ -58,16 +54,22 @@ public class GamePlayManager {
     //Все что относится к генерации
     private ObjectsGeneration objectsGeneration;
     private ArrayList<Wrapper> usedObjects;
-    boolean needZeroCoins;
+    boolean needZeroCoins = true;
     boolean needZeroThorn;
-    private int minDistanceAdditionObject = 150; //Минимальная пройденная дистанция, после которой можно добавить новый объект в пул
-    private int maxDistanceAdditionObject = 250; //Максимальная пройденная дистанция, после которой можно добавить новый объект в пул
+    boolean needZeroLongThorn;
+    private int minDistanceAdditionObject = 250; //Минимальная пройденная дистанция, после которой можно добавить новый объект в пул
+    private int maxDistanceAdditionObject = 450; //Максимальная пройденная дистанция, после которой можно добавить новый объект в пул
     private int distanceAdditionObject = 35; //Дистацния при достижении которой добавляем новый объект в пул
     private int pullCoinsCount = 0; //Число монеток подряд добавленных в пул.
     private final int pullCoinsCountMax = 4; //Максимальное количество монет, которые могут быть сгенерированы подряд
 
     Integer countCoins = -1; //Счетчик количества монет, которые запросили отрисовать.
     Integer countThorn = -1;
+    Integer countLongThorn = -1;
+
+    private final HashMap<Integer, Boolean> longThornAdded; //Дистацния и статус замены коротких шипов на длинные
+
+    private final HashMap<Integer, Integer> distanceSpeed; //Дистация и скорость игры на данной дистации
 
     public GamePlayManager(Activity activity, DisplayMetrics displayMetrics, User user) {
         this.activity = activity;
@@ -93,9 +95,6 @@ public class GamePlayManager {
 
         //Создаем объект шарика исходя из полученного id выбранного шарика пользователем.
         airBalloon = new AirBalloonObject(activity, displayMetrics, image);
-
-        coins = new ArrayList<>();
-        thorns = new ArrayList<>();
         textPaint = new Paint();
         textPaint.setColor(Color.WHITE);
         textPaint.setTextSize(50);
@@ -131,6 +130,21 @@ public class GamePlayManager {
         //Все что относится к генерации
         objectsGeneration =  new ObjectsGeneration(activity, displayMetrics, getAirBalloon());
         usedObjects = objectsGeneration.getUsedObjects();
+
+        //Устанавливаем дистанцию и скорость на этой дистанции
+        distanceSpeed = new HashMap<>();
+        distanceSpeed.put(170000, 42);
+        distanceSpeed.put(140000, 38);
+        distanceSpeed.put(110000, 34);
+        distanceSpeed.put(800000, 30);
+        distanceSpeed.put(60000, 26);
+        distanceSpeed.put(40000, 23);
+        distanceSpeed.put(20000, 20);
+
+        longThornAdded = new HashMap<>();
+        longThornAdded.put(150000, false);
+        longThornAdded.put(80000, false);
+        longThornAdded.put(30000, false);
     }
 
     public void startObjectsGeneration(Canvas canvas) {
@@ -146,7 +160,11 @@ public class GamePlayManager {
                     distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
                 } else if (objectsGeneration.getUsedObjects().get(1).getDrawCount() > countThorn) {
                     countThorn++; //Добавляем шип в пул
-                    distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject * 2), (maxDistanceAdditionObject * 2), distance);
+                    distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject), (maxDistanceAdditionObject), distance);
+                    pullCoinsCount = 0;
+                } else if (objectsGeneration.getUsedObjects().get(2).getDrawCount() > countLongThorn) {
+                    countLongThorn++; //Добавляем шип в пул
+                    distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject * 2), (int) (maxDistanceAdditionObject * 1.4), distance);
                     pullCoinsCount = 0;
                 } else {
                     //Нет того элемента, который хотели отрисовать, рисуем, что осталось
@@ -184,9 +202,29 @@ public class GamePlayManager {
 
                 ArrayList<Object> thorns = usedObjects.get(1).getObjects();
 
+                //Если нужно, меняем маленький шип на длинный
+                if(determineReplaceThorn()) {
+                    usedObjects.get(1).removeObject();
+                    usedObjects.get(2).addObject();
+                }
+
                 for (Object ob : thorns) {
                     Thorn thorn = (Thorn) ob;
                     thorn.calculateStartPosition();
+                }
+            }
+
+            //Отрисовываем длинные шипы из пула
+            needZeroLongThorn = usedObjects.get(2).drawObjects(canvas, countLongThorn, "long_thorn");
+
+            if (needZeroLongThorn) {
+                countLongThorn = -1;
+
+                ArrayList<Object> longThorns = usedObjects.get(2).getObjects();
+
+                for (Object ob : longThorns) {
+                    LongThorn longThorn = (LongThorn) ob;
+                    longThorn.calculateStartPosition();
                 }
             }
         }
@@ -275,11 +313,25 @@ public class GamePlayManager {
     }
 
     public void speedUp() {
-        if(LocalTime.now().isAfter(currentTime)) {
-            speed += boost;
-            currentTime =  LocalTime.now().plusSeconds(speedUpInterval);
+        for (Map.Entry<Integer, Integer> entry : distanceSpeed.entrySet()) {
+            if(distance > entry.getKey()) {
+                speed = entry.getValue();
+                break;
+            }
         }
-    }
+    } //Устаналиваем скорость в зависимости от дистанции
+
+    private boolean determineReplaceThorn() {
+        for (Map.Entry<Integer, Boolean> entry : longThornAdded.entrySet()) {
+            if(!entry.getValue() && distance > entry.getKey()) {
+                entry.setValue(true); //Запоминаем, что на этом чекпоинте мы уже меняли шип
+                return true;
+            }
+        }
+
+        return false;
+    } //В зависимости от пройденной дистанции определяет, нужно ли заменить маленький шип на большой
+
 
     public int getHpAirBalloon() {
         return airBalloon.getHp();
@@ -335,8 +387,16 @@ public class GamePlayManager {
 
         countCoins = -1;
         countThorn = -1;
+        countLongThorn = -1;
 
         distanceAdditionObject = 35;
+
+        //Обнуляем статусы замен коротких шипов на длинные
+        for (Map.Entry<Integer, Boolean> entry : longThornAdded.entrySet()) {
+            if(entry.getValue()) {
+                entry.setValue(false);
+            }
+        }
     }
 
     public void restartBackGround() {

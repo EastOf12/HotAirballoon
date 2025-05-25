@@ -16,6 +16,7 @@ public class ObjectsGeneration {
     ArrayList<Wrapper> allObjects; //Список в котором лежат все доступные объекты
 
     ArrayList<Wrapper> usedObjects; //Список в котором лежат объекты, которые будут отрисовываться в игре
+    Wrapper longThorn;
 
     //Игровые объекты в обертке
     Wrapper coins; //Монетка
@@ -25,6 +26,7 @@ public class ObjectsGeneration {
         //Создаем обертки для игровых объектов.
         coins = new Wrapper("coin", activity, displayMetrics, airBalloon);
         thorns = new Wrapper("thorn",  activity, displayMetrics, airBalloon);
+        longThorn = new Wrapper("long_thorn",  activity, displayMetrics, airBalloon);
 
         //Создаем список со всеми доступными объектами
         createAllObjects();
@@ -42,6 +44,7 @@ public class ObjectsGeneration {
         allObjects = new ArrayList<>();
         allObjects.add(coins);
         allObjects.add(thorns);
+        allObjects.add(longThorn);
     } //Создает список объектов, которые будут отрисовываться в игре
 
     private void updateCount() {

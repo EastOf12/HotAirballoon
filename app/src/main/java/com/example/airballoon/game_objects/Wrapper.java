@@ -6,6 +6,7 @@ import android.util.DisplayMetrics;
 
 import androidx.annotation.NonNull;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Random;
 
 //Обертка для всех объектов, которые будут генироваться в игре
@@ -18,7 +19,7 @@ public class Wrapper {
     private int drawCount; //Общее количество доступных объектов на отрисовку в рамках игровой итерации
     private final String type; //Название объектов
 
-    private ArrayList<Object> objects; //Игровые объекты, например монетки
+    private ArrayList<Object> objects; //Игровые объекты, зависит от переданного типа
     private boolean newIteration;
 
     Random random;
@@ -41,10 +42,13 @@ public class Wrapper {
     private void generateMaxMin() {
         switch (type) {
             case "coin":
-                maxCount = 30;
+                maxCount = 8; //8
                 break;
             case "thorn":
-                maxCount = 9;
+                maxCount = 4; //4
+                break;
+            case "long_thorn":
+                maxCount = 0;
                 break;
         }
     } //Максимальное количество возможных объектов в пуле
@@ -54,12 +58,10 @@ public class Wrapper {
 
         switch (type) {
             case "coin":
-
                 //Создаем необходимое количество объектов монет
-                for(int i = 0; i <= maxCount; i++) {
+                for(int i = 0; i <= maxCount - 1; i++) {
                     objects.add(new Coin(activity, displayMetrics, airBalloonObject));
                 }
-
                 break;
             case "thorn":
                 //Создаем необходимое количество объектов шипов
@@ -67,27 +69,17 @@ public class Wrapper {
                     objects.add(new Thorn(activity, displayMetrics, airBalloonObject));
                 }
                 break;
+            case "long_thorn":
+                //Создаем необходимое количество длинных шипов
+                for(int i = 0; i <= maxCount; i++) {
+                    objects.add(new LongThorn(activity, displayMetrics, airBalloonObject));
+                }
+                break;
         }
     } //Генерирует игровые объекты
 
     public int getDrawCount() {
         return drawCount;
-    }
-
-    public void setDrawCount(int drawCount) {
-        this.drawCount = drawCount;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public int getMaxCount() {
-        return maxCount;
-    }
-
-    public void setMaxCount(int maxCount) {
-        this.maxCount = maxCount;
     }
     public boolean drawObjects(Canvas canvas, Integer count, String wrapperType) {
 
@@ -116,8 +108,16 @@ public class Wrapper {
                     newIteration = false;
                 }
             }
-        }
+        } else if (wrapperType.equals("long_thorn")) {
+            for(int i = 0; i <= count; i++ ) {
+                LongThorn longThorn = (LongThorn) objects.get(i);
+                longThorn.drawThorn(canvas);
 
+                if(longThorn.isNeedDraw()) {
+                    newIteration = false;
+                }
+            }
+        }
 
         return newIteration;
     }
@@ -134,6 +134,34 @@ public class Wrapper {
                 ", drawCount=" + drawCount +
                 ", type='" + type + '\'' +
                 ", random=" + random +
+                ", objects=" + objects +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Wrapper wrapper = (Wrapper) o;
+        return maxCount == wrapper.maxCount && drawCount == wrapper.drawCount && newIteration == wrapper.newIteration && Objects.equals(activity, wrapper.activity) && Objects.equals(displayMetrics, wrapper.displayMetrics) && Objects.equals(airBalloonObject, wrapper.airBalloonObject) && Objects.equals(type, wrapper.type) && Objects.equals(objects, wrapper.objects) && Objects.equals(random, wrapper.random);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(activity, displayMetrics, airBalloonObject, maxCount, drawCount, type, objects, newIteration, random);
+    }
+
+    public void removeObject() {
+        objects.remove(objects.size() - 1);
+        drawCount--;
+    } //Удаляем первый объект в пуле
+
+    public void addObject() {
+        switch (type) {
+            case "long_thorn":
+                objects.add(new LongThorn(activity, displayMetrics, airBalloonObject));
+                drawCount++;
+                break;
+        }
+    } //Добавляем объект в пул
 }

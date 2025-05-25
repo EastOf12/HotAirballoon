@@ -8,6 +8,7 @@ import android.util.DisplayMetrics;
 import com.example.airballoon.managers.GamePlayManager;
 import com.example.airballoon.R;
 
+import java.util.Objects;
 import java.util.Random;
 
 public class Coin extends GameObject{
@@ -76,5 +77,18 @@ public class Coin extends GameObject{
 
     public boolean isNeedDraw() {
         return needDraw;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Coin coin = (Coin) o;
+        return needDraw == coin.needDraw && Objects.equals(random, coin.random) && Objects.equals(airBalloon, coin.airBalloon);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(random, airBalloon, needDraw);
     }
 }
