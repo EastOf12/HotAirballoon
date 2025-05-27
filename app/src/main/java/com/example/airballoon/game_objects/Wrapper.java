@@ -48,7 +48,10 @@ public class Wrapper {
                 maxCount = 4; //4
                 break;
             case "long_thorn":
-                maxCount = 0;
+                maxCount = 0; //0
+                break;
+            case "bird":
+                maxCount = 0; //Пока не определил
                 break;
         }
     } //Максимальное количество возможных объектов в пуле
@@ -73,6 +76,12 @@ public class Wrapper {
                 //Создаем необходимое количество длинных шипов
                 for(int i = 0; i <= maxCount; i++) {
                     objects.add(new LongThorn(activity, displayMetrics, airBalloonObject));
+                }
+                break;
+            case "bird":
+                //Создаем необходимое количество птиц
+                for(int i = 0; i <= maxCount; i++) {
+                    objects.add(new Bird(activity, displayMetrics, airBalloonObject));
                 }
                 break;
         }
@@ -114,6 +123,15 @@ public class Wrapper {
                 longThorn.drawThorn(canvas);
 
                 if(longThorn.isNeedDraw()) {
+                    newIteration = false;
+                }
+            }
+        } else if (wrapperType.equals("bird")) {
+            for(int i = 0; i <= count; i++ ) {
+                Bird bird = (Bird) objects.get(i);
+                bird.draw(canvas);
+
+                if(bird.isNeedDraw()) {
                     newIteration = false;
                 }
             }
@@ -160,6 +178,10 @@ public class Wrapper {
         switch (type) {
             case "long_thorn":
                 objects.add(new LongThorn(activity, displayMetrics, airBalloonObject));
+                drawCount++;
+                break;
+            case "bird":
+                objects.add(new Bird(activity, displayMetrics, airBalloonObject));
                 drawCount++;
                 break;
         }

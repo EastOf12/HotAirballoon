@@ -71,10 +71,6 @@ public class Coin extends GameObject{
         return result;
     }
 
-    public void setYPosition(int yPosition) {
-        this.yPosition = yPosition;
-    }
-
     public boolean isNeedDraw() {
         return needDraw;
     }

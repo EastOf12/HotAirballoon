@@ -13,7 +13,7 @@ public class AirBalloonObject extends GameObject{
     float startX, startY;
     float offsetX, offsetY;
     private int collectedCoins = 0;
-    private int hp = 100;
+    private int hp = 1000;
     private final int maxXp = 1;
     float newX;
 

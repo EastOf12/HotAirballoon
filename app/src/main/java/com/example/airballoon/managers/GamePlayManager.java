@@ -13,6 +13,7 @@ import android.view.MotionEvent;
 
 import com.example.airballoon.game_objects.AirBalloonObject;
 import com.example.airballoon.game_objects.BackGround;
+import com.example.airballoon.game_objects.Bird;
 import com.example.airballoon.game_objects.Coin;
 import com.example.airballoon.game_objects.GamePlayMenu;
 import com.example.airballoon.game_objects.GearWheel;
@@ -23,6 +24,7 @@ import com.example.airballoon.game_objects.Wrapper;
 import com.example.airballoon.models.User;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import java.time.LocalTime;
@@ -57,6 +59,7 @@ public class GamePlayManager {
     boolean needZeroCoins = true;
     boolean needZeroThorn;
     boolean needZeroLongThorn;
+    boolean needZeroBird;
     private int minDistanceAdditionObject = 250; //Минимальная пройденная дистанция, после которой можно добавить новый объект в пул
     private int maxDistanceAdditionObject = 450; //Максимальная пройденная дистанция, после которой можно добавить новый объект в пул
     private int distanceAdditionObject = 35; //Дистацния при достижении которой добавляем новый объект в пул
@@ -66,10 +69,13 @@ public class GamePlayManager {
     Integer countCoins = -1; //Счетчик количества монет, которые запросили отрисовать.
     Integer countThorn = -1;
     Integer countLongThorn = -1;
+    Integer countBird = -1;
+    int distanceBirdAdd = 5000;
+    boolean birdAdd = false;
 
-    private final HashMap<Integer, Boolean> longThornAdded; //Дистацния и статус замены коротких шипов на длинные
+    private final LinkedHashMap<Integer, Boolean> longThornAdded; //Дистацния и статус замены коротких шипов на длинные
 
-    private final HashMap<Integer, Integer> distanceSpeed; //Дистация и скорость игры на данной дистации
+    private final LinkedHashMap<Integer, Integer> distanceSpeed; //Дистация и скорость игры на данной дистации
 
     public GamePlayManager(Activity activity, DisplayMetrics displayMetrics, User user) {
         this.activity = activity;
@@ -132,16 +138,16 @@ public class GamePlayManager {
         usedObjects = objectsGeneration.getUsedObjects();
 
         //Устанавливаем дистанцию и скорость на этой дистанции
-        distanceSpeed = new HashMap<>();
+        distanceSpeed = new LinkedHashMap<>();
         distanceSpeed.put(170000, 42);
         distanceSpeed.put(140000, 38);
         distanceSpeed.put(110000, 34);
-        distanceSpeed.put(800000, 30);
+        distanceSpeed.put(80000, 30);
         distanceSpeed.put(60000, 26);
         distanceSpeed.put(40000, 23);
         distanceSpeed.put(20000, 20);
 
-        longThornAdded = new HashMap<>();
+        longThornAdded = new LinkedHashMap<>();
         longThornAdded.put(150000, false);
         longThornAdded.put(80000, false);
         longThornAdded.put(30000, false);
@@ -152,7 +158,7 @@ public class GamePlayManager {
 
             //Определяем что нужно добавить в пул объектов на отрисовку.
             if (distance >= distanceAdditionObject) { //Проверяем, что дистанция на отрисовку достигнута
-                int b = random.nextInt(4);; //Случайно выбираем, что будем добавлять в пул
+                int b = random.nextInt(4); //Случайно выбираем, что будем добавлять в пул
 
                 if (objectsGeneration.getUsedObjects().get(0).getDrawCount() > countCoins && b < 3 && pullCoinsCount <= pullCoinsCountMax) {
                     countCoins++; //Добавляем монетку в пул
@@ -164,6 +170,10 @@ public class GamePlayManager {
                     pullCoinsCount = 0;
                 } else if (objectsGeneration.getUsedObjects().get(2).getDrawCount() > countLongThorn) {
                     countLongThorn++; //Добавляем шип в пул
+                    distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject * 2), (int) (maxDistanceAdditionObject * 1.4), distance);
+                    pullCoinsCount = 0;
+                } else if (objectsGeneration.getUsedObjects().get(3).getDrawCount() > countBird) {
+                    countBird++; //Добавляем птичку в пул
                     distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject * 2), (int) (maxDistanceAdditionObject * 1.4), distance);
                     pullCoinsCount = 0;
                 } else {
@@ -225,6 +235,26 @@ public class GamePlayManager {
                 for (Object ob : longThorns) {
                     LongThorn longThorn = (LongThorn) ob;
                     longThorn.calculateStartPosition();
+                }
+            }
+
+            //Добавляем птицу в пул если нужно
+            if(distance >= distanceBirdAdd && !birdAdd) {
+                usedObjects.get(3).addObject(); //Добавляем в пул объектов для отрисовки птицу
+                birdAdd = true;
+            }
+
+            //Отрисовываем птиц шипы из пула
+            needZeroBird = usedObjects.get(3).drawObjects(canvas, countBird, "bird");
+
+            if (needZeroBird) {
+                countBird = -1;
+
+                ArrayList<Object> birds = usedObjects.get(3).getObjects();
+
+                for (Object ob : birds) {
+                    Bird bird = (Bird) ob;
+                    bird.calculateStartPosition();
                 }
             }
         }
@@ -388,6 +418,7 @@ public class GamePlayManager {
         countCoins = -1;
         countThorn = -1;
         countLongThorn = -1;
+        countBird = -1;
 
         distanceAdditionObject = 35;
 
