@@ -1,5 +1,6 @@
 package com.example.airballoon.game_objects;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -10,14 +11,23 @@ import android.util.DisplayMetrics;
 import com.example.airballoon.R;
 import com.example.airballoon.managers.GamePlayManager;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
 public class Bird extends GameObject{
-    AirBalloonObject airBalloon;
-    Random random = new Random();
-    int birdSpeed = 8; //Скорость птицы
+    private AirBalloonObject airBalloon;
+    private Random random = new Random();
+    private int birdSpeed = 7; //Скорость птицы
     private DirectionMovement directionMovement;
+    private int frameCount = 0;
+    private int framePoint = 5; //Количество кадров для смены спрайта
+    private int imageCounter = 0; //Индекс текущего спрайта
+    private List<Bitmap> imagesLeft; //Все спрайты птицы которые летят на право
+    private List<Bitmap> imagesRight; //Все спрайты птицы которые летят на лево
+    private Boolean needAnimation = true; //Останавливает анимацию птицы
+
 
     private boolean needDraw;
     public Bird(Activity activity, DisplayMetrics displayMetrics,  AirBalloonObject airBalloon) {
@@ -25,14 +35,65 @@ public class Bird extends GameObject{
         this.airBalloon = airBalloon;
         needDraw = true;
         directionMovement = DirectionMovement.LEFT;
-        image = BitmapFactory.decodeResource(activity.getResources(), R.drawable.bird);
+        image = BitmapFactory.decodeResource(activity.getResources(), R.drawable.bird1);
+        imagesLeft = new ArrayList<>();
+        imagesRight = new ArrayList<>();
 
-        setPercentage(0.16);
-
+        setPercentage(0.17);
         calculateSize();
+
         calculateStartPosition();
         createRect();
+
+        loadImages();
     }
+
+    private void replaceImage() {
+        frameCount++;
+
+        if(frameCount >= framePoint) {
+
+            if(directionMovement.equals(DirectionMovement.LEFT)) {
+                image= imagesLeft.get(imageCounter);
+            } else {
+                image = imagesRight.get(imageCounter);
+            }
+
+            if(imageCounter == imagesLeft.size() - 1) {
+                imageCounter = 0;
+            } else {
+                imageCounter++;
+            }
+
+            frameCount = 0;
+        }
+    } //Заменяем текущий спрайт следующим при необходимости
+
+    private void loadImages() {
+        for (int i = 1; i <= 12; i++) {
+            String resourceName = "bird" + i;
+            @SuppressLint("DiscouragedApi") int resourceId = activity.getResources().getIdentifier(resourceName, "drawable", activity.getPackageName());
+            imagesLeft.add(BitmapFactory.decodeResource(activity.getResources(), resourceId));
+            imagesLeft = calculateSizeImages();
+        }
+
+        flipBitmapHorizontally(); //Добавляем горизонтально отраженные спрайты птиц
+    } //Загружаем все спрайты птицы
+
+    private ArrayList<Bitmap> calculateSizeImages() {
+        ArrayList<Bitmap> img = new ArrayList<>();
+
+        width = displayMetrics.widthPixels * percentage;
+        double proportion = (double) image.getWidth() / image.getHeight();
+        height = width / proportion;
+
+        for(Bitmap im: imagesLeft) {
+            img.add(Bitmap.createScaledBitmap(im
+                    , (int) width, (int) height, true));
+        }
+
+        return img;
+    } //Меняем размер изображения для всех спрайтов птиц
 
     @Override
     public void calculateStartPosition() {
@@ -40,7 +101,6 @@ public class Bird extends GameObject{
         DirectionMovement newDirection = calculateDirection();
         if(!directionMovement.equals(newDirection)) {
             directionMovement = newDirection;
-            flipBitmapHorizontally();
         }
 
         xPosition = calculateStartXPosition();
@@ -58,6 +118,10 @@ public class Bird extends GameObject{
             rect.bottom = (int) (yPosition + height);
 
             canvas.drawBitmap(image, xPosition, yPosition, null);
+
+            if(needAnimation) {
+                replaceImage();
+            }
         }
     }
 
@@ -69,7 +133,10 @@ public class Bird extends GameObject{
         }
 
         yPosition += (GamePlayManager.speed);
-        calculateNewXPosition();
+
+        if(GamePlayManager.speed != 0) {
+            calculateNewXPosition();
+        }
     }
 
     private int calculateStartXPosition() {
@@ -116,8 +183,20 @@ public class Bird extends GameObject{
     private void flipBitmapHorizontally() {
         Matrix matrix = new Matrix();
         matrix.preScale(-1.0f, 1.0f);
-        image = Bitmap.createBitmap(image, 0, 0, image.getWidth(), image.getHeight(), matrix, false);
+
+        for(int i = 0; i < imagesLeft.size(); i++) {
+            imagesRight.add(Bitmap.createBitmap(imagesLeft.get(i), 0, 0, imagesLeft.get(i).getWidth(),
+                    imagesLeft.get(i).getHeight(), matrix, false));
+        }
     } //Инверсируем изображение по горизонтали
+
+    public void startAnimation() {
+        needAnimation = true;
+    } //Запускает анимацию птицы, если она была остановлена
+
+    public void stopAnimation() {
+        needAnimation = false;
+    } //Останавливает анимацию птицы, если она была запущена
 
     @Override
     public boolean equals(Object o) {

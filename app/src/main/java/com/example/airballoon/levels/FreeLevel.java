@@ -51,6 +51,7 @@ public class FreeLevel extends BaseLevel implements Runnable{
                         if(gamePlayManager.getHpAirBalloon() <= 0) { //Проверяем количество здоровья
                             GamePlayManager.speed = 0;
 
+                            gamePlayManager.switchStatusGame(true);
                             gamePlayManager.drawGameOver(canvas, displayMetrics); //Выводим сообщение о конце игры
 
                             if(needSave) {

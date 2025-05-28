@@ -56,8 +56,10 @@ abstract class BaseLevel extends SurfaceView implements Runnable{
 
         if(isPaused) {
             GamePlayManager.speed = 0;
+            gamePlayManager.switchStatusGame(isPaused);
         } else {
             GamePlayManager.speed = 15;
+            gamePlayManager.switchStatusGame(isPaused);
         }
     }
 }

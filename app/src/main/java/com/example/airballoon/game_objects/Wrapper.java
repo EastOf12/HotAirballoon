@@ -51,7 +51,7 @@ public class Wrapper {
                 maxCount = 0; //0
                 break;
             case "bird":
-                maxCount = 0; //Пока не определил
+                maxCount = 0; //0
                 break;
         }
     } //Максимальное количество возможных объектов в пуле

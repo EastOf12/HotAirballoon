@@ -45,5 +45,5 @@ public class ManagerFPS {
         } else {
             return false;
         }
-    }
+    } //Ограничивает частоту кадров
 }

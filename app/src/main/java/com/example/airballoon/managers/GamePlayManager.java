@@ -37,7 +37,7 @@ public class GamePlayManager {
     Paint textPaint;
     Paint textPaintEndGame;
     Paint textPaintDistance;
-    public static int speed = 15; //Стартовая скорость
+    public static int speed = 19; //Стартовая скорость
     public final int initialSpeed = speed; //Скорость при перезапуске
     GamePlayMenu gamePlayMenu;
     Random random = new Random();
@@ -70,7 +70,7 @@ public class GamePlayManager {
     Integer countThorn = -1;
     Integer countLongThorn = -1;
     Integer countBird = -1;
-    int distanceBirdAdd = 5000;
+    int distanceBirdAdd = 20000;
     boolean birdAdd = false;
 
     private final LinkedHashMap<Integer, Boolean> longThornAdded; //Дистацния и статус замены коротких шипов на длинные
@@ -139,12 +139,11 @@ public class GamePlayManager {
 
         //Устанавливаем дистанцию и скорость на этой дистанции
         distanceSpeed = new LinkedHashMap<>();
-        distanceSpeed.put(170000, 42);
-        distanceSpeed.put(140000, 38);
-        distanceSpeed.put(110000, 34);
-        distanceSpeed.put(80000, 30);
-        distanceSpeed.put(60000, 26);
-        distanceSpeed.put(40000, 23);
+        distanceSpeed.put(140000, 25);
+        distanceSpeed.put(110000, 24);
+        distanceSpeed.put(80000, 23);
+        distanceSpeed.put(60000, 22);
+        distanceSpeed.put(40000, 21);
         distanceSpeed.put(20000, 20);
 
         longThornAdded = new LinkedHashMap<>();
@@ -421,11 +420,32 @@ public class GamePlayManager {
         countBird = -1;
 
         distanceAdditionObject = 35;
+        birdAdd = false;
 
         //Обнуляем статусы замен коротких шипов на длинные
         for (Map.Entry<Integer, Boolean> entry : longThornAdded.entrySet()) {
             if(entry.getValue()) {
                 entry.setValue(false);
+            }
+        }
+    }
+
+    public void switchStatusGame(Boolean isPaused) {
+        ArrayList<Object> objects = usedObjects.get(3).getObjects();
+        if(objects.isEmpty()) {
+            return;
+        }
+
+        //Останавливаем или запускаем анимацию птиц в завивисмости от статуса паузы
+        if(isPaused) {
+            for(int i = 0; i < objects.size(); i++) {
+                Bird bird = (Bird) objects.get(i);
+                bird.stopAnimation();
+            }
+        } else {
+            for(int i = 0; i < objects.size(); i++) {
+                Bird bird = (Bird) objects.get(i);
+                bird.startAnimation();
             }
         }
     }
