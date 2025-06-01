@@ -18,6 +18,7 @@ import com.example.airballoon.game_objects.Coin;
 import com.example.airballoon.game_objects.GamePlayMenu;
 import com.example.airballoon.game_objects.GearWheel;
 import com.example.airballoon.game_objects.LongThorn;
+import com.example.airballoon.game_objects.Shield;
 import com.example.airballoon.game_objects.Thorn;
 import com.example.airballoon.R;
 import com.example.airballoon.game_objects.Wrapper;
@@ -60,6 +61,7 @@ public class GamePlayManager {
     boolean needZeroThorn;
     boolean needZeroLongThorn;
     boolean needZeroBird;
+    boolean needZeroShield;
     private int minDistanceAdditionObject = 250; //Минимальная пройденная дистанция, после которой можно добавить новый объект в пул
     private int maxDistanceAdditionObject = 450; //Максимальная пройденная дистанция, после которой можно добавить новый объект в пул
     private int distanceAdditionObject = 35; //Дистацния при достижении которой добавляем новый объект в пул
@@ -70,6 +72,7 @@ public class GamePlayManager {
     Integer countThorn = -1;
     Integer countLongThorn = -1;
     Integer countBird = -1;
+    Integer countShield = -1;
     int distanceBirdAdd = 20000;
     boolean birdAdd = false;
 
@@ -175,6 +178,10 @@ public class GamePlayManager {
                     countBird++; //Добавляем птичку в пул
                     distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject * 2), (int) (maxDistanceAdditionObject * 1.4), distance);
                     pullCoinsCount = 0;
+                } else if (objectsGeneration.getUsedObjects().get(4).getDrawCount() > countShield) {
+                    countShield++; //Добавляем щит в пул
+                    distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+                    pullCoinsCount = 0;
                 } else {
                     //Нет того элемента, который хотели отрисовать, рисуем, что осталось
                     if(objectsGeneration.getUsedObjects().get(0).getDrawCount() > countCoins) {
@@ -243,7 +250,7 @@ public class GamePlayManager {
                 birdAdd = true;
             }
 
-            //Отрисовываем птиц шипы из пула
+            //Отрисовываем птиц из пула
             needZeroBird = usedObjects.get(3).drawObjects(canvas, countBird, "bird");
 
             if (needZeroBird) {
@@ -254,6 +261,20 @@ public class GamePlayManager {
                 for (Object ob : birds) {
                     Bird bird = (Bird) ob;
                     bird.calculateStartPosition();
+                }
+            }
+
+            //Отрисовываем щиты из пула
+            needZeroShield = usedObjects.get(4).drawObjects(canvas, countShield, "shield");
+
+            if (needZeroShield) {
+                countShield = -1;
+
+                ArrayList<Object> shields = usedObjects.get(4).getObjects();
+
+                for (Object ob : shields) {
+                    Shield shield = (Shield) ob;
+                    shield.calculateStartPosition();
                 }
             }
         }
@@ -418,6 +439,7 @@ public class GamePlayManager {
         countThorn = -1;
         countLongThorn = -1;
         countBird = -1;
+        countShield = -1;
 
         distanceAdditionObject = 35;
         birdAdd = false;
@@ -428,6 +450,8 @@ public class GamePlayManager {
                 entry.setValue(false);
             }
         }
+
+        airBalloon.removeShield();
     }
 
     public void switchStatusGame(Boolean isPaused) {

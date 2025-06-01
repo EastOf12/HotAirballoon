@@ -53,6 +53,9 @@ public class Wrapper {
             case "bird":
                 maxCount = 0; //0
                 break;
+            case "shield":
+                maxCount = 1; //0
+                break;
         }
     } //Максимальное количество возможных объектов в пуле
 
@@ -82,6 +85,12 @@ public class Wrapper {
                 //Создаем необходимое количество птиц
                 for(int i = 0; i <= maxCount; i++) {
                     objects.add(new Bird(activity, displayMetrics, airBalloonObject));
+                }
+                break;
+            case "shield":
+                //Создаем необходимое количество птиц
+                for(int i = 0; i <= maxCount; i++) {
+                    objects.add(new Shield(activity, displayMetrics, airBalloonObject));
                 }
                 break;
         }
@@ -135,6 +144,15 @@ public class Wrapper {
                     newIteration = false;
                 }
             }
+        } else if (wrapperType.equals("shield")) {
+            for(int i = 0; i <= count; i++ ) {
+                Shield shield = (Shield) objects.get(i);
+                shield.draw(canvas);
+
+                if(shield.isNeedDraw()) {
+                    newIteration = false;
+                }
+            }
         }
 
         return newIteration;
@@ -182,6 +200,10 @@ public class Wrapper {
                 break;
             case "bird":
                 objects.add(new Bird(activity, displayMetrics, airBalloonObject));
+                drawCount++;
+                break;
+            case "shield":
+                objects.add(new Shield(activity, displayMetrics, airBalloonObject));
                 drawCount++;
                 break;
         }

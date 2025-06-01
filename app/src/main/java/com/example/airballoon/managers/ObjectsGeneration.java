@@ -6,6 +6,7 @@ import android.util.DisplayMetrics;
 
 import com.example.airballoon.game_objects.AirBalloonObject;
 import com.example.airballoon.game_objects.Coin;
+import com.example.airballoon.game_objects.Shield;
 import com.example.airballoon.game_objects.Thorn;
 import com.example.airballoon.game_objects.Wrapper;
 
@@ -22,6 +23,7 @@ public class ObjectsGeneration {
     Wrapper coins; //Монетка
     Wrapper thorns; //Шип
     Wrapper birds;
+    Wrapper shields;
 
     public ObjectsGeneration (Activity activity, DisplayMetrics displayMetrics, AirBalloonObject airBalloon) {
         //Создаем обертки для игровых объектов.
@@ -29,6 +31,7 @@ public class ObjectsGeneration {
         thorns = new Wrapper("thorn",  activity, displayMetrics, airBalloon);
         longThorns = new Wrapper("long_thorn",  activity, displayMetrics, airBalloon);
         birds = new Wrapper("bird", activity, displayMetrics, airBalloon);
+        shields = new Wrapper("shield", activity, displayMetrics, airBalloon);
 
         //Создаем список со всеми доступными объектами
         createAllObjects();
@@ -48,6 +51,7 @@ public class ObjectsGeneration {
         allObjects.add(thorns);
         allObjects.add(longThorns);
         allObjects.add(birds);
+        allObjects.add(shields);
     } //Создает список объектов, которые будут отрисовываться в игре
 
     private void updateCount() {
@@ -70,6 +74,10 @@ public class ObjectsGeneration {
 
     public boolean checkAvailabilityBirds() {
         return birds.getDrawCount() >= 0;
+    } //Проверяет, можем ли отрисовать птиц.
+
+    public boolean checkAvailabilityShields() {
+        return shields.getDrawCount() >= 0;
     } //Проверяет, можем ли отрисовать птиц.
 
     public ArrayList<Wrapper> getUsedObjects() {

@@ -9,13 +9,20 @@ import android.view.MotionEvent;
 
 import com.example.airballoon.models.AirBalloon;
 
+import java.time.LocalDateTime;
+
 public class AirBalloonObject extends GameObject{
     float startX, startY;
     float offsetX, offsetY;
     private int collectedCoins = 0;
     private int hp = 1;
     private final int maxXp = 1;
+    private boolean hadShield = false;
     float newX;
+    private LocalDateTime nowTime;
+    private LocalDateTime shieldEndTime;
+    private int timeActionShield = 5; //Время действия щита.
+
 
     public AirBalloonObject(Activity activity, DisplayMetrics displayMetrics, Bitmap image) {
         super(activity, displayMetrics);
@@ -40,6 +47,7 @@ public class AirBalloonObject extends GameObject{
         rect.right = (int) (xPosition + width);
         rect.bottom = (int) (yPosition + height);
         canvas.drawBitmap(image, xPosition, yPosition, null);
+        shieldTimeCounter();
     }
 
     public boolean onTouch(MotionEvent event) {
@@ -81,7 +89,9 @@ public class AirBalloonObject extends GameObject{
     }
 
     public void removeHp() {
-        hp--;
+        if(!hadShield) {
+            hp--;
+        }
     }
 
     public int getHp() {
@@ -92,4 +102,24 @@ public class AirBalloonObject extends GameObject{
         hp = maxXp;
         calculateStartPosition();
     }
+
+    public void addShield() {
+        hadShield = true;
+        nowTime = LocalDateTime.now();
+        shieldEndTime = nowTime.plusSeconds(timeActionShield);
+    }
+
+    public void removeShield() {
+        hadShield = false;
+    }
+
+    public void shieldTimeCounter() {
+        nowTime = LocalDateTime.now();
+
+        if(hadShield) {
+            if(nowTime.isAfter(shieldEndTime)) {
+                removeShield();
+            }
+        }
+    } //Возвращает false если время действия щита вышло
 }
