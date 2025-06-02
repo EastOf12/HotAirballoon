@@ -1,6 +1,7 @@
 package com.example.airballoon.game_objects;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.util.DisplayMetrics;
@@ -14,7 +15,6 @@ import java.util.Random;
 public class Shield extends GameObject{
     Random random = new Random();
     AirBalloonObject airBalloon;
-
     private boolean needDraw;
 
     public Shield(Activity activity, DisplayMetrics displayMetrics, AirBalloonObject airBalloon) {

@@ -22,6 +22,7 @@ public class AirBalloonObject extends GameObject{
     private LocalDateTime nowTime;
     private LocalDateTime shieldEndTime;
     private int timeActionShield = 5; //Время действия щита.
+    ShieldIcon shieldIcon;
 
 
     public AirBalloonObject(Activity activity, DisplayMetrics displayMetrics, Bitmap image) {
@@ -32,6 +33,8 @@ public class AirBalloonObject extends GameObject{
         calculateSize();
         calculateStartPosition();
         createRect();
+
+        shieldIcon = new ShieldIcon(activity, displayMetrics);
     }
 
     @Override
@@ -47,7 +50,7 @@ public class AirBalloonObject extends GameObject{
         rect.right = (int) (xPosition + width);
         rect.bottom = (int) (yPosition + height);
         canvas.drawBitmap(image, xPosition, yPosition, null);
-        shieldTimeCounter();
+        shieldTimeCounter(canvas);
     }
 
     public boolean onTouch(MotionEvent event) {
@@ -107,19 +110,23 @@ public class AirBalloonObject extends GameObject{
         hadShield = true;
         nowTime = LocalDateTime.now();
         shieldEndTime = nowTime.plusSeconds(timeActionShield);
+
+        activity.runOnUiThread(() -> {
+            shieldIcon.startShieldTimer(timeActionShield * 1000L);
+        });
     }
 
     public void removeShield() {
         hadShield = false;
     }
 
-    public void shieldTimeCounter() {
+    public void shieldTimeCounter(Canvas canvas) {
         nowTime = LocalDateTime.now();
 
-        if(hadShield) {
-            if(nowTime.isAfter(shieldEndTime)) {
-                removeShield();
-            }
+        if(hadShield && nowTime.isAfter(shieldEndTime)) {
+            removeShield();
+        } else if (hadShield) {
+            shieldIcon.draw(canvas);
         }
-    } //Возвращает false если время действия щита вышло
+    } //Обновляем время действия щита, удаляем щит если нужно.
 }

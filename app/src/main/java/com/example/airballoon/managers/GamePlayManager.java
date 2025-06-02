@@ -477,4 +477,6 @@ public class GamePlayManager {
     public void restartBackGround() {
         backGround.restartBackground();
     }
+
+
 }
