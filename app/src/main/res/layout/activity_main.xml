@@ -10,11 +10,37 @@
         android:id="@+id/menu_bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="fitXY"
+        android:scaleType="centerCrop"
         app:srcCompat="@drawable/menu_bg"
         tools:ignore="ContentDescription"
         tools:layout_editor_absoluteX="26dp"
         tools:layout_editor_absoluteY="-44dp" />
+
+    <ImageView
+        android:id="@+id/cloud_long"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="matrix"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/menu_bg"
+        app:layout_constraintVertical_bias="0.187"
+        app:srcCompat="@drawable/cloud_long" />
+
+    <ImageView
+        android:id="@+id/group_clouds"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="matrix"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/menu_bg"
+        app:layout_constraintVertical_bias="0.187"
+        app:srcCompat="@drawable/group_clouds" />
 
     <ImageView
         android:id="@+id/coins"
@@ -33,26 +59,26 @@
         android:layout_width="93dp"
         android:layout_height="26dp"
         android:text="@string/_0"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="italic"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.47"
         app:layout_constraintStart_toEndOf="@+id/coins"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.088"
-        android:textColor="@color/white"
-        android:textSize="20sp"
-        android:textStyle="italic"/>
+        app:layout_constraintVertical_bias="0.088" />
 
     <HorizontalScrollView
         android:id="@+id/scrollable"
         android:layout_width="match_parent"
         android:layout_height="350dp"
+        android:fillViewport="true"
+        android:scrollbars="none"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/menu_bg"
-        app:layout_constraintVertical_bias="0.498"
-        android:scrollbars="none"
-        android:fillViewport="true">
+        app:layout_constraintVertical_bias="0.498">
 
         <LinearLayout
             android:id="@+id/linear_layout"

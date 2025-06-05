@@ -31,7 +31,7 @@ public class BackGround {
     }
 
     public void drawBackgroundImage(Canvas canvas, int speed) {
-        heightPixels += (speed / 3);
+        heightPixels += (speed / 4);
         canvas.drawBitmap(backGroundImagePiece1, weightPixels, heightPixels, null);
         canvas.drawBitmap(backGroundImagePiece2, weightPixels, (heightPixels - displayMetricsHeight * coefficient), null);
 

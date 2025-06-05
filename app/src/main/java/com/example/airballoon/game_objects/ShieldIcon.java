@@ -1,6 +1,7 @@
 package com.example.airballoon.game_objects;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -11,14 +12,20 @@ import android.os.Looper;
 import android.util.DisplayMetrics;
 import com.example.airballoon.R;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.List;
+
 public class ShieldIcon extends GameObject {
     private boolean isShieldActive = false;
     private long shieldDuration; // Длительность щита в миллисекундах
     private long timeLeft; // Оставшееся время
     private Paint paint; // Для отрисовки анимации
-    private Handler handler; // Обработчик для работы с UI потоком
-
     private CountDownTimer countDownTimer;
+    private float xPos = 0;
+    private float yPos = 0;
+    int rotationSpeed = 4;
+    List<Integer> angles;
 
     public ShieldIcon(Activity activity, DisplayMetrics displayMetrics) {
         super(activity, displayMetrics);
@@ -32,9 +39,13 @@ public class ShieldIcon extends GameObject {
         paint.setColor(Color.YELLOW); // Цвет анимации
         paint.setStyle(Paint.Style.STROKE);
         paint.setStrokeWidth(8); // Толщина линии
-        handler = new Handler(Looper.getMainLooper()); // Создаем обработчик с привязкой к основному потоку
 
-
+        //Заполняем начальные углы расположения щитов
+        angles = new ArrayList<>();
+        angles.add(0);
+        angles.add(90);
+        angles.add(180);
+        angles.add(270);
     }
 
     @Override
@@ -71,6 +82,33 @@ public class ShieldIcon extends GameObject {
         // Рисуем круг с учетом нового радиуса
         canvas.drawArc(cx - outerRadius, cy - outerRadius, cx + outerRadius,
                 cy + outerRadius, -90, angle, false, paint);
+    }
+
+    public void drawShieldAnimationAirballoon(Canvas canvas, Bitmap airballoon, int xNext, int yNext) {
+        for (int i = 0; i < angles.size(); i++) {
+            // Получаем размеры битмапа
+            int airballoonWidth = airballoon.getWidth();
+            int airballoonHeight = airballoon.getHeight();
+
+            // Определяем радиусы для овала
+            float radiusX = airballoonWidth * 0.8f; // Горизонтальный радиус
+            float radiusY = airballoonHeight * 0.7f; // Вертикальный радиус
+            float centerX = (float) (xNext + (airballoonWidth * 0.3)); // Центр по X
+            float centerY = (float) (yNext + (airballoonHeight * 0.3)); // Центр по Y
+
+            // Определение скорости вращения
+            angles.set(i, angles.get(i) + rotationSpeed); // Увеличиваем угол для движения
+            if (angles.get(i) >= 360) { // Если угол превышает 360 градусов, сбрасываем
+                angles.set(i, angles.get(i) - 360) ;
+            }
+
+            // Рассчитываем позиции щита по овальной траектории
+            xPos = centerX + (float) (radiusX * Math.cos(Math.toRadians(angles.get(i)))); // Новый X для овала
+            yPos = centerY + (float) (radiusY * Math.sin(Math.toRadians(angles.get(i)))); // Новый Y для овала
+
+            // Рисуем битмап щита
+            canvas.drawBitmap(image, xPos, yPos, null);
+        }
     }
 
     public void startShieldTimer(long duration) {

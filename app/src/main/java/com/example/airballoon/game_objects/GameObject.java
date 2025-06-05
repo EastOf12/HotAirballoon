@@ -36,7 +36,7 @@ public abstract class GameObject {
     //Отрисовка объекта
     protected abstract void draw(Canvas canvas);
 
-    protected void setPercentage(double percentage) {
+    public void setPercentage(double percentage) {
         this.percentage = percentage;
     }
 

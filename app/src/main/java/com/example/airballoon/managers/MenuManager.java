@@ -1,13 +1,18 @@
 package com.example.airballoon.managers;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -16,7 +21,11 @@ import com.example.airballoon.GamePlayActivity;
 import com.example.airballoon.R;
 import com.example.airballoon.models.User;
 
+import java.time.Duration;
 import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.Random;
 
 public class MenuManager {
     Activity activity;
@@ -30,18 +39,36 @@ public class MenuManager {
     private final TextView priceAirballoonView;
     private final int priceAirballoon1 = 5000;
     private final int priceAirballoon2 = 15000;
+    private ImageView menuBg;
+    private ImageView longCloud;
+    private Bitmap cloudBitmap;
+    private ImageView groupClouds;
+    private Bitmap groupCloudsBitmap;
+    private WindowManager windowManager;
+    private Random random;
+    private boolean running = true;
 
 
     @SuppressLint("ClickableViewAccessibility")
-    public MenuManager(Activity activity) {
+    public MenuManager(Activity activity, WindowManager windowManager) {
         COUNT_AIRBALLOON = 3;
         this.activity = activity;
+        this.windowManager = windowManager;
 
+        random = new Random();
         user = SaveManager.readFromFile(activity);
         view = activity.getWindow().getDecorView();
         buttonStart = addButtonStart(view);
         buttonBuy = addButtonBuy(view);
         priceAirballoonView = view.findViewById(R.id.price_airballoon);
+
+        longCloud = view.findViewById(R.id.cloud_long);
+        cloudBitmap = BitmapFactory.decodeResource(activity.getResources(), R.drawable.cloud_long);
+        longCloud.setImageBitmap(Bitmap.createScaledBitmap(cloudBitmap, 200, 100, true));
+
+        groupClouds = view.findViewById(R.id.group_clouds);
+        groupCloudsBitmap = BitmapFactory.decodeResource(activity.getResources(), R.drawable.group_clouds);
+        groupClouds.setImageBitmap(Bitmap.createScaledBitmap(groupCloudsBitmap, 400, 300, true));
 
         selectAirballoon = user.getSelectAirBalloon();
     }
@@ -54,6 +81,9 @@ public class MenuManager {
         drawSettingButton();
         useSettingButton();
         selectAirballoon();
+        calculateStartPositionCloud(longCloud);
+        calculateStartPositionGroupClouds(groupClouds);
+        runClouds(longCloud);
 
         changStatusButtonStartBuy();
     }
@@ -311,6 +341,120 @@ public class MenuManager {
         }
 
         choosePrice();
+    }
+
+    public void shiftLongCloudLeft(ImageView longCloud, float shiftAmount) {
+        // Получаем текущую матрицу изображения
+        Matrix currentMatrix = longCloud.getImageMatrix();
+        float[] values = new float[9];
+        currentMatrix.getValues(values);
+
+        // Изменяем значения матрицы для сдвига
+        float currentTranslateX = values[Matrix.MTRANS_X]; // Получаем текущее смещение по X
+        float currentTranslateY = values[Matrix.MTRANS_Y];
+        if(currentTranslateX > windowManager.getDefaultDisplay().getWidth()) {
+            currentTranslateX = random.nextInt(-300 - (-1000) + 1) + (-1000);
+            currentTranslateY = random.nextInt(700);
+        }
+        float newTranslateX = currentTranslateX - shiftAmount; // Вычисляем новое смещение
+
+        // Создаем новую матрицу и устанавливаем новое смещение
+        Matrix newMatrix = new Matrix();
+        newMatrix.set(currentMatrix); // Копируем текущую матрицу
+        newMatrix.setTranslate(newTranslateX, currentTranslateY); // Обновляем только смещение по X
+
+        // Устанавливаем новую матрицу на ImageView
+        longCloud.setImageMatrix(newMatrix);
+    }
+
+    public void shiftGroupCloudsLeft(ImageView groupClouds, float shiftAmount) {
+        // Получаем текущую матрицу изображения
+        Matrix currentMatrix = groupClouds.getImageMatrix();
+        float[] values = new float[9];
+        currentMatrix.getValues(values);
+
+        // Изменяем значения матрицы для сдвига
+        float currentTranslateX = values[Matrix.MTRANS_X]; // Получаем текущее смещение по X
+        float currentTranslateY = values[Matrix.MTRANS_Y];
+        if(currentTranslateX > windowManager.getDefaultDisplay().getWidth()) {
+            currentTranslateX = random.nextInt(-300 - (-1000) + 1) + (-1000);
+            currentTranslateY = random.nextInt(700);
+        }
+        float newTranslateX = currentTranslateX - shiftAmount; // Вычисляем новое смещение
+
+        // Создаем новую матрицу и устанавливаем новое смещение
+        Matrix newMatrix = new Matrix();
+        newMatrix.set(currentMatrix); // Копируем текущую матрицу
+        newMatrix.setTranslate(newTranslateX, currentTranslateY); // Обновляем только смещение по X
+
+        // Устанавливаем новую матрицу на ImageView
+        groupClouds.setImageMatrix(newMatrix);
+    }
+
+    public void calculateStartPositionCloud(ImageView longCloud) {
+
+        // Устанавливаем стартовую позицию - так, чтобы облак был вне правой части экрана
+        float startX = random.nextInt(-300 - (-1000) + 1) + (-1000); // Начальная позиция за пределами экрана по X
+        float startY = random.nextInt(700);
+
+        // Создаем новую матрицу и устанавливаем стартовую позицию
+        Matrix newMatrix = new Matrix();
+        newMatrix.setTranslate(startX, startY); // Устанавливаем начинающую позицию
+
+        // Устанавливаем новую матрицу на ImageView
+        longCloud.setImageMatrix(newMatrix);
+    }
+
+    public void calculateStartPositionGroupClouds(ImageView groupClouds) {
+
+        // Устанавливаем стартовую позицию - так, чтобы облак был вне правой части экрана
+        float startX = random.nextInt(-300 - (-1000) + 1); // Начальная позиция за пределами экрана по X
+        float startY = random.nextInt(700);
+
+        // Создаем новую матрицу и устанавливаем стартовую позицию
+        Matrix newMatrix = new Matrix();
+        newMatrix.setTranslate(startX, startY); // Устанавливаем начинающую позицию
+
+        // Устанавливаем новую матрицу на ImageView
+        groupClouds.setImageMatrix(newMatrix);
+    }
+
+    public void runClouds(ImageView longCloud) {
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                LocalDateTime now;
+                LocalDateTime last = LocalDateTime.now();
+
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    throw new RuntimeException(e);
+                }
+
+                while (running) {
+                    now = LocalDateTime.now();
+                    // Проверяем, прошло ли 1/60 секунды
+                    if (Duration.between(last, now).toNanos() >= 16666667) { // 1/60 секунды в наносекундах
+                        shiftLongCloudLeft(longCloud, -1f);
+                        shiftGroupCloudsLeft(groupClouds, -1);
+                        last = now;
+                    }
+
+                    // Небольшая пауза, чтобы избежать избыточной нагрузки на процессор
+                    try {
+                        Thread.sleep(1); // Пауза на 1 миллисекунду
+                    } catch (InterruptedException e) {
+                        Thread.currentThread().interrupt(); // Восстановление статуса прерывания
+                    }
+                }
+            }
+        });
+        thread.start(); // Запускаем поток
+    } //Запускаем генерацию облаков в отдельном потоке
+
+    public void stopClouds() {
+        running = false; // Устанавливаем флаг в false
     }
 
 }
