@@ -23,6 +23,7 @@ public class AirBalloonObject extends GameObject{
     private LocalDateTime shieldEndTime;
     private int timeActionShield = 5; //Время действия щита.
     ShieldIcon shieldIcon;
+    ShieldIcon shieldAirballoonAnimation;
 
 
     public AirBalloonObject(Activity activity, DisplayMetrics displayMetrics, Bitmap image) {
@@ -35,6 +36,9 @@ public class AirBalloonObject extends GameObject{
         createRect();
 
         shieldIcon = new ShieldIcon(activity, displayMetrics);
+        shieldAirballoonAnimation = new ShieldIcon(activity, displayMetrics);
+        shieldAirballoonAnimation.setPercentage(0.05); //Устанавливаем размер щитов, которые будут вокруг
+        shieldAirballoonAnimation.calculateSize();
     }
 
     @Override
@@ -127,6 +131,7 @@ public class AirBalloonObject extends GameObject{
             removeShield();
         } else if (hadShield) {
             shieldIcon.draw(canvas);
+            shieldAirballoonAnimation.drawShieldAnimationAirballoon(canvas, image, xPosition, yPosition);
         }
     } //Обновляем время действия щита, удаляем щит если нужно.
 }
