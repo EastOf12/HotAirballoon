@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 import android.graphics.Rect;
+import android.media.MediaPlayer;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -39,14 +40,14 @@ public class MenuManager {
     private final TextView priceAirballoonView;
     private final int priceAirballoon1 = 5000;
     private final int priceAirballoon2 = 15000;
-    private ImageView menuBg;
-    private ImageView longCloud;
-    private Bitmap cloudBitmap;
-    private ImageView groupClouds;
-    private Bitmap groupCloudsBitmap;
-    private WindowManager windowManager;
-    private Random random;
+    private final ImageView longCloud;
+    private final Bitmap cloudBitmap;
+    private final ImageView groupClouds;
+    private final Bitmap groupCloudsBitmap;
+    private final WindowManager windowManager;
+    private final Random random;
     private boolean running = true;
+    MediaPlayer mediaPlayer;
 
 
     @SuppressLint("ClickableViewAccessibility")
@@ -71,6 +72,8 @@ public class MenuManager {
         groupClouds.setImageBitmap(Bitmap.createScaledBitmap(groupCloudsBitmap, 400, 300, true));
 
         selectAirballoon = user.getSelectAirBalloon();
+
+        mediaPlayer = MediaPlayer.create(activity, R.raw.menu_music);
     }
 
     public void startGame() {
@@ -84,8 +87,13 @@ public class MenuManager {
         calculateStartPositionCloud(longCloud);
         calculateStartPositionGroupClouds(groupClouds);
         runClouds(longCloud);
-
         changStatusButtonStartBuy();
+
+        mediaPlayer.start();
+        mediaPlayer.setOnCompletionListener(mp -> {
+            // Запускаем аудио снова когда оно доиграло до конца
+            mediaPlayer.start();
+        });
     }
 
     @SuppressLint("WrongViewCast")
@@ -123,6 +131,8 @@ public class MenuManager {
         buttonStart.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
+
+                    stopClouds();
                     // Отобразить ProgressBar
                     ProgressBar progressBar = view.findViewById(R.id.progress_bar);
                     progressBar.setVisibility(View.VISIBLE);
@@ -136,6 +146,8 @@ public class MenuManager {
 
                     // Завершить текущую активность
                     activity.finish();
+
+                mediaPlayer.stop();
             }
         });
     }
@@ -408,7 +420,7 @@ public class MenuManager {
     public void calculateStartPositionGroupClouds(ImageView groupClouds) {
 
         // Устанавливаем стартовую позицию - так, чтобы облак был вне правой части экрана
-        float startX = random.nextInt(-300 - (-1000) + 1); // Начальная позиция за пределами экрана по X
+        float startX = random.nextInt(100); // Начальная позиция за пределами экрана по X
         float startY = random.nextInt(700);
 
         // Создаем новую матрицу и устанавливаем стартовую позицию
@@ -455,6 +467,10 @@ public class MenuManager {
 
     public void stopClouds() {
         running = false; // Устанавливаем флаг в false
+    }
+
+    public void releaseMusic() {
+        mediaPlayer.start();
     }
 
 }
