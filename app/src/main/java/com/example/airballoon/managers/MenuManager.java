@@ -20,6 +20,7 @@ import android.widget.TextView;
 
 import com.example.airballoon.GamePlayActivity;
 import com.example.airballoon.R;
+import com.example.airballoon.SelectLevelActivity;
 import com.example.airballoon.models.User;
 
 import java.time.Duration;
@@ -47,7 +48,10 @@ public class MenuManager {
     private final WindowManager windowManager;
     private final Random random;
     private boolean running = true;
-    MediaPlayer mediaPlayer;
+
+    private ImageButton selectLevel;
+
+    MediaPlayer player;
 
 
     @SuppressLint("ClickableViewAccessibility")
@@ -62,6 +66,7 @@ public class MenuManager {
         buttonStart = addButtonStart(view);
         buttonBuy = addButtonBuy(view);
         priceAirballoonView = view.findViewById(R.id.price_airballoon);
+        selectLevel = addButtonPlay();
 
         longCloud = view.findViewById(R.id.cloud_long);
         cloudBitmap = BitmapFactory.decodeResource(activity.getResources(), R.drawable.cloud_long);
@@ -72,12 +77,17 @@ public class MenuManager {
         groupClouds.setImageBitmap(Bitmap.createScaledBitmap(groupCloudsBitmap, 400, 300, true));
 
         selectAirballoon = user.getSelectAirBalloon();
-
-        mediaPlayer = MediaPlayer.create(activity, R.raw.menu_music);
     }
 
     public void startGame() {
-        useButtonStart(activity);
+
+        //Переводим к активити выбора уровня при нажатии кнопки плей
+        useButtonSelectLevel();
+
+        //Запускаем игру при нажатии кнопки плей
+//        useButtonStart(activity);
+
+
         useButtonBuy(activity);
         drawDesiredAirballoon();
         drawCoins();
@@ -89,11 +99,11 @@ public class MenuManager {
         runClouds(longCloud);
         changStatusButtonStartBuy();
 
-        mediaPlayer.start();
-        mediaPlayer.setOnCompletionListener(mp -> {
-            // Запускаем аудио снова когда оно доиграло до конца
-            mediaPlayer.start();
-        });
+        player = MediaPlayerSingleton.getInstance(activity);
+        if (!player.isPlaying()) {
+            player.start(); // Запустим, если еще не запущен
+        }
+
     }
 
     @SuppressLint("WrongViewCast")
@@ -147,7 +157,7 @@ public class MenuManager {
                     // Завершить текущую активность
                     activity.finish();
 
-                mediaPlayer.stop();
+                player.stop();
             }
         });
     }
@@ -178,6 +188,33 @@ public class MenuManager {
             }
         });
     } //Производим покупку, если денег пользователя достаточно и открыаем доступ к шарику.
+
+    //Переход на экран выбор уровня
+    private void useButtonSelectLevel() {
+        selectLevel.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                // Отобразить ProgressBar
+//                ProgressBar progressBar = view.findViewById(R.id.progress_bar);
+//                progressBar.setVisibility(View.VISIBLE);
+//
+////                Скрыть кнопку
+//                selectLevel.setVisibility(View.INVISIBLE);
+
+                // Запустить игру
+                Intent intent = new Intent(activity, SelectLevelActivity.class);
+                activity.startActivity(intent);
+
+                //Убираем анимацию перехода.
+//                activity.overridePendingTransition(0, 0);
+
+                activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+
+                // Завершить текущую активность
+                activity.finish();
+            }
+        });
+    }
 
     @SuppressLint("WrongViewCast")
     private ImageButton addButtonStart(View view) {
@@ -467,10 +504,6 @@ public class MenuManager {
 
     public void stopClouds() {
         running = false; // Устанавливаем флаг в false
-    }
-
-    public void releaseMusic() {
-        mediaPlayer.start();
     }
 
 }
