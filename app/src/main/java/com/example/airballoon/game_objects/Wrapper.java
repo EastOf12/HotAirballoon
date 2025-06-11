@@ -56,6 +56,9 @@ public class Wrapper {
             case "shield":
                 maxCount = 1; //0
                 break;
+            case "magnet":
+                maxCount = 1;
+                break;
         }
     } //Максимальное количество возможных объектов в пуле
 
@@ -88,9 +91,15 @@ public class Wrapper {
                 }
                 break;
             case "shield":
-                //Создаем необходимое количество птиц
+                //Создаем необходимое количество щитов
                 for(int i = 0; i <= maxCount; i++) {
                     objects.add(new Shield(activity, displayMetrics, airBalloonObject));
+                }
+                break;
+            case "magnet":
+                //Создаем необходимое количество магнитов
+                for(int i = 0; i <= maxCount; i++) {
+                    objects.add(new Magnet(activity, displayMetrics, airBalloonObject));
                 }
                 break;
         }
@@ -153,6 +162,15 @@ public class Wrapper {
                     newIteration = false;
                 }
             }
+        } else if (wrapperType.equals("magnet")) {
+            for(int i = 0; i <= count; i++ ) {
+                Magnet magnet = (Magnet) objects.get(i);
+                magnet.draw(canvas);
+
+                if(magnet.isNeedDraw()) {
+                    newIteration = false;
+                }
+            }
         }
 
         return newIteration;
@@ -203,6 +221,10 @@ public class Wrapper {
                 drawCount++;
                 break;
             case "shield":
+                objects.add(new Shield(activity, displayMetrics, airBalloonObject));
+                drawCount++;
+                break;
+            case "magnet":
                 objects.add(new Shield(activity, displayMetrics, airBalloonObject));
                 drawCount++;
                 break;

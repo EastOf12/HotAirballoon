@@ -65,7 +65,6 @@ public class SelectLevelActivity extends AppCompatActivity {
 
                     // Запустить игру
                     Intent intent = new Intent(activity, GamePlayActivity.class);
-                    MediaPlayerSingleton.stop();
                     activity.startActivity(intent);
 
                     //Убираем анимацию перехода.

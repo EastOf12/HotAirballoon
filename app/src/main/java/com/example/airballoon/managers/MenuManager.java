@@ -151,8 +151,10 @@ public class MenuManager {
                     Intent intent = new Intent(activity, GamePlayActivity.class);
                     activity.startActivity(intent);
 
+                    activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+
                     //Убираем анимацию перехода.
-                    activity.overridePendingTransition(0, 0);
+//                    activity.overridePendingTransition(0, 0);
 
                     // Завершить текущую активность
                     activity.finish();

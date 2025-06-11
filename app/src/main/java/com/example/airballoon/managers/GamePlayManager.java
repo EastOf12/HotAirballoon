@@ -18,6 +18,7 @@ import com.example.airballoon.game_objects.Coin;
 import com.example.airballoon.game_objects.GamePlayMenu;
 import com.example.airballoon.game_objects.GearWheel;
 import com.example.airballoon.game_objects.LongThorn;
+import com.example.airballoon.game_objects.Magnet;
 import com.example.airballoon.game_objects.Shield;
 import com.example.airballoon.game_objects.Thorn;
 import com.example.airballoon.R;
@@ -62,6 +63,7 @@ public class GamePlayManager {
     boolean needZeroLongThorn;
     boolean needZeroBird;
     boolean needZeroShield;
+    boolean needZeroMagnet;
     private int minDistanceAdditionObject = 250; //Минимальная пройденная дистанция, после которой можно добавить новый объект в пул
     private int maxDistanceAdditionObject = 450; //Максимальная пройденная дистанция, после которой можно добавить новый объект в пул
     private int distanceAdditionObject = 35; //Дистацния при достижении которой добавляем новый объект в пул
@@ -73,6 +75,7 @@ public class GamePlayManager {
     Integer countLongThorn = -1;
     Integer countBird = -1;
     Integer countShield = -1;
+    Integer countMagnet = -1;
     int distanceBirdAdd = 20000;
     boolean birdAdd = false;
 
@@ -182,7 +185,11 @@ public class GamePlayManager {
                     countShield++; //Добавляем щит в пул
                     distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
                     pullCoinsCount = 0;
-                } else {
+                } else if (objectsGeneration.getUsedObjects().get(5).getDrawCount() > countMagnet) {
+                    countMagnet++; //Добавляем магнит в пул
+                    distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+                    pullCoinsCount = 0;
+                }else {
                     //Нет того элемента, который хотели отрисовать, рисуем, что осталось
                     if(objectsGeneration.getUsedObjects().get(0).getDrawCount() > countCoins) {
                         countCoins++; //Добавляем монетку в пул
@@ -275,6 +282,20 @@ public class GamePlayManager {
                 for (Object ob : shields) {
                     Shield shield = (Shield) ob;
                     shield.calculateStartPosition();
+                }
+            }
+
+            //Отрисовываем щиты из пула
+            needZeroMagnet = usedObjects.get(5).drawObjects(canvas, countMagnet, "magnet");
+
+            if (needZeroMagnet) {
+                countMagnet = -1;
+
+                ArrayList<Object> magnets = usedObjects.get(5).getObjects();
+
+                for (Object ob : magnets) {
+                    Magnet magnet = (Magnet) ob;
+                    magnet.calculateStartPosition();
                 }
             }
         }

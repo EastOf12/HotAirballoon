@@ -8,6 +8,7 @@ import android.view.SurfaceView;
 
 import com.example.airballoon.managers.GamePlayManager;
 import com.example.airballoon.managers.ManagerFPS;
+import com.example.airballoon.managers.MediaPlayerSingleton;
 import com.example.airballoon.managers.SaveManager;
 import com.example.airballoon.models.User;
 
@@ -33,6 +34,9 @@ abstract class BaseLevel extends SurfaceView implements Runnable{
     public BaseLevel(Activity activity) {
         super(activity);
         this.activity = activity;
+        //Останавливаем мелодию меню
+        MediaPlayerSingleton.stop();
+
         surfaceHolder = getHolder();
         user = SaveManager.readFromFile(activity);
         displayMetrics = new DisplayMetrics();

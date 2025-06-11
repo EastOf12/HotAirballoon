@@ -24,6 +24,7 @@ public class ObjectsGeneration {
     Wrapper thorns; //Шип
     Wrapper birds;
     Wrapper shields;
+    Wrapper magnets;
 
     public ObjectsGeneration (Activity activity, DisplayMetrics displayMetrics, AirBalloonObject airBalloon) {
         //Создаем обертки для игровых объектов.
@@ -32,6 +33,7 @@ public class ObjectsGeneration {
         longThorns = new Wrapper("long_thorn",  activity, displayMetrics, airBalloon);
         birds = new Wrapper("bird", activity, displayMetrics, airBalloon);
         shields = new Wrapper("shield", activity, displayMetrics, airBalloon);
+        magnets = new Wrapper("magnet", activity, displayMetrics, airBalloon);
 
         //Создаем список со всеми доступными объектами
         createAllObjects();
@@ -52,6 +54,7 @@ public class ObjectsGeneration {
         allObjects.add(longThorns);
         allObjects.add(birds);
         allObjects.add(shields);
+        allObjects.add(magnets);
     } //Создает список объектов, которые будут отрисовываться в игре
 
     private void updateCount() {
@@ -78,7 +81,11 @@ public class ObjectsGeneration {
 
     public boolean checkAvailabilityShields() {
         return shields.getDrawCount() >= 0;
-    } //Проверяет, можем ли отрисовать птиц.
+    } //Проверяет, можем ли отрисовать щит.
+
+    public boolean checkAvailabilityMagnet() {
+        return shields.getDrawCount() >= 0;
+    } //Проверяет, можем ли отрисовать магнит.
 
     public ArrayList<Wrapper> getUsedObjects() {
         return usedObjects;

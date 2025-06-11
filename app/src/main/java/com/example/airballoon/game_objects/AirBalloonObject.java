@@ -18,11 +18,18 @@ public class AirBalloonObject extends GameObject{
     private int hp = 1;
     private final int maxXp = 1;
     private boolean hadShield = false;
+    private boolean hadMagnet = false;
     float newX;
-    private LocalDateTime nowTime;
+    private LocalDateTime nowTimeShield;
     private LocalDateTime shieldEndTime;
+    private LocalDateTime nowTimeMagnet;
+    private LocalDateTime magnetEndTime;
+
+
     private int timeActionShield = 5; //Время действия щита.
+    private int timeActionMagnet = 5; //Время действия щита.
     ShieldIcon shieldIcon;
+    MagnetIcon magnetIcon;
     ShieldIcon shieldAirballoonAnimation;
 
 
@@ -39,6 +46,8 @@ public class AirBalloonObject extends GameObject{
         shieldAirballoonAnimation = new ShieldIcon(activity, displayMetrics);
         shieldAirballoonAnimation.setPercentage(0.05); //Устанавливаем размер щитов, которые будут вокруг
         shieldAirballoonAnimation.calculateSize();
+
+        magnetIcon = new MagnetIcon(activity, displayMetrics);
     }
 
     @Override
@@ -55,6 +64,7 @@ public class AirBalloonObject extends GameObject{
         rect.bottom = (int) (yPosition + height);
         canvas.drawBitmap(image, xPosition, yPosition, null);
         shieldTimeCounter(canvas);
+        magnetTimeCounter(canvas);
     }
 
     public boolean onTouch(MotionEvent event) {
@@ -112,11 +122,21 @@ public class AirBalloonObject extends GameObject{
 
     public void addShield() {
         hadShield = true;
-        nowTime = LocalDateTime.now();
-        shieldEndTime = nowTime.plusSeconds(timeActionShield);
+        nowTimeShield = LocalDateTime.now();
+        shieldEndTime = nowTimeShield.plusSeconds(timeActionShield);
 
         activity.runOnUiThread(() -> {
             shieldIcon.startShieldTimer(timeActionShield * 1000L);
+        });
+    }
+
+    public void addMagnet() {
+        hadMagnet = true;
+        nowTimeMagnet = LocalDateTime.now();
+        magnetEndTime = nowTimeMagnet.plusSeconds(timeActionMagnet);
+
+        activity.runOnUiThread(() -> {
+            magnetIcon.startMagnetTimer(timeActionMagnet * 1000L);
         });
     }
 
@@ -124,14 +144,28 @@ public class AirBalloonObject extends GameObject{
         hadShield = false;
     }
 
-    public void shieldTimeCounter(Canvas canvas) {
-        nowTime = LocalDateTime.now();
+    public void removeMagnet() {
+        hadMagnet = false;
+    }
 
-        if(hadShield && nowTime.isAfter(shieldEndTime)) {
+    public void shieldTimeCounter(Canvas canvas) {
+        nowTimeShield = LocalDateTime.now();
+
+        if(hadShield && nowTimeShield.isAfter(shieldEndTime)) {
             removeShield();
         } else if (hadShield) {
             shieldIcon.draw(canvas);
             shieldAirballoonAnimation.drawShieldAnimationAirballoon(canvas, image, xPosition, yPosition);
         }
     } //Обновляем время действия щита, удаляем щит если нужно.
+
+    public void magnetTimeCounter(Canvas canvas) {
+        nowTimeMagnet = LocalDateTime.now();
+
+        if(hadMagnet && nowTimeMagnet.isAfter(magnetEndTime)) {
+            removeMagnet();
+        } else if (hadMagnet) {
+            magnetIcon.draw(canvas);
+        }
+    } //Обновляем время действия магнита, удаляем если нужно.
 }

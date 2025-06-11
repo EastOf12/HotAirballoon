@@ -11,6 +11,7 @@ import android.view.View;
 
 import com.example.airballoon.GamePlayActivity;
 import com.example.airballoon.MainActivity;
+import com.example.airballoon.R;
 import com.example.airballoon.RewardedAdActivity;
 import com.example.airballoon.managers.GamePlayManager;
 import com.example.airballoon.managers.MenuActions;
@@ -87,6 +88,8 @@ public class FreeLevel extends BaseLevel implements Runnable{
                             //Создаем новую активность.
                             Intent intent = new Intent(activity, MainActivity.class);
                             activity.startActivity(intent);
+
+                            activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
                             // Завершить текущую активность
                             activity.finish();
