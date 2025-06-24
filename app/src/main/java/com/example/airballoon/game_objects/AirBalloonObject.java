@@ -27,7 +27,7 @@ public class AirBalloonObject extends GameObject{
 
 
     private int timeActionShield = 5; //Время действия щита.
-    private int timeActionMagnet = 5; //Время действия щита.
+    private int timeActionMagnet = 5; //Время действия магнита.
     ShieldIcon shieldIcon;
     MagnetIcon magnetIcon;
     ShieldIcon shieldAirballoonAnimation;
@@ -168,4 +168,8 @@ public class AirBalloonObject extends GameObject{
             magnetIcon.draw(canvas);
         }
     } //Обновляем время действия магнита, удаляем если нужно.
+
+    public boolean getHadMagnet() {
+        return hadMagnet;
+    }
 }

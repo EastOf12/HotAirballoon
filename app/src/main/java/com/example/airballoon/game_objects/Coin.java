@@ -48,9 +48,14 @@ public class Coin extends GameObject{
 
     @Override
     public void draw(Canvas canvas) {
-
         if(needDraw) {
-            calculateNewPosition(canvas);
+            if(airBalloon.getHadMagnet() && needMagnetCoin()) { //Рассчитываем новую позицию монеток, когда включен магнит
+                calculateNewPositionMagnet(canvas);
+            } else {
+                calculateNewPosition(canvas);
+            }
+
+
             rect.left = xPosition;
             rect.top = yPosition;
             rect.right = (int) (xPosition + width);
@@ -86,5 +91,46 @@ public class Coin extends GameObject{
     @Override
     public int hashCode() {
         return Objects.hash(random, airBalloon, needDraw);
+    }
+
+    private void calculateNewPositionMagnet(Canvas canvas) {
+        if (yPosition >= canvas.getHeight() || checkCollisionAirBalloon()) {
+            yPosition = random.nextInt(500) - 1000;
+            xPosition = random.nextInt((int) (displayMetrics.widthPixels - width));
+            needDraw = !needDraw;
+        } else {
+            int xAirballoonPosition = airBalloon.xPosition;
+            int yAirballoonPosition = airBalloon.yPosition;
+
+            //Изменяем позицию монетки ближе к шарику
+            boolean needCalculate = !(yPosition > yAirballoonPosition && yPosition < yAirballoonPosition + airBalloon.height);
+
+            if(needCalculate) {
+                if(yPosition < yAirballoonPosition) {
+                    yPosition += GamePlayManager.speed * 2.5;
+                } else if(yPosition > yAirballoonPosition){
+                    yPosition = (int) (yPosition - (GamePlayManager.speed * 2.5));
+                }
+            }
+
+            needCalculate = !(xPosition > xAirballoonPosition && xPosition < xAirballoonPosition + (airBalloon.width * 0.5));
+
+            if(needCalculate) {
+                if(xPosition < xAirballoonPosition) {
+                    xPosition += GamePlayManager.speed * 1.5;
+                } else if (xPosition > xAirballoonPosition){
+                    xPosition -= GamePlayManager.speed * 1.5;
+                }
+            }
+        }
+    }
+
+    private boolean needMagnetCoin() {
+        boolean xNeedMagnet = xPosition + (airBalloon.width * 2) > airBalloon.xPosition && xPosition < (airBalloon.xPosition + (airBalloon.width * 3));
+
+
+        boolean yNeedMagnet = yPosition > (airBalloon.yPosition - airBalloon.height * 1.5) && yPosition < (airBalloon.yPosition + airBalloon.height * 2);
+
+        return xNeedMagnet && yNeedMagnet;
     }
 }

@@ -285,7 +285,7 @@ public class GamePlayManager {
                 }
             }
 
-            //Отрисовываем щиты из пула
+            //Отрисовываем магниты из пула
             needZeroMagnet = usedObjects.get(5).drawObjects(canvas, countMagnet, "magnet");
 
             if (needZeroMagnet) {
@@ -498,6 +498,4 @@ public class GamePlayManager {
     public void restartBackGround() {
         backGround.restartBackground();
     }
-
-
 }
