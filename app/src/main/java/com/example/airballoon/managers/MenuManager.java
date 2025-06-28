@@ -91,6 +91,7 @@ public class MenuManager {
         useButtonBuy(activity);
         drawDesiredAirballoon();
         drawCoins();
+        drawStars();
         drawSettingButton();
         useSettingButton();
         selectAirballoon();
@@ -508,6 +509,10 @@ public class MenuManager {
         running = false; // Устанавливаем флаг в false
     }
 
+    private void drawStars() {
+        TextView coinCountView = view.findViewById(R.id.stars_count);
+        coinCountView.setText(String.valueOf(user.getStars()));
+    } //Отображаем количество монет
 }
 
 

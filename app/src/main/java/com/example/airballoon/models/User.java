@@ -8,6 +8,8 @@ public class User {
 
     private long coins = 0;
 
+    private int stars = 5;
+
     private int lastCoins = 0; //Монетки, которые были начислены в крайней игре
     private long maxDistanceLevelFirst = 0;
 
@@ -86,5 +88,13 @@ public class User {
 
     public void setSelectAirBalloon(int selectAirBalloon) {
         this.selectAirBalloon = selectAirBalloon;
+    }
+
+    public int getStars() {
+        return stars;
+    }
+
+    public void setStars(int stars) {
+        this.stars = stars;
     }
 }

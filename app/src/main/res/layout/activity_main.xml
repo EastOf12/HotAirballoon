@@ -44,30 +44,59 @@
 
     <ImageView
         android:id="@+id/coins"
-        android:layout_width="97dp"
-        android:layout_height="78dp"
+        android:layout_width="55dp"
+        android:layout_height="46dp"
         app:layout_constraintBottom_toBottomOf="@+id/menu_bg"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.646"
+        app:layout_constraintHorizontal_bias="0.727"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/menu_bg"
-        app:layout_constraintVertical_bias="0.061"
+        app:layout_constraintVertical_bias="0.054"
         app:srcCompat="@drawable/coins" />
 
     <TextView
         android:id="@+id/coin_count"
-        android:layout_width="93dp"
-        android:layout_height="26dp"
+        android:layout_width="78dp"
+        android:layout_height="33dp"
         android:text="@string/_0"
         android:textColor="@color/white"
         android:textSize="20sp"
         android:textStyle="italic"
+        android:gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.47"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/coins"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.088" />
+        app:layout_constraintVertical_bias="0.065" />
+
+    <ImageView
+        android:id="@+id/stars"
+        android:layout_width="55dp"
+        android:layout_height="46dp"
+        app:layout_constraintBottom_toBottomOf="@+id/menu_bg"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.727"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/menu_bg"
+        app:layout_constraintVertical_bias="0.14"
+        app:srcCompat="@drawable/star_yellow" />
+
+    <TextView
+        android:id="@+id/stars_count"
+        android:layout_width="78dp"
+        android:layout_height="30dp"
+        android:text="@string/_0"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="italic"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/coins"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.147" />
 
     <HorizontalScrollView
         android:id="@+id/scrollable"
