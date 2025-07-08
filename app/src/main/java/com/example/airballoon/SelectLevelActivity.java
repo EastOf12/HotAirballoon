@@ -44,10 +44,6 @@ public class SelectLevelActivity extends AppCompatActivity {
         setContentView(R.layout.select_level_activity);
         view = getWindow().getDecorView();
 
-        View view = this.getWindow().getDecorView();
-//        buttonStart = addButtonStart(view);
-//        useButtonStart(this);
-
         buttonResumeMenu = addButtonResumeMenu(this);
         useButtonResumeMenu(this);
 
@@ -62,35 +58,6 @@ public class SelectLevelActivity extends AppCompatActivity {
 //        overridePendingTransition(R.anim.slide_in_center, R.anim.slide_out_center);
         loadLevels();
     }
-
-//    private void useButtonStart(Activity activity) {
-//        buttonStart.setOnClickListener(new View.OnClickListener(){
-//            @Override
-//            public void onClick(View v) {
-//                System.out.println("Нажали на кнопку старт");
-//                if(isLevel1) {
-//                    // Отобразить ProgressBar
-//                    ProgressBar progressBar = view.findViewById(R.id.progress_bar);
-//                    progressBar.setVisibility(View.VISIBLE);
-//
-//                    // Запустить игру
-//                    Intent intent = new Intent(activity, GamePlayActivity.class);
-//                    activity.startActivity(intent);
-//
-//                    //Убираем анимацию перехода.
-////                    activity.overridePendingTransition(0, 0);
-//                    activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-//                    // Завершить текущую активность
-//                    activity.finish();
-//                }
-//            }
-//        });
-//    }
-
-//    @SuppressLint("WrongViewCast")
-//    private ImageButton addButtonStart(View view) {
-//        return view.findViewById(R.id.button_start);
-//    }
 
     private ImageButton addButtonResumeMenu(Activity activity) {
         return buttonResumeMenu = activity.findViewById(R.id.button_resume_menu);
@@ -114,42 +81,6 @@ public class SelectLevelActivity extends AppCompatActivity {
             }
         });
     } //Используем кнопку возврата в меню
-
-//    private ImageButton addButtonLevel1(Activity activity) {
-//        return buttonResumeMenu = activity.findViewById(R.id.level_1_image);
-//    }
-
-//    private boolean selectButtonLevel1() {
-//        isLevel1 = !isLevel1;
-//
-//        //Меняем цвет кнопки (Пока только для уровня 1, исправить при рефакторе)
-//        if (isLevel1) {
-//            buttonLevel1Image.setImageResource(R.drawable.button_level_1_selected);
-//        } else {
-//            buttonLevel1Image.setImageResource(R.drawable.button_level_1);
-//        }
-//
-//        return false;
-//    }
-
-//    private void useButtonLevel1(Activity activity) {
-//        buttonLevel1Image.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                selectButtonLevel1();
-//
-////                //Возвращаемся в меню.
-////                Intent intent = new Intent(activity, MainActivity.class);
-////                startActivity(intent);
-////
-////                //Убираем анимацию перехода.
-////                overridePendingTransition(0, 0);
-////
-////                // Завершить текущую активность
-////                finish();
-//            }
-//        });
-//    }
 
     private void loadLevels() {
         levels = new ArrayList<>();

@@ -83,8 +83,8 @@ public class MenuLevel {
 
                 // Запустить игру
                 Intent intent = new Intent(activity, GamePlayActivity.class);
+                intent.putExtra("levelNumber", levelNumber);
                 activity.startActivity(intent);
-
                 //Убираем анимацию перехода.
 //                    activity.overridePendingTransition(0, 0);
                 activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);

@@ -39,6 +39,19 @@ public class Thorn {
                 , (int) (yPosition + height));
     }
 
+    public Thorn(Activity activity, DisplayMetrics displayMetrics, AirBalloonObject airBalloon, PosX posX, int yPosition) {
+        this.activity = activity;
+        this.displayMetrics = displayMetrics;
+        this.airBalloon = airBalloon;
+        needDraw = true;
+        calculatePercentage();
+        loadThornImage();
+        calculateSize();
+        calculateStartPosition(posX, yPosition);
+        rect = new Rect(xPosition, yPosition, (int) (xPosition + width)
+                , (int) (yPosition + height));
+    }
+
     private void calculateSize() {
         width = displayMetrics.widthPixels * percentage;
         double proportion = (double) thornImage.getWidth() / thornImage.getHeight();
@@ -60,6 +73,28 @@ public class Thorn {
         Random random = new Random();
         xPosition = random.nextInt((int) (displayMetrics.widthPixels - width));
         yPosition = -50;
+    }
+
+    public void calculateStartPosition(PosX posX, int yPosition) {
+        switch (posX) {
+            case LEFT:
+                xPosition = 0;
+                break;
+            case LEFT2:
+                xPosition = (int) (width);
+                break;
+            case CENTER:
+                xPosition = (int) (width * 2);
+                break;
+            case RIGHT1:
+                xPosition = (int) (displayMetrics.widthPixels - (width * 2));
+                break;
+            case RIGHT2:
+                xPosition = (int) (displayMetrics.widthPixels - width);
+                break;
+        }
+
+        this.yPosition = yPosition;
     }
 
     private void calculateNewPosition(Canvas canvas) {
@@ -117,5 +152,9 @@ public class Thorn {
     @Override
     public int hashCode() {
         return Objects.hash(activity, displayMetrics, thornImage, rect, xPosition, yPosition, percentage, width, height, airBalloon, needDraw);
+    }
+
+    public int getYPosition() {
+        return yPosition;
     }
 }

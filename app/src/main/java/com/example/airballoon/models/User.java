@@ -8,7 +8,7 @@ public class User {
 
     private long coins = 0;
 
-    private int stars = 5;
+    private int stars = 0;
 
     private int lastCoins = 0; //Монетки, которые были начислены в крайней игре
     private long maxDistanceLevelFirst = 0;
