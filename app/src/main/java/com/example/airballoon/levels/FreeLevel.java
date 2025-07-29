@@ -38,7 +38,7 @@ public class FreeLevel extends BaseLevel implements Runnable{
 
                         gamePlayManager.drawBackGround(canvas); //Добавляем фон
                         gamePlayManager.drawAirBalloon(canvas); //Добавляем шарик
-                        gamePlayManager.startObjectsGeneration(canvas); //Добавляем генерацию игровых объектов
+                        gamePlayManager.startObjectsGeneration(canvas, 0); //Добавляем генерацию игровых объектов
                         gamePlayManager.drawCountCoins(canvas, displayMetrics); //Добавляем количество монет
                         gamePlayManager.drawHp(canvas, displayMetrics); //Добавляем количество здоровья
                         gamePlayManager.drawDistance(canvas, displayMetrics); //Добавляем дистанцию

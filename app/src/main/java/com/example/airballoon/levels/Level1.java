@@ -4,22 +4,24 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Canvas;
+import android.os.Handler;
+import android.os.HandlerThread;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.example.airballoon.GamePlayActivity;
 import com.example.airballoon.MainActivity;
 import com.example.airballoon.R;
+import com.example.airballoon.RewardedAdActivity;
 import com.example.airballoon.managers.GamePlayManager;
 import com.example.airballoon.managers.MenuActions;
 import com.example.airballoon.managers.SaveManager;
 
 @SuppressLint("ViewConstructor")
 public class Level1 extends BaseLevel implements Runnable{
-
     public Level1(Activity activity) {
         super(activity);
     }
-
 
     //Основной цикл игры.
     @Override
@@ -36,7 +38,7 @@ public class Level1 extends BaseLevel implements Runnable{
 
                         gamePlayManager.drawBackGround(canvas); //Добавляем фон
                         gamePlayManager.drawAirBalloon(canvas); //Добавляем шарик
-                        gamePlayManager.startObjectsGenerationLevel1(canvas); //Добавляем генерацию игровых объектов
+                        gamePlayManager.startObjectsGeneration(canvas, 1); //Добавляем генерацию игровых объектов
                         gamePlayManager.drawCountCoins(canvas, displayMetrics); //Добавляем количество монет
                         gamePlayManager.drawHp(canvas, displayMetrics); //Добавляем количество здоровья
                         gamePlayManager.drawDistance(canvas, displayMetrics); //Добавляем дистанцию
