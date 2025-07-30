@@ -380,6 +380,51 @@ public class GamePlayManager {
             case 1:
                 addObjectsLevel1();
                 break;
+            case 2:
+                addObjectsLevel2();
+                break;
+            case 3:
+                addObjectsLevel3();
+                break;
+            case 4:
+                addObjectsLevel4();
+                break;
+            case 5:
+                addObjectsLevel5();
+                break;
+            case 6:
+                addObjectsLevel6();
+                break;
+            case 7:
+                addObjectsLevel7();
+                break;
+            case 8:
+                addObjectsLevel8();
+                break;
+            case 9:
+                addObjectsLevel9();
+                break;
+            case 10:
+                addObjectsLevel10();
+                break;
+            case 11:
+                addObjectsLevel11();
+                break;
+            case 12:
+                addObjectsLevel12();
+                break;
+            case 13:
+                addObjectsLevel13();
+                break;
+            case 14:
+                addObjectsLevel14();
+                break;
+            case 15:
+                addObjectsLevel15();
+                break;
+            case 16:
+                addObjectsLevel16();
+                break;
         }
     }
     private void addObjectsLevelFree() {
@@ -437,6 +482,636 @@ public class GamePlayManager {
                 distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject), (maxDistanceAdditionObject), distance);
                 pullCoinsCount = 0;
             } else {
+                //Нет того элемента, который хотели отрисовать, рисуем, что осталось
+                if(objectsGeneration.getUsedObjects().get(0).getDrawCount() > countCoins) {
+                    countCoins++; //Добавляем монетку в пул
+                    distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+                } else {
+                    countThorn++; //Добавляем шип в пул если нет монет
+                    distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject * 2), (maxDistanceAdditionObject * 2), distance);
+                }
+            }
+        }
+    }
+
+    private void addObjectsLevel2() {
+        //Определяем что нужно добавить в пул объектов на отрисовку.
+        if (distance >= distanceAdditionObject) { //Проверяем, что дистанция на отрисовку достигнута
+            int b = random.nextInt(4); //Случайно выбираем, что будем добавлять в пул
+
+            if (objectsGeneration.getUsedObjects().get(0).getDrawCount() > countCoins && b < 3 && pullCoinsCount <= pullCoinsCountMax) {
+                countCoins++; //Добавляем монетку в пул
+                pullCoinsCount++;
+                distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+            } else if (objectsGeneration.getUsedObjects().get(1).getDrawCount() > countThorn) {
+                countThorn++; //Добавляем шип в пул
+                distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject), (maxDistanceAdditionObject), distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(2).getDrawCount() > countLongThorn) {
+                countLongThorn++; //Добавляем шип в пул
+                distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject * 2), (int) (maxDistanceAdditionObject * 1.4), distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(3).getDrawCount() > countBird) {
+                countBird++; //Добавляем птичку в пул
+                distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject * 2), (int) (maxDistanceAdditionObject * 1.4), distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(4).getDrawCount() > countShield) {
+                countShield++; //Добавляем щит в пул
+                distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(5).getDrawCount() > countMagnet) {
+                countMagnet++; //Добавляем магнит в пул
+                distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+                pullCoinsCount = 0;
+            }else {
+                //Нет того элемента, который хотели отрисовать, рисуем, что осталось
+                if(objectsGeneration.getUsedObjects().get(0).getDrawCount() > countCoins) {
+                    countCoins++; //Добавляем монетку в пул
+                    distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+                } else {
+                    countThorn++; //Добавляем шип в пул если нет монет
+                    distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject * 2), (maxDistanceAdditionObject * 2), distance);
+                }
+            }
+        }
+    }
+
+    private void addObjectsLevel3() {
+        //Определяем что нужно добавить в пул объектов на отрисовку.
+        if (distance >= distanceAdditionObject) { //Проверяем, что дистанция на отрисовку достигнута
+            int b = random.nextInt(4); //Случайно выбираем, что будем добавлять в пул
+
+            if (objectsGeneration.getUsedObjects().get(0).getDrawCount() > countCoins && b < 3 && pullCoinsCount <= pullCoinsCountMax) {
+                countCoins++; //Добавляем монетку в пул
+                pullCoinsCount++;
+                distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+            } else if (objectsGeneration.getUsedObjects().get(1).getDrawCount() > countThorn) {
+                countThorn++; //Добавляем шип в пул
+                distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject), (maxDistanceAdditionObject), distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(2).getDrawCount() > countLongThorn) {
+                countLongThorn++; //Добавляем шип в пул
+                distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject * 2), (int) (maxDistanceAdditionObject * 1.4), distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(3).getDrawCount() > countBird) {
+                countBird++; //Добавляем птичку в пул
+                distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject * 2), (int) (maxDistanceAdditionObject * 1.4), distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(4).getDrawCount() > countShield) {
+                countShield++; //Добавляем щит в пул
+                distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(5).getDrawCount() > countMagnet) {
+                countMagnet++; //Добавляем магнит в пул
+                distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+                pullCoinsCount = 0;
+            }else {
+                //Нет того элемента, который хотели отрисовать, рисуем, что осталось
+                if(objectsGeneration.getUsedObjects().get(0).getDrawCount() > countCoins) {
+                    countCoins++; //Добавляем монетку в пул
+                    distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+                } else {
+                    countThorn++; //Добавляем шип в пул если нет монет
+                    distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject * 2), (maxDistanceAdditionObject * 2), distance);
+                }
+            }
+        }
+    }
+
+    private void addObjectsLevel4() {
+        //Определяем что нужно добавить в пул объектов на отрисовку.
+        if (distance >= distanceAdditionObject) { //Проверяем, что дистанция на отрисовку достигнута
+            int b = random.nextInt(4); //Случайно выбираем, что будем добавлять в пул
+
+            if (objectsGeneration.getUsedObjects().get(0).getDrawCount() > countCoins && b < 3 && pullCoinsCount <= pullCoinsCountMax) {
+                countCoins++; //Добавляем монетку в пул
+                pullCoinsCount++;
+                distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+            } else if (objectsGeneration.getUsedObjects().get(1).getDrawCount() > countThorn) {
+                countThorn++; //Добавляем шип в пул
+                distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject), (maxDistanceAdditionObject), distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(2).getDrawCount() > countLongThorn) {
+                countLongThorn++; //Добавляем шип в пул
+                distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject * 2), (int) (maxDistanceAdditionObject * 1.4), distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(3).getDrawCount() > countBird) {
+                countBird++; //Добавляем птичку в пул
+                distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject * 2), (int) (maxDistanceAdditionObject * 1.4), distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(4).getDrawCount() > countShield) {
+                countShield++; //Добавляем щит в пул
+                distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(5).getDrawCount() > countMagnet) {
+                countMagnet++; //Добавляем магнит в пул
+                distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+                pullCoinsCount = 0;
+            }else {
+                //Нет того элемента, который хотели отрисовать, рисуем, что осталось
+                if(objectsGeneration.getUsedObjects().get(0).getDrawCount() > countCoins) {
+                    countCoins++; //Добавляем монетку в пул
+                    distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+                } else {
+                    countThorn++; //Добавляем шип в пул если нет монет
+                    distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject * 2), (maxDistanceAdditionObject * 2), distance);
+                }
+            }
+        }
+    }
+
+    private void addObjectsLevel5() {
+        //Определяем что нужно добавить в пул объектов на отрисовку.
+        if (distance >= distanceAdditionObject) { //Проверяем, что дистанция на отрисовку достигнута
+            int b = random.nextInt(4); //Случайно выбираем, что будем добавлять в пул
+
+            if (objectsGeneration.getUsedObjects().get(0).getDrawCount() > countCoins && b < 3 && pullCoinsCount <= pullCoinsCountMax) {
+                countCoins++; //Добавляем монетку в пул
+                pullCoinsCount++;
+                distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+            } else if (objectsGeneration.getUsedObjects().get(1).getDrawCount() > countThorn) {
+                countThorn++; //Добавляем шип в пул
+                distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject), (maxDistanceAdditionObject), distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(2).getDrawCount() > countLongThorn) {
+                countLongThorn++; //Добавляем шип в пул
+                distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject * 2), (int) (maxDistanceAdditionObject * 1.4), distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(3).getDrawCount() > countBird) {
+                countBird++; //Добавляем птичку в пул
+                distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject * 2), (int) (maxDistanceAdditionObject * 1.4), distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(4).getDrawCount() > countShield) {
+                countShield++; //Добавляем щит в пул
+                distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(5).getDrawCount() > countMagnet) {
+                countMagnet++; //Добавляем магнит в пул
+                distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+                pullCoinsCount = 0;
+            }else {
+                //Нет того элемента, который хотели отрисовать, рисуем, что осталось
+                if(objectsGeneration.getUsedObjects().get(0).getDrawCount() > countCoins) {
+                    countCoins++; //Добавляем монетку в пул
+                    distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+                } else {
+                    countThorn++; //Добавляем шип в пул если нет монет
+                    distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject * 2), (maxDistanceAdditionObject * 2), distance);
+                }
+            }
+        }
+    }
+
+    private void addObjectsLevel6() {
+        //Определяем что нужно добавить в пул объектов на отрисовку.
+        if (distance >= distanceAdditionObject) { //Проверяем, что дистанция на отрисовку достигнута
+            int b = random.nextInt(4); //Случайно выбираем, что будем добавлять в пул
+
+            if (objectsGeneration.getUsedObjects().get(0).getDrawCount() > countCoins && b < 3 && pullCoinsCount <= pullCoinsCountMax) {
+                countCoins++; //Добавляем монетку в пул
+                pullCoinsCount++;
+                distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+            } else if (objectsGeneration.getUsedObjects().get(1).getDrawCount() > countThorn) {
+                countThorn++; //Добавляем шип в пул
+                distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject), (maxDistanceAdditionObject), distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(2).getDrawCount() > countLongThorn) {
+                countLongThorn++; //Добавляем шип в пул
+                distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject * 2), (int) (maxDistanceAdditionObject * 1.4), distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(3).getDrawCount() > countBird) {
+                countBird++; //Добавляем птичку в пул
+                distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject * 2), (int) (maxDistanceAdditionObject * 1.4), distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(4).getDrawCount() > countShield) {
+                countShield++; //Добавляем щит в пул
+                distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(5).getDrawCount() > countMagnet) {
+                countMagnet++; //Добавляем магнит в пул
+                distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+                pullCoinsCount = 0;
+            }else {
+                //Нет того элемента, который хотели отрисовать, рисуем, что осталось
+                if(objectsGeneration.getUsedObjects().get(0).getDrawCount() > countCoins) {
+                    countCoins++; //Добавляем монетку в пул
+                    distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+                } else {
+                    countThorn++; //Добавляем шип в пул если нет монет
+                    distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject * 2), (maxDistanceAdditionObject * 2), distance);
+                }
+            }
+        }
+    }
+
+    private void addObjectsLevel7() {
+        //Определяем что нужно добавить в пул объектов на отрисовку.
+        if (distance >= distanceAdditionObject) { //Проверяем, что дистанция на отрисовку достигнута
+            int b = random.nextInt(4); //Случайно выбираем, что будем добавлять в пул
+
+            if (objectsGeneration.getUsedObjects().get(0).getDrawCount() > countCoins && b < 3 && pullCoinsCount <= pullCoinsCountMax) {
+                countCoins++; //Добавляем монетку в пул
+                pullCoinsCount++;
+                distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+            } else if (objectsGeneration.getUsedObjects().get(1).getDrawCount() > countThorn) {
+                countThorn++; //Добавляем шип в пул
+                distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject), (maxDistanceAdditionObject), distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(2).getDrawCount() > countLongThorn) {
+                countLongThorn++; //Добавляем шип в пул
+                distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject * 2), (int) (maxDistanceAdditionObject * 1.4), distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(3).getDrawCount() > countBird) {
+                countBird++; //Добавляем птичку в пул
+                distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject * 2), (int) (maxDistanceAdditionObject * 1.4), distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(4).getDrawCount() > countShield) {
+                countShield++; //Добавляем щит в пул
+                distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(5).getDrawCount() > countMagnet) {
+                countMagnet++; //Добавляем магнит в пул
+                distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+                pullCoinsCount = 0;
+            }else {
+                //Нет того элемента, который хотели отрисовать, рисуем, что осталось
+                if(objectsGeneration.getUsedObjects().get(0).getDrawCount() > countCoins) {
+                    countCoins++; //Добавляем монетку в пул
+                    distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+                } else {
+                    countThorn++; //Добавляем шип в пул если нет монет
+                    distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject * 2), (maxDistanceAdditionObject * 2), distance);
+                }
+            }
+        }
+    }
+
+    private void addObjectsLevel8() {
+        //Определяем что нужно добавить в пул объектов на отрисовку.
+        if (distance >= distanceAdditionObject) { //Проверяем, что дистанция на отрисовку достигнута
+            int b = random.nextInt(4); //Случайно выбираем, что будем добавлять в пул
+
+            if (objectsGeneration.getUsedObjects().get(0).getDrawCount() > countCoins && b < 3 && pullCoinsCount <= pullCoinsCountMax) {
+                countCoins++; //Добавляем монетку в пул
+                pullCoinsCount++;
+                distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+            } else if (objectsGeneration.getUsedObjects().get(1).getDrawCount() > countThorn) {
+                countThorn++; //Добавляем шип в пул
+                distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject), (maxDistanceAdditionObject), distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(2).getDrawCount() > countLongThorn) {
+                countLongThorn++; //Добавляем шип в пул
+                distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject * 2), (int) (maxDistanceAdditionObject * 1.4), distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(3).getDrawCount() > countBird) {
+                countBird++; //Добавляем птичку в пул
+                distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject * 2), (int) (maxDistanceAdditionObject * 1.4), distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(4).getDrawCount() > countShield) {
+                countShield++; //Добавляем щит в пул
+                distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(5).getDrawCount() > countMagnet) {
+                countMagnet++; //Добавляем магнит в пул
+                distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+                pullCoinsCount = 0;
+            }else {
+                //Нет того элемента, который хотели отрисовать, рисуем, что осталось
+                if(objectsGeneration.getUsedObjects().get(0).getDrawCount() > countCoins) {
+                    countCoins++; //Добавляем монетку в пул
+                    distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+                } else {
+                    countThorn++; //Добавляем шип в пул если нет монет
+                    distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject * 2), (maxDistanceAdditionObject * 2), distance);
+                }
+            }
+        }
+    }
+
+    private void addObjectsLevel9() {
+        //Определяем что нужно добавить в пул объектов на отрисовку.
+        if (distance >= distanceAdditionObject) { //Проверяем, что дистанция на отрисовку достигнута
+            int b = random.nextInt(4); //Случайно выбираем, что будем добавлять в пул
+
+            if (objectsGeneration.getUsedObjects().get(0).getDrawCount() > countCoins && b < 3 && pullCoinsCount <= pullCoinsCountMax) {
+                countCoins++; //Добавляем монетку в пул
+                pullCoinsCount++;
+                distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+            } else if (objectsGeneration.getUsedObjects().get(1).getDrawCount() > countThorn) {
+                countThorn++; //Добавляем шип в пул
+                distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject), (maxDistanceAdditionObject), distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(2).getDrawCount() > countLongThorn) {
+                countLongThorn++; //Добавляем шип в пул
+                distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject * 2), (int) (maxDistanceAdditionObject * 1.4), distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(3).getDrawCount() > countBird) {
+                countBird++; //Добавляем птичку в пул
+                distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject * 2), (int) (maxDistanceAdditionObject * 1.4), distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(4).getDrawCount() > countShield) {
+                countShield++; //Добавляем щит в пул
+                distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(5).getDrawCount() > countMagnet) {
+                countMagnet++; //Добавляем магнит в пул
+                distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+                pullCoinsCount = 0;
+            }else {
+                //Нет того элемента, который хотели отрисовать, рисуем, что осталось
+                if(objectsGeneration.getUsedObjects().get(0).getDrawCount() > countCoins) {
+                    countCoins++; //Добавляем монетку в пул
+                    distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+                } else {
+                    countThorn++; //Добавляем шип в пул если нет монет
+                    distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject * 2), (maxDistanceAdditionObject * 2), distance);
+                }
+            }
+        }
+    }
+
+    private void addObjectsLevel10() {
+        //Определяем что нужно добавить в пул объектов на отрисовку.
+        if (distance >= distanceAdditionObject) { //Проверяем, что дистанция на отрисовку достигнута
+            int b = random.nextInt(4); //Случайно выбираем, что будем добавлять в пул
+
+            if (objectsGeneration.getUsedObjects().get(0).getDrawCount() > countCoins && b < 3 && pullCoinsCount <= pullCoinsCountMax) {
+                countCoins++; //Добавляем монетку в пул
+                pullCoinsCount++;
+                distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+            } else if (objectsGeneration.getUsedObjects().get(1).getDrawCount() > countThorn) {
+                countThorn++; //Добавляем шип в пул
+                distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject), (maxDistanceAdditionObject), distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(2).getDrawCount() > countLongThorn) {
+                countLongThorn++; //Добавляем шип в пул
+                distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject * 2), (int) (maxDistanceAdditionObject * 1.4), distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(3).getDrawCount() > countBird) {
+                countBird++; //Добавляем птичку в пул
+                distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject * 2), (int) (maxDistanceAdditionObject * 1.4), distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(4).getDrawCount() > countShield) {
+                countShield++; //Добавляем щит в пул
+                distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(5).getDrawCount() > countMagnet) {
+                countMagnet++; //Добавляем магнит в пул
+                distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+                pullCoinsCount = 0;
+            }else {
+                //Нет того элемента, который хотели отрисовать, рисуем, что осталось
+                if(objectsGeneration.getUsedObjects().get(0).getDrawCount() > countCoins) {
+                    countCoins++; //Добавляем монетку в пул
+                    distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+                } else {
+                    countThorn++; //Добавляем шип в пул если нет монет
+                    distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject * 2), (maxDistanceAdditionObject * 2), distance);
+                }
+            }
+        }
+    }
+
+    private void addObjectsLevel11() {
+        //Определяем что нужно добавить в пул объектов на отрисовку.
+        if (distance >= distanceAdditionObject) { //Проверяем, что дистанция на отрисовку достигнута
+            int b = random.nextInt(4); //Случайно выбираем, что будем добавлять в пул
+
+            if (objectsGeneration.getUsedObjects().get(0).getDrawCount() > countCoins && b < 3 && pullCoinsCount <= pullCoinsCountMax) {
+                countCoins++; //Добавляем монетку в пул
+                pullCoinsCount++;
+                distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+            } else if (objectsGeneration.getUsedObjects().get(1).getDrawCount() > countThorn) {
+                countThorn++; //Добавляем шип в пул
+                distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject), (maxDistanceAdditionObject), distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(2).getDrawCount() > countLongThorn) {
+                countLongThorn++; //Добавляем шип в пул
+                distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject * 2), (int) (maxDistanceAdditionObject * 1.4), distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(3).getDrawCount() > countBird) {
+                countBird++; //Добавляем птичку в пул
+                distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject * 2), (int) (maxDistanceAdditionObject * 1.4), distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(4).getDrawCount() > countShield) {
+                countShield++; //Добавляем щит в пул
+                distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(5).getDrawCount() > countMagnet) {
+                countMagnet++; //Добавляем магнит в пул
+                distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+                pullCoinsCount = 0;
+            }else {
+                //Нет того элемента, который хотели отрисовать, рисуем, что осталось
+                if(objectsGeneration.getUsedObjects().get(0).getDrawCount() > countCoins) {
+                    countCoins++; //Добавляем монетку в пул
+                    distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+                } else {
+                    countThorn++; //Добавляем шип в пул если нет монет
+                    distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject * 2), (maxDistanceAdditionObject * 2), distance);
+                }
+            }
+        }
+    }
+
+    private void addObjectsLevel12() {
+        //Определяем что нужно добавить в пул объектов на отрисовку.
+        if (distance >= distanceAdditionObject) { //Проверяем, что дистанция на отрисовку достигнута
+            int b = random.nextInt(4); //Случайно выбираем, что будем добавлять в пул
+
+            if (objectsGeneration.getUsedObjects().get(0).getDrawCount() > countCoins && b < 3 && pullCoinsCount <= pullCoinsCountMax) {
+                countCoins++; //Добавляем монетку в пул
+                pullCoinsCount++;
+                distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+            } else if (objectsGeneration.getUsedObjects().get(1).getDrawCount() > countThorn) {
+                countThorn++; //Добавляем шип в пул
+                distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject), (maxDistanceAdditionObject), distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(2).getDrawCount() > countLongThorn) {
+                countLongThorn++; //Добавляем шип в пул
+                distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject * 2), (int) (maxDistanceAdditionObject * 1.4), distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(3).getDrawCount() > countBird) {
+                countBird++; //Добавляем птичку в пул
+                distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject * 2), (int) (maxDistanceAdditionObject * 1.4), distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(4).getDrawCount() > countShield) {
+                countShield++; //Добавляем щит в пул
+                distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(5).getDrawCount() > countMagnet) {
+                countMagnet++; //Добавляем магнит в пул
+                distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+                pullCoinsCount = 0;
+            }else {
+                //Нет того элемента, который хотели отрисовать, рисуем, что осталось
+                if(objectsGeneration.getUsedObjects().get(0).getDrawCount() > countCoins) {
+                    countCoins++; //Добавляем монетку в пул
+                    distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+                } else {
+                    countThorn++; //Добавляем шип в пул если нет монет
+                    distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject * 2), (maxDistanceAdditionObject * 2), distance);
+                }
+            }
+        }
+    }
+
+    private void addObjectsLevel13() {
+        //Определяем что нужно добавить в пул объектов на отрисовку.
+        if (distance >= distanceAdditionObject) { //Проверяем, что дистанция на отрисовку достигнута
+            int b = random.nextInt(4); //Случайно выбираем, что будем добавлять в пул
+
+            if (objectsGeneration.getUsedObjects().get(0).getDrawCount() > countCoins && b < 3 && pullCoinsCount <= pullCoinsCountMax) {
+                countCoins++; //Добавляем монетку в пул
+                pullCoinsCount++;
+                distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+            } else if (objectsGeneration.getUsedObjects().get(1).getDrawCount() > countThorn) {
+                countThorn++; //Добавляем шип в пул
+                distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject), (maxDistanceAdditionObject), distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(2).getDrawCount() > countLongThorn) {
+                countLongThorn++; //Добавляем шип в пул
+                distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject * 2), (int) (maxDistanceAdditionObject * 1.4), distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(3).getDrawCount() > countBird) {
+                countBird++; //Добавляем птичку в пул
+                distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject * 2), (int) (maxDistanceAdditionObject * 1.4), distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(4).getDrawCount() > countShield) {
+                countShield++; //Добавляем щит в пул
+                distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(5).getDrawCount() > countMagnet) {
+                countMagnet++; //Добавляем магнит в пул
+                distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+                pullCoinsCount = 0;
+            }else {
+                //Нет того элемента, который хотели отрисовать, рисуем, что осталось
+                if(objectsGeneration.getUsedObjects().get(0).getDrawCount() > countCoins) {
+                    countCoins++; //Добавляем монетку в пул
+                    distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+                } else {
+                    countThorn++; //Добавляем шип в пул если нет монет
+                    distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject * 2), (maxDistanceAdditionObject * 2), distance);
+                }
+            }
+        }
+    }
+
+    private void addObjectsLevel14() {
+        //Определяем что нужно добавить в пул объектов на отрисовку.
+        if (distance >= distanceAdditionObject) { //Проверяем, что дистанция на отрисовку достигнута
+            int b = random.nextInt(4); //Случайно выбираем, что будем добавлять в пул
+
+            if (objectsGeneration.getUsedObjects().get(0).getDrawCount() > countCoins && b < 3 && pullCoinsCount <= pullCoinsCountMax) {
+                countCoins++; //Добавляем монетку в пул
+                pullCoinsCount++;
+                distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+            } else if (objectsGeneration.getUsedObjects().get(1).getDrawCount() > countThorn) {
+                countThorn++; //Добавляем шип в пул
+                distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject), (maxDistanceAdditionObject), distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(2).getDrawCount() > countLongThorn) {
+                countLongThorn++; //Добавляем шип в пул
+                distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject * 2), (int) (maxDistanceAdditionObject * 1.4), distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(3).getDrawCount() > countBird) {
+                countBird++; //Добавляем птичку в пул
+                distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject * 2), (int) (maxDistanceAdditionObject * 1.4), distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(4).getDrawCount() > countShield) {
+                countShield++; //Добавляем щит в пул
+                distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(5).getDrawCount() > countMagnet) {
+                countMagnet++; //Добавляем магнит в пул
+                distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+                pullCoinsCount = 0;
+            }else {
+                //Нет того элемента, который хотели отрисовать, рисуем, что осталось
+                if(objectsGeneration.getUsedObjects().get(0).getDrawCount() > countCoins) {
+                    countCoins++; //Добавляем монетку в пул
+                    distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+                } else {
+                    countThorn++; //Добавляем шип в пул если нет монет
+                    distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject * 2), (maxDistanceAdditionObject * 2), distance);
+                }
+            }
+        }
+    }
+
+    private void addObjectsLevel15() {
+        //Определяем что нужно добавить в пул объектов на отрисовку.
+        if (distance >= distanceAdditionObject) { //Проверяем, что дистанция на отрисовку достигнута
+            int b = random.nextInt(4); //Случайно выбираем, что будем добавлять в пул
+
+            if (objectsGeneration.getUsedObjects().get(0).getDrawCount() > countCoins && b < 3 && pullCoinsCount <= pullCoinsCountMax) {
+                countCoins++; //Добавляем монетку в пул
+                pullCoinsCount++;
+                distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+            } else if (objectsGeneration.getUsedObjects().get(1).getDrawCount() > countThorn) {
+                countThorn++; //Добавляем шип в пул
+                distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject), (maxDistanceAdditionObject), distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(2).getDrawCount() > countLongThorn) {
+                countLongThorn++; //Добавляем шип в пул
+                distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject * 2), (int) (maxDistanceAdditionObject * 1.4), distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(3).getDrawCount() > countBird) {
+                countBird++; //Добавляем птичку в пул
+                distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject * 2), (int) (maxDistanceAdditionObject * 1.4), distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(4).getDrawCount() > countShield) {
+                countShield++; //Добавляем щит в пул
+                distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(5).getDrawCount() > countMagnet) {
+                countMagnet++; //Добавляем магнит в пул
+                distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+                pullCoinsCount = 0;
+            }else {
+                //Нет того элемента, который хотели отрисовать, рисуем, что осталось
+                if(objectsGeneration.getUsedObjects().get(0).getDrawCount() > countCoins) {
+                    countCoins++; //Добавляем монетку в пул
+                    distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+                } else {
+                    countThorn++; //Добавляем шип в пул если нет монет
+                    distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject * 2), (maxDistanceAdditionObject * 2), distance);
+                }
+            }
+        }
+    }
+
+    private void addObjectsLevel16() {
+        //Определяем что нужно добавить в пул объектов на отрисовку.
+        if (distance >= distanceAdditionObject) { //Проверяем, что дистанция на отрисовку достигнута
+            int b = random.nextInt(4); //Случайно выбираем, что будем добавлять в пул
+
+            if (objectsGeneration.getUsedObjects().get(0).getDrawCount() > countCoins && b < 3 && pullCoinsCount <= pullCoinsCountMax) {
+                countCoins++; //Добавляем монетку в пул
+                pullCoinsCount++;
+                distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+            } else if (objectsGeneration.getUsedObjects().get(1).getDrawCount() > countThorn) {
+                countThorn++; //Добавляем шип в пул
+                distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject), (maxDistanceAdditionObject), distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(2).getDrawCount() > countLongThorn) {
+                countLongThorn++; //Добавляем шип в пул
+                distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject * 2), (int) (maxDistanceAdditionObject * 1.4), distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(3).getDrawCount() > countBird) {
+                countBird++; //Добавляем птичку в пул
+                distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject * 2), (int) (maxDistanceAdditionObject * 1.4), distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(4).getDrawCount() > countShield) {
+                countShield++; //Добавляем щит в пул
+                distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(5).getDrawCount() > countMagnet) {
+                countMagnet++; //Добавляем магнит в пул
+                distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
+                pullCoinsCount = 0;
+            }else {
                 //Нет того элемента, который хотели отрисовать, рисуем, что осталось
                 if(objectsGeneration.getUsedObjects().get(0).getDrawCount() > countCoins) {
                     countCoins++; //Добавляем монетку в пул

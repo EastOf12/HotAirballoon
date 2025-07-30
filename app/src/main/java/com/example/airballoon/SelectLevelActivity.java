@@ -87,10 +87,10 @@ public class SelectLevelActivity extends AppCompatActivity {
 
         for(int i = 1; i <= countLevels; i++) {
 
-            if(i == 1) {
-                levels.add(new MenuLevel(this, view, i, true, 0));
-            } else {
+            if(i == 16) {
                 levels.add(new MenuLevel(this, view, i, false, 0));
+            } else {
+                levels.add(new MenuLevel(this, view, i, true, 0));
             }
         }
     } //Загружаем кнопки уровней

@@ -19,8 +19,10 @@ import com.example.airballoon.managers.SaveManager;
 
 @SuppressLint("ViewConstructor")
 public class FreeLevel extends BaseLevel implements Runnable{
-    public FreeLevel(Activity activity) {
+    private final int selectedLevel;
+    public FreeLevel(Activity activity, int selectedLevel) {
         super(activity);
+        this.selectedLevel = selectedLevel;
     }
 
     //Основной цикл игры.
@@ -38,7 +40,7 @@ public class FreeLevel extends BaseLevel implements Runnable{
 
                         gamePlayManager.drawBackGround(canvas); //Добавляем фон
                         gamePlayManager.drawAirBalloon(canvas); //Добавляем шарик
-                        gamePlayManager.startObjectsGeneration(canvas, 0); //Добавляем генерацию игровых объектов
+                        gamePlayManager.startObjectsGeneration(canvas, selectedLevel); //Добавляем генерацию игровых объектов
                         gamePlayManager.drawCountCoins(canvas, displayMetrics); //Добавляем количество монет
                         gamePlayManager.drawHp(canvas, displayMetrics); //Добавляем количество здоровья
                         gamePlayManager.drawDistance(canvas, displayMetrics); //Добавляем дистанцию
