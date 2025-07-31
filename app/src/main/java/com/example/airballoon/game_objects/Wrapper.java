@@ -59,6 +59,9 @@ public class Wrapper {
             case "magnet":
                 maxCount = 1;
                 break;
+            case "star":
+                maxCount = 1;
+                break;
         }
     } //Максимальное количество возможных объектов в пуле
 
@@ -100,6 +103,13 @@ public class Wrapper {
                 //Создаем необходимое количество магнитов
                 for(int i = 0; i <= maxCount; i++) {
                     objects.add(new Magnet(activity, displayMetrics, airBalloonObject));
+                }
+                break;
+
+            case "star":
+                //Создаем необходимое количество звезд
+                for(int i = 0; i <= maxCount; i++) {
+                    objects.add(new Star(activity, displayMetrics, airBalloonObject));
                 }
                 break;
         }
@@ -171,6 +181,15 @@ public class Wrapper {
                     newIteration = false;
                 }
             }
+        } else if (wrapperType.equals("star")) {
+            for(int i = 0; i <= count; i++ ) {
+                Star star = (Star) objects.get(i);
+                star.draw(canvas);
+
+                if(star.isNeedDraw()) {
+                    newIteration = false;
+                }
+            }
         }
 
         return newIteration;
@@ -225,7 +244,11 @@ public class Wrapper {
                 drawCount++;
                 break;
             case "magnet":
-                objects.add(new Shield(activity, displayMetrics, airBalloonObject));
+                objects.add(new Magnet(activity, displayMetrics, airBalloonObject));
+                drawCount++;
+                break;
+            case "star":
+                objects.add(new Star(activity, displayMetrics, airBalloonObject));
                 drawCount++;
                 break;
         }

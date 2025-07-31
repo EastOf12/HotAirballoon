@@ -21,6 +21,7 @@ import com.example.airballoon.game_objects.LongThorn;
 import com.example.airballoon.game_objects.Magnet;
 import com.example.airballoon.game_objects.PosX;
 import com.example.airballoon.game_objects.Shield;
+import com.example.airballoon.game_objects.Star;
 import com.example.airballoon.game_objects.Thorn;
 import com.example.airballoon.R;
 import com.example.airballoon.game_objects.Wrapper;
@@ -65,6 +66,7 @@ public class GamePlayManager {
     boolean needZeroBird;
     boolean needZeroShield;
     boolean needZeroMagnet;
+    boolean needZeroStar;
     private int minDistanceAdditionObject = 250; //Минимальная пройденная дистанция, после которой можно добавить новый объект в пул
     private int maxDistanceAdditionObject = 450; //Максимальная пройденная дистанция, после которой можно добавить новый объект в пул
     private int distanceAdditionObject = 35; //Дистацния при достижении которой добавляем новый объект в пул
@@ -77,6 +79,7 @@ public class GamePlayManager {
     Integer countBird = -1;
     Integer countShield = -1;
     Integer countMagnet = -1;
+    Integer countStar = -1;
     int distanceBirdAdd = 20000;
     boolean birdAdd = false;
 
@@ -87,6 +90,10 @@ public class GamePlayManager {
     private boolean gameObjectLoaded = false;
     private ArrayList<Thorn> thorns;
     private ArrayList<Coin> coins;
+
+    private int starsAdded = 0;
+    private boolean needStar = false;
+    private final int[] level1starDistance = {20000, 40000, 60000};
 
     public GamePlayManager(Activity activity, DisplayMetrics displayMetrics, User user) {
         this.activity = activity;
@@ -441,7 +448,7 @@ public class GamePlayManager {
                 distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject), (maxDistanceAdditionObject), distance);
                 pullCoinsCount = 0;
             } else if (objectsGeneration.getUsedObjects().get(2).getDrawCount() > countLongThorn) {
-                countLongThorn++; //Добавляем шип в пул
+                countLongThorn++; //Добавляем длинный шип в пул
                 distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject * 2), (int) (maxDistanceAdditionObject * 1.4), distance);
                 pullCoinsCount = 0;
             } else if (objectsGeneration.getUsedObjects().get(3).getDrawCount() > countBird) {
@@ -480,6 +487,10 @@ public class GamePlayManager {
             } else if (objectsGeneration.getUsedObjects().get(1).getDrawCount() > countThorn) {
                 countThorn++; //Добавляем шип в пул
                 distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject), (maxDistanceAdditionObject), distance);
+                pullCoinsCount = 0;
+            } else if (objectsGeneration.getUsedObjects().get(6).getDrawCount() > countStar) {
+                addStar(level1starDistance); //Добавляем звезду, если пришло время
+                distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
                 pullCoinsCount = 0;
             } else {
                 //Нет того элемента, который хотели отрисовать, рисуем, что осталось
@@ -1221,7 +1232,38 @@ public class GamePlayManager {
                 magnet.calculateStartPosition();
             }
         }
+
+        //Отрисовываем магниты из пула
+        needZeroStar = usedObjects.get(6).drawObjects(canvas, countStar, "star");
+
+        if (needZeroStar) {
+            countStar = -1;
+
+            ArrayList<Object> stars = usedObjects.get(6).getObjects();
+
+            for (Object ob : stars) {
+                Star star = (Star) ob;
+                star.calculateStartPosition();
+            }
+        }
     }
 
+    private void addStar(int[] distanceAdd) {
+        if(starsAdded == 0 && distance >= distanceAdd[0]) {
+            needStar = true;
+            starsAdded = 1;
+        } else if(starsAdded == 1 && distance >= distanceAdd[1]) {
+            needStar = true;
+            starsAdded = 2;
+        } else if(starsAdded == 2 && distance >= distanceAdd[2]) {
+            needStar = true;
+            starsAdded = 3;
+        }
 
+        if(needStar) {
+            countStar++;
+            needStar = false;
+        }
+
+    } //Принимает массив значений, когда нужно добавить звезду в пул на отрисовку
 }

@@ -29,57 +29,10 @@ public class Coin extends GameObject{
         createRect();
     }
 
-    public Coin(Activity activity, DisplayMetrics displayMetrics, AirBalloonObject airBalloon, PosX posX, int yPos) {
-        super(activity, displayMetrics);
-
-        this.airBalloon = airBalloon;
-        needDraw = true;
-        setPercentage(0.08);
-        image = BitmapFactory.decodeResource(activity.getResources(), R.drawable.coin);
-        calculateSize();
-        calculateStartPosition(posX, yPos);
-        createRect();
-    }
     @Override
     public void calculateStartPosition() {
         xPosition = random.nextInt((int) (displayMetrics.widthPixels - width));
         yPosition = -50;
-        needDraw = true;
-    }
-
-    public void calculateStartPosition(PosX posX, int yPos) {
-        switch (posX) {
-            case LEFT:
-                xPosition = (int) (width * 0.5);
-                break;
-            case LEFT2:
-                xPosition = (int) ((displayMetrics.widthPixels * 0.2) - width * 0.5);
-                break;
-            case LEFT3:
-                xPosition = (int) ((displayMetrics.widthPixels * 0.3) - width * 0.5);
-                break;
-            case LEFT4:
-                xPosition = (int) ((displayMetrics.widthPixels * 0.4 ) - width * 0.5);
-                break;
-            case CENTER:
-                xPosition = (int) ((displayMetrics.widthPixels * 0.5 ) - width * 0.5);
-                break;
-            case RIGHT1:
-                xPosition = (int) ((displayMetrics.widthPixels * 0.6 ) - width * 0.5);
-                break;
-            case RIGHT2:
-                xPosition = (int) ((displayMetrics.widthPixels * 0.7 ) - width * 0.5);
-                break;
-            case RIGHT3:
-                xPosition = (int) ((displayMetrics.widthPixels * 0.8 ) - width * 0.5);
-                break;
-            case RIGHT:
-                xPosition = (int) (displayMetrics.widthPixels - width * 1.5);
-                break;
-
-        }
-
-        yPosition = yPos;
         needDraw = true;
     }
 
