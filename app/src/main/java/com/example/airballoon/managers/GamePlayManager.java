@@ -197,7 +197,14 @@ public class GamePlayManager {
                 , (int) (displayMetrics.heightPixels * 0.2), textPaint);
     }
 
-    public void drawGameOver(Canvas canvas, DisplayMetrics displayMetrics) {
+    public void drawGameOver(Canvas canvas, DisplayMetrics displayMetrics, int selectedLevel) {
+        boolean freeLevel = selectedLevel == 0;
+        double heightPixels = 0.4;
+
+        if(!freeLevel) {
+            heightPixels = 0.5;
+        }
+
 
         canvas.save();
 
@@ -205,28 +212,35 @@ public class GamePlayManager {
         canvas.rotate(-5, (int) (displayMetrics.heightPixels * 0.26),
                 (int) (displayMetrics.widthPixels * 0.64));
 
-        canvas.drawText("Конец игры !"
+        String textEndGame = "Конец игры !";
+
+        canvas.drawText(textEndGame
                 , (int) (displayMetrics.widthPixels * 0.5)
-                , (int) (displayMetrics.heightPixels * 0.4), textPaintEndGame);
+                , (int) (displayMetrics.heightPixels * heightPixels), textPaintEndGame);
 
+        if(freeLevel) {
+            canvas.drawText("Набранная высота: " + (distance / 100)
+                    , (int) (displayMetrics.widthPixels * 0.73)
+                    , (int) (displayMetrics.heightPixels * 0.45), textPaintDistance);
 
-        canvas.drawText("Набранная высота: " + (distance / 100)
-                , (int) (displayMetrics.widthPixels * 0.73)
-                , (int) (displayMetrics.heightPixels * 0.45), textPaintDistance);
+            long maxDistance;
 
-        long maxDistance;
+            if(distance / 100 > user.getMaxDistanceLevelFirst()) {
+                maxDistance = distance / 100;
+            } else {
+                maxDistance = user.getMaxDistanceLevelFirst();
+            }
 
-        if(distance / 100 > user.getMaxDistanceLevelFirst()) {
-            maxDistance = distance / 100;
-        } else {
-            maxDistance = user.getMaxDistanceLevelFirst();
+            canvas.drawText("Рекорд высоты: " + maxDistance
+                    , (int) (displayMetrics.widthPixels * 0.73)
+                    , (int) (displayMetrics.heightPixels * 0.49), textPaintDistance);
+
+            canvas.restore();
         }
+    }
 
-        canvas.drawText("Рекорд высоты: " + maxDistance
-                , (int) (displayMetrics.widthPixels * 0.73)
-                , (int) (displayMetrics.heightPixels * 0.49), textPaintDistance);
-
-        canvas.restore();
+    public void drawLevelCompleted(Canvas canvas, DisplayMetrics displayMetrics) {
+        gamePlayMenu.drawLevelCompleted(canvas);
     }
 
     public void drawGamePlayMenu(Canvas canvas) {
@@ -366,6 +380,10 @@ public class GamePlayManager {
             }
         }
     }
+
+    public boolean checkLevelProgress(int needDistance) {
+        return distance >= needDistance * 100;
+    } //Возвращает ответ, можно ли считать уровень пройденным.
 
     public void restartBackGround() {
         backGround.restartBackground();

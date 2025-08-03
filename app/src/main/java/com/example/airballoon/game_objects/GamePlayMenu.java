@@ -96,34 +96,48 @@ public class GamePlayMenu {
                 null);
     } //Рисуем кнопки, когда игра завершена.
 
-    public Enum onTouch(MotionEvent event, boolean isPaused) {
+    public void drawLevelCompleted(Canvas canvas) {
+        //Кнопка выхода в меню
+        canvas.drawBitmap(buttonExit, xPositionButtonExit, yPositionButtonExit, null);
+
+        //Кнопка перезапуска
+        canvas.drawBitmap(buttonRestart, xPositionButtonRestart, yPositionButtonRestart,
+                null);
+    } //Рисуем экран пройденного уровня
+
+    public Enum onTouch(MotionEvent event, boolean isPaused, boolean levelCompleted) {
+
         float touchX = event.getX();
         float touchY = event.getY();
 
+        MenuActions actions = MenuActions.PENDING;
+
         if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            if (touchX >= xPositionButtonResume && touchX < (xPositionButtonResume + widthButtonResume) &&
+            if (!levelCompleted && touchX >= xPositionButtonResume && touchX < (xPositionButtonResume + widthButtonResume) &&
                     touchY >= yPositionButtonResume && touchY < (yPositionButtonResume + heightButtonResume) && isPaused) {
-                return MenuActions.RESUME;
+                actions = MenuActions.RESUME;
             }
 
-            if (touchX >= (int) (displayMetrics.widthPixels * 0.4) && touchX < ((int) (displayMetrics.widthPixels * 0.4) + widthButtonResume) &&
+            if (!levelCompleted && touchX >= (int) (displayMetrics.widthPixels * 0.4) && touchX < ((int) (displayMetrics.widthPixels * 0.4) + widthButtonResume) &&
                     touchY >= (int) (displayMetrics.heightPixels * 0.4) && touchY < ((int) (displayMetrics.heightPixels * 0.4) + heightButtonResume)
             && isPaused) {
-                return MenuActions.EXIT;
+                actions = MenuActions.EXIT;
             }
 
             if (touchX >= xPositionButtonExit && touchX < (xPositionButtonExit + widthButtonExit) &&
-                    touchY >= yPositionButtonExit && touchY < (yPositionButtonExit + heightButtonExit) && !isPaused) {
-                return MenuActions.EXIT;
+                    touchY >= yPositionButtonExit && touchY < (yPositionButtonExit + heightButtonExit) && (!isPaused || levelCompleted)) {
+                actions = MenuActions.EXIT;
             }
 
             if(touchX >= xPositionButtonRestart && touchX <(xPositionButtonRestart
                     + widthButtonRestart) && touchY >= yPositionButtonRestart &&
                     touchY < (yPositionButtonRestart + heightButtonRestart)) {
-                return MenuActions.RESTART;
+                actions = MenuActions.RESTART;
             }
         }
 
-        return MenuActions.PENDING;
+        System.out.println(actions);
+
+        return actions;
     }
 }
