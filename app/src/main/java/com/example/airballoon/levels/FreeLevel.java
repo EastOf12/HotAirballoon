@@ -66,7 +66,7 @@ public class FreeLevel extends BaseLevel implements Runnable{
                         }
 
                         if(levelCompleted) {
-                            gamePlayManager.drawLevelCompleted(canvas, displayMetrics); //Считаем, что уровень пройден
+                            gamePlayManager.drawLevelCompleted(canvas, displayMetrics, 3); //Считаем, что уровень пройден
                             GamePlayManager.speed = 0;
                         }
 

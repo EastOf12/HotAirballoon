@@ -239,8 +239,8 @@ public class GamePlayManager {
         }
     }
 
-    public void drawLevelCompleted(Canvas canvas, DisplayMetrics displayMetrics) {
-        gamePlayMenu.drawLevelCompleted(canvas);
+    public void drawLevelCompleted(Canvas canvas, DisplayMetrics displayMetrics, int starCount) {
+        gamePlayMenu.drawLevelCompleted(canvas, starCount);
     }
 
     public void drawGamePlayMenu(Canvas canvas) {
