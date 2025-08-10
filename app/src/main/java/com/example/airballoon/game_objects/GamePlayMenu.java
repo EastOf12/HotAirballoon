@@ -121,7 +121,7 @@ public class GamePlayMenu {
     } //Рисуем кнопки, когда игра завершена.
 
     public void drawLevelCompleted(Canvas canvas, int starCount) {
-        backGroundLevelCompleted.draw(canvas);
+//        backGroundLevelCompleted.draw(canvas);
 
         if(stars.isEmpty()) {
             for(int i = 1; i < 4; i++) {
