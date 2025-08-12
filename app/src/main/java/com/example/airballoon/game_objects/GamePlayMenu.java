@@ -198,7 +198,7 @@ public class GamePlayMenu {
     }
 }
 
-class BackGroundLevelCompleted extends GamePlayMenuObject {
+class BackGroundLevelCompleted extends BaseObject {
     public BackGroundLevelCompleted(Activity activity, DisplayMetrics displayMetrics, int resourceId,
                       double percentage) {
         super(activity, displayMetrics, percentage);
@@ -210,7 +210,7 @@ class BackGroundLevelCompleted extends GamePlayMenuObject {
     }
 }
 
-class ResultText extends GamePlayMenuObject {
+class ResultText extends BaseObject {
     public ResultText(Activity activity, DisplayMetrics displayMetrics, int resourceId,
                       double percentage, Cube cube) {
         super(activity, displayMetrics, percentage);
@@ -223,7 +223,7 @@ class ResultText extends GamePlayMenuObject {
     }
 }
 
-class ButtonExit extends GamePlayMenuObject {
+class ButtonExit extends BaseObject {
     public ButtonExit(Activity activity, DisplayMetrics displayMetrics, int resourceId,
                       double percentage, Cube cube) {
         super(activity, displayMetrics, percentage);
@@ -236,7 +236,7 @@ class ButtonExit extends GamePlayMenuObject {
     }
 }
 
-class ButtonNext extends GamePlayMenuObject {
+class ButtonNext extends BaseObject {
     public ButtonNext(Activity activity, DisplayMetrics displayMetrics, int resourceId,
                       double percentage, Cube cube) {
         super(activity, displayMetrics, percentage);
@@ -249,7 +249,7 @@ class ButtonNext extends GamePlayMenuObject {
     }
 }
 
-class ButtonRestart extends GamePlayMenuObject {
+class ButtonRestart extends BaseObject {
     public ButtonRestart(Activity activity, DisplayMetrics displayMetrics, int resourceId,
                       double percentage, Cube cube) {
         super(activity, displayMetrics, percentage);
@@ -262,7 +262,7 @@ class ButtonRestart extends GamePlayMenuObject {
     }
 }
 
-class StarObject extends GamePlayMenuObject{
+class StarObject extends BaseObject{
 
     public StarObject(Activity activity, DisplayMetrics displayMetrics, int resourceId,
                       double percentage, int starNumber, Cube cube) {
@@ -295,7 +295,7 @@ class StarObject extends GamePlayMenuObject{
     }
 }
 
-class Cube extends GamePlayMenuObject {
+class Cube extends BaseObject {
 
     public Cube(Activity activity, DisplayMetrics displayMetrics, int resourceId, double percentage) {
         super(activity, displayMetrics, percentage);
@@ -321,45 +321,5 @@ class Cube extends GamePlayMenuObject {
 
     public double getHeight() {
         return height;
-    }
-}
-
-class GamePlayMenuObject{
-    private Bitmap image;
-    protected int xPosition;
-    protected int yPosition;
-    protected double width;
-    protected double height;
-    private final double percentage;
-    Activity activity;
-    DisplayMetrics displayMetrics;
-
-    public GamePlayMenuObject(Activity activity, DisplayMetrics displayMetrics,
-                              double percentage) {
-        this.activity = activity;
-        this.displayMetrics = displayMetrics;
-        this.percentage = percentage;
-    }
-
-    protected void loadImage(Activity activity, int resourceId) {
-        image = BitmapFactory.decodeResource(activity.getResources(), resourceId);
-    }
-
-    protected void calculateSize(DisplayMetrics displayMetrics) {
-        width = displayMetrics.widthPixels * percentage;
-        double proportion = (double) image.getWidth() / image.getHeight();
-        height = width / proportion;
-        image = Bitmap.createScaledBitmap(image
-                , (int) width, (int) height, true);
-    }
-
-    public void draw(Canvas canvas) {
-        canvas.drawBitmap(image, xPosition, yPosition,
-                null);
-    }
-
-    protected void setPositions(int xPosition, int yPosition) {
-        this.xPosition = xPosition;
-        this.yPosition = yPosition;
     }
 }
