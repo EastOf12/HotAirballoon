@@ -9,20 +9,23 @@ import android.util.StateSet;
 
 import com.example.airballoon.R;
 import com.example.airballoon.game_objects.BaseObject;
+import com.example.airballoon.levels.FreeLevel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class LevelProgressManager {
     ProgressBarBg progressBarBg;
     ProgressBar progressBar;
     ArrayList<StarProgress> stars = new ArrayList<>();
 
-    public LevelProgressManager(Activity activity, DisplayMetrics displayMetrics) {
+
+    public LevelProgressManager(Activity activity, DisplayMetrics displayMetrics, int levelNum) {
         progressBarBg = new ProgressBarBg(activity, displayMetrics, R.drawable.level_progress_bg, 0.045);
-        progressBar = new ProgressBar(activity, displayMetrics, R.drawable.level_progress, 0.023, progressBarBg);
+        progressBar = new ProgressBar(activity, displayMetrics, R.drawable.level_progress, 0.023, progressBarBg, levelNum);
 
         for(int i = 1; i < 4; i++) {
-            StarProgress starProgress = new StarProgress(activity, displayMetrics, R.drawable.star_brown, 0.3, progressBarBg, i);
+            StarProgress starProgress = new StarProgress(activity, displayMetrics, R.drawable.star_brown, 0.08, progressBarBg, i, levelNum);
             stars.add(starProgress);
         }
     }
@@ -31,9 +34,9 @@ public class LevelProgressManager {
         progressBarBg.draw(canvas);
         progressBar.draw(canvas, distance);
 
-//        for (StarProgress star: stars) {
-//            star.draw(canvas);
-//        }
+        for (StarProgress star: stars) {
+            star.draw(canvas, distance);
+        }
     }
 
 }
@@ -67,14 +70,16 @@ class ProgressBarBg extends BaseObject {
 }
 
 class ProgressBar extends BaseObject {
+    HashMap<Integer, Integer> levelsInfo = FreeLevel.loadLevelFinishInfo();
     double minYPos;
     int extremePoint; //Крайняя точка по Y внизу
     int maxHeight;
 
-    int maxDistance = 500_00;
+    int maxDistance;
     public ProgressBar(Activity activity, DisplayMetrics displayMetrics, int resourceId,
-                       double percentage, ProgressBarBg progressBarBg) {
+                       double percentage, ProgressBarBg progressBarBg, int levelNum) {
         super(activity, displayMetrics, percentage);
+        maxDistance = levelsInfo.get(levelNum) * 100;
         minYPos = (int) (progressBarBg.getYPos() + progressBarBg.getHeight() * 0.050);
 
         loadImage(activity, resourceId);
@@ -97,54 +102,121 @@ class ProgressBar extends BaseObject {
         setPositions(xPos, yPos);
     }
 
+//    public void draw(Canvas canvas, int distance) {
+//        double percent = (double) distance / maxDistance;
+//
+//        if(yPosition > minYPos && percent > 0) {
+//            height = maxHeight * percent;
+//
+//            if(height > 1) {
+//                yPosition = (int) (extremePoint - height);
+//                image = Bitmap.createScaledBitmap(image
+//                        , (int) width, (int) height, true);
+//            }
+//        }
+//
+//        canvas.drawBitmap(image, xPosition, yPosition,
+//                null);
+//
+//    }
+
     public void draw(Canvas canvas, int distance) {
-        double percent = (double) distance / maxDistance;
+        double newHeight = interpolateHeight(distance);
 
-        if(yPosition > minYPos && percent > 0) {
-            height = maxHeight * percent;
-
-            if(height > 1) {
-                yPosition = (int) (extremePoint - height);
-                image = Bitmap.createScaledBitmap(image
-                        , (int) width, (int) height, true);
-            }
+        if (newHeight > 1) {
+            height = (int) newHeight;
+            yPosition = (int) (extremePoint - height);
+            image = Bitmap.createScaledBitmap(image, (int) width, (int) height, true);
         }
 
-        canvas.drawBitmap(image, xPosition, yPosition,
-                null);
+        canvas.drawBitmap(image, xPosition, yPosition, null);
+    }
 
+    private double interpolateHeight(int distance) {
+        double percent = (double) distance / maxDistance;
+
+        if (percent <= 0.5) {
+            return maxHeight * (percent / 0.5 * 0.35);
+        } else if (percent <= 0.75) {
+            return maxHeight * (0.35 + (percent - 0.5) / (0.75 - 0.5) * (0.60 - 0.35));
+        } else {
+            return maxHeight * (0.60 + (percent - 0.75) / (1.00 - 0.75) * (1.00 - 0.60));
+        }
     }
 }
 
 class StarProgress extends BaseObject {
+    HashMap<Integer, Integer> levelsInfo = FreeLevel.loadLevelFinishInfo();
+    boolean yellowStar = false;
+    Bitmap yellowStarImage;
+    int yellowStarDistance;
+    int starNumber;
+    DisplayMetrics displayMetrics;
+
     public StarProgress(Activity activity, DisplayMetrics displayMetrics, int resourceId,
-                       double percentage, ProgressBarBg progressBarBg, int starNumber) {
+                       double percentage, ProgressBarBg progressBarBg, int starNumber, int LevelNum) {
         super(activity, displayMetrics, percentage);
+        this.starNumber = starNumber;
+        this.displayMetrics = displayMetrics;
+        setYellowStarDistance(LevelNum);
+
+        yellowStarImage= BitmapFactory.decodeResource(activity.getResources(), R.drawable.star_yellow);
 
         loadImage(activity, resourceId);
         calculateSize(displayMetrics);
 
         int yPos;
-        int xPos;
+        int xPos = progressBarBg.getXPos() - (int) (width * 0.21);;
         int bgYPos = progressBarBg.getYPos();
-        int bgXPos = progressBarBg.getXPos();
+
 
         switch (starNumber) {
             case 1:
-                yPos = bgYPos - (int) (width / 2);
-                xPos = bgXPos + (int) (width * 0.2);
+                yPos = bgYPos + (int) (progressBarBg.getHeight() * 0.55);
                 break;
             case 2:
-                yPos = bgYPos - (int) (height * 0.85);
-                xPos = (int) (bgXPos + (progressBarBg.getWidth() * 0.5) - (width * 0.5));
+                yPos = bgYPos + (int) (progressBarBg.getHeight() * 0.2);
                 break;
             default:
-                yPos = bgYPos - (int) (width / 2);
-                xPos = bgXPos + (int) (progressBarBg.getWidth() * 0.7);
+                yPos = bgYPos - (int) (height * 0.5);
                 break;
         }
 
         setPositions(xPos, yPos);
+    }
+
+    public void setImage(int distance) {
+        if(starNumber == 1 && !yellowStar && distance > (yellowStarDistance * 100)) {
+            image = yellowStarImage;
+            calculateSize(displayMetrics);
+        } else if(starNumber == 2 && !yellowStar && distance > (yellowStarDistance * 100)) {
+            image = yellowStarImage;
+            calculateSize(displayMetrics);
+        } else if(starNumber == 3 && !yellowStar && distance > (yellowStarDistance * 100)) {
+            image = yellowStarImage;
+            calculateSize(displayMetrics);
+        }
+    }
+
+    public void draw(Canvas canvas, int distance) {
+        setImage(distance);
+
+        canvas.drawBitmap(image, xPosition, yPosition,
+                null);
+    }
+
+    private void setYellowStarDistance(int levelNum) {
+        switch (starNumber) {
+            case 1:
+                yellowStarDistance = (int) (levelsInfo.get(levelNum) * 0.4);
+                break;
+            case 2:
+                yellowStarDistance = (int) (levelsInfo.get(levelNum) * 0.79);
+                break;
+            case 3:
+                yellowStarDistance = levelsInfo.get(levelNum);
+                break;
+        }
     }
 }
 

@@ -96,12 +96,12 @@ public class GamePlayManager {
     private final int[] level1starDistance = {20000, 40000, 60000};
     LevelProgressManager levelProgressManager;
 
-    public GamePlayManager(Activity activity, DisplayMetrics displayMetrics, User user) {
+    public GamePlayManager(Activity activity, DisplayMetrics displayMetrics, User user, int LevelNum) {
         this.activity = activity;
         this.displayMetrics = displayMetrics;
         this.user = user;
         gamePlayMenu = new GamePlayMenu(activity, displayMetrics, gameStatus);
-        levelProgressManager = new LevelProgressManager(activity, displayMetrics);
+        levelProgressManager = new LevelProgressManager(activity, displayMetrics, LevelNum);
 
         backGround = new BackGround(activity, displayMetrics, R.drawable.game_bg); //В дальнейшем нужно будет доработать, тк фон для разных уровней может быть разным.
         gearWheel = new GearWheel(activity, displayMetrics);
@@ -265,7 +265,7 @@ public class GamePlayManager {
         return gearWheel.onTouch(event);
     }
 
-    public void drawLevelProgress(Canvas canvas, int levelNum) {
+    public void drawLevelProgress(Canvas canvas) {
         levelProgressManager.run(canvas, distance);
     } //Выводит информацию по прогрессу уровня.
 

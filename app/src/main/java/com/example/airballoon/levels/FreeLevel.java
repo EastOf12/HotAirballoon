@@ -27,6 +27,7 @@ public class FreeLevel extends BaseLevel implements Runnable{
 
     public FreeLevel(Activity activity, int selectedLevel) {
         super(activity);
+        gamePlayManager = new GamePlayManager(activity, displayMetrics, user, selectedLevel);
         this.selectedLevel = selectedLevel;
     }
 
@@ -49,7 +50,7 @@ public class FreeLevel extends BaseLevel implements Runnable{
                         gamePlayManager.drawCountCoins(canvas, displayMetrics); //Добавляем количество монет
                         gamePlayManager.drawHp(canvas, displayMetrics); //Добавляем количество здоровья
                         gamePlayManager.drawDistance(canvas, displayMetrics); //Добавляем дистанцию
-                        gamePlayManager.drawLevelProgress(canvas, 1);
+                        gamePlayManager.drawLevelProgress(canvas);
 
                         if(isPaused && !levelCompleted) {
                             gamePlayManager.drawGamePlayMenu(canvas);
@@ -156,9 +157,9 @@ public class FreeLevel extends BaseLevel implements Runnable{
         needSave = true;
     } //Перезапуск уровня. Работает коряво, нужно пересобирать.
 
-    private HashMap<Integer, Integer> loadLevelFinishInfo() {
+    public static HashMap<Integer, Integer> loadLevelFinishInfo() {
         HashMap<Integer, Integer> levelsInfo = new HashMap<>();
-        levelsInfo.put(1, 500);
+        levelsInfo.put(1, 1000);
         levelsInfo.put(2, 500);
         levelsInfo.put(3, 500);
         levelsInfo.put(4, 500);

@@ -42,7 +42,6 @@ abstract class BaseLevel extends SurfaceView implements Runnable{
         displayMetrics = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         managerFPS = new ManagerFPS();
-        gamePlayManager = new GamePlayManager(activity, displayMetrics, user);
     }
 
     //Запускаем уровень
