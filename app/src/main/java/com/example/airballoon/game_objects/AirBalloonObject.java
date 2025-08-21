@@ -15,7 +15,7 @@ public class AirBalloonObject extends GameObject{
     float startX, startY;
     float offsetX, offsetY;
     private int collectedCoins = 0;
-    private int hp = 1;
+    private int hp = 1000;
     private final int maxXp = 1;
     private boolean hadShield = false;
     private boolean hadMagnet = false;
@@ -27,7 +27,7 @@ public class AirBalloonObject extends GameObject{
 
 
     private int timeActionShield = 5; //Время действия щита.
-    private int timeActionMagnet = 5; //Время действия магнита.
+    private int timeActionMagnet = 10; //Время действия магнита.
     ShieldIcon shieldIcon;
     MagnetIcon magnetIcon;
     ShieldIcon shieldAirballoonAnimation;
@@ -36,7 +36,7 @@ public class AirBalloonObject extends GameObject{
     public AirBalloonObject(Activity activity, DisplayMetrics displayMetrics, Bitmap image) {
         super(activity, displayMetrics);
 
-        setPercentage(0.15);
+        setPercentage(0.12);
         this.image = image;
         calculateSize();
         calculateStartPosition();

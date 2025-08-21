@@ -42,10 +42,10 @@ public class Wrapper {
     private void generateMaxMin() {
         switch (type) {
             case "coin":
-                maxCount = 8; //8
+                maxCount = 5; //8
                 break;
             case "thorn":
-                maxCount = 4; //4
+                maxCount = 10; //4
                 break;
             case "long_thorn":
                 maxCount = 0; //0
@@ -253,4 +253,9 @@ public class Wrapper {
                 break;
         }
     } //Добавляем объект в пул
+
+    public void addObject(Bird bird) {
+        objects.add(bird);
+        drawCount++;
+    } //Для птички отдельно, тк ее нужно создавать на экране загрузки либо в concurrent
 }

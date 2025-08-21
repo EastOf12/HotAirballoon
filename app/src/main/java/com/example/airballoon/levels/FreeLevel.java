@@ -4,12 +4,9 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Canvas;
-import android.os.Handler;
-import android.os.HandlerThread;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.example.airballoon.GamePlayActivity;
 import com.example.airballoon.MainActivity;
 import com.example.airballoon.R;
 import com.example.airballoon.RewardedAdActivity;
@@ -47,9 +44,8 @@ public class FreeLevel extends BaseLevel implements Runnable{
                         gamePlayManager.drawBackGround(canvas); //Добавляем фон
                         gamePlayManager.drawAirBalloon(canvas); //Добавляем шарик
                         gamePlayManager.startObjectsGeneration(canvas, selectedLevel); //Добавляем генерацию игровых объектов
-                        gamePlayManager.drawCountCoins(canvas, displayMetrics); //Добавляем количество монет
-                        gamePlayManager.drawHp(canvas, displayMetrics); //Добавляем количество здоровья
-                        gamePlayManager.drawDistance(canvas, displayMetrics); //Добавляем дистанцию
+                        gamePlayManager.drawCountCoins(canvas, displayMetrics); //Рисуем количество собранных монет
+                        gamePlayManager.countDistance(); //Увеличиваем пройденную дистацнию
                         gamePlayManager.drawLevelProgress(canvas);
 
                         if(isPaused && !levelCompleted) {
@@ -159,8 +155,8 @@ public class FreeLevel extends BaseLevel implements Runnable{
 
     public static HashMap<Integer, Integer> loadLevelFinishInfo() {
         HashMap<Integer, Integer> levelsInfo = new HashMap<>();
-        levelsInfo.put(1, 1000);
-        levelsInfo.put(2, 500);
+        levelsInfo.put(1, 600);
+        levelsInfo.put(2, 700);
         levelsInfo.put(3, 500);
         levelsInfo.put(4, 500);
         levelsInfo.put(5, 500);

@@ -27,7 +27,7 @@ abstract class BaseLevel extends SurfaceView implements Runnable{
     //Поля состояний (В целом можно когда-нибудь вынести в отдельный класс)
     protected volatile boolean running = false;
     protected boolean isPaused = false;
-    int startSpeed = 15;
+    int startSpeed = GamePlayManager.speed;
     boolean needSave = true;
 
     @SuppressLint("UseCompatLoadingForDrawables")
