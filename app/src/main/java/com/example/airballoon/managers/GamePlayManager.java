@@ -13,6 +13,7 @@ import android.view.MotionEvent;
 
 import com.example.airballoon.game_objects.AirBalloonObject;
 import com.example.airballoon.game_objects.BackGround;
+import com.example.airballoon.game_objects.BaseObject;
 import com.example.airballoon.game_objects.Bird;
 import com.example.airballoon.game_objects.Coin;
 import com.example.airballoon.game_objects.GamePlayMenu;
@@ -95,6 +96,7 @@ public class GamePlayManager {
     private boolean needStar = false;
     private final int[] level1starDistance = {20000, 40000, 60000};
     LevelProgressManager levelProgressManager;
+    Coins coinsCount;
 
     public GamePlayManager(Activity activity, DisplayMetrics displayMetrics, User user, int LevelNum) {
         this.activity = activity;
@@ -122,8 +124,9 @@ public class GamePlayManager {
         //Создаем объект шарика исходя из полученного id выбранного шарика пользователем.
         airBalloon = new AirBalloonObject(activity, displayMetrics, image);
         textPaint = new Paint();
-        textPaint.setColor(Color.WHITE);
-        textPaint.setTextSize(50);
+        textPaint.setColor(Color.BLACK);
+        textPaint.setTextSize(60);
+        textPaint.setTextSkewX(-0.25f); //Наклон текста
         textPaint.setTextAlign(Paint.Align.CENTER);
 
         textPaintEndGame = new Paint();
@@ -173,6 +176,7 @@ public class GamePlayManager {
 
         thorns = new ArrayList<>();
         coins = new ArrayList<>();
+        coinsCount = new Coins(activity, displayMetrics, R.drawable.coins, 0.1);
     }
 
     public void drawAirBalloon(Canvas canvas) {
@@ -180,23 +184,16 @@ public class GamePlayManager {
     }
 
     public void drawCountCoins(Canvas canvas, DisplayMetrics displayMetrics) {
-        canvas.drawText("Монеты: " + airBalloon.getCollectedCoins()
-                , (int) (displayMetrics.heightPixels * 0.35)
+        canvas.drawText(String.valueOf(airBalloon.getCollectedCoins())
+                , (int) (displayMetrics.widthPixels * 0.92)
                 , (int) (displayMetrics.heightPixels * 0.1), textPaint);
+
+        coinsCount.draw(canvas);
+
     }
 
-    public void drawHp(Canvas canvas, DisplayMetrics displayMetrics) {
-        canvas.drawText("Здоровье: " + airBalloon.getHp()
-                , (int) (displayMetrics.heightPixels * 0.35)
-                , (int) (displayMetrics.heightPixels * 0.15), textPaint);
-    }
-
-    public void drawDistance(Canvas canvas, DisplayMetrics displayMetrics) {
+    public void countDistance() {
         distance += speed;
-
-        canvas.drawText("Высота: " + (distance / 100)
-                , (int) (displayMetrics.heightPixels * 0.35)
-                , (int) (displayMetrics.heightPixels * 0.2), textPaint);
     }
 
     public void drawGameOver(Canvas canvas, DisplayMetrics displayMetrics, int selectedLevel) {
@@ -1290,4 +1287,16 @@ public class GamePlayManager {
         }
 
     } //Принимает массив значений, когда нужно добавить звезду в пул на отрисовку
+}
+
+class Coins extends BaseObject {
+    public Coins(Activity activity, DisplayMetrics displayMetrics, int resourceId, double percentage) {
+        super(activity, displayMetrics, percentage);
+
+        loadImage(activity, resourceId);
+        calculateSize(displayMetrics);
+
+        setPositions((int) ((displayMetrics.widthPixels * 0.75)),
+                (int) ((displayMetrics.heightPixels * 0.065)));
+    }
 }

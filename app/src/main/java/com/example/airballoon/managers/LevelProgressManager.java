@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.util.DisplayMetrics;
 import android.util.StateSet;
 
@@ -17,12 +19,14 @@ import java.util.HashMap;
 public class LevelProgressManager {
     ProgressBarBg progressBarBg;
     ProgressBar progressBar;
+    ProgressSign progressSign;
     ArrayList<StarProgress> stars = new ArrayList<>();
 
 
     public LevelProgressManager(Activity activity, DisplayMetrics displayMetrics, int levelNum) {
         progressBarBg = new ProgressBarBg(activity, displayMetrics, R.drawable.level_progress_bg, 0.045);
         progressBar = new ProgressBar(activity, displayMetrics, R.drawable.level_progress, 0.023, progressBarBg, levelNum);
+        progressSign = new ProgressSign(activity, displayMetrics, 0.05, progressBarBg);
 
         for(int i = 1; i < 4; i++) {
             StarProgress starProgress = new StarProgress(activity, displayMetrics, R.drawable.star_brown, 0.08, progressBarBg, i, levelNum);
@@ -33,10 +37,39 @@ public class LevelProgressManager {
     public void run(Canvas canvas, int distance) {
         progressBarBg.draw(canvas);
         progressBar.draw(canvas, distance);
+        progressSign.draw(canvas, distance);
 
         for (StarProgress star: stars) {
             star.draw(canvas, distance);
         }
+    }
+
+}
+
+class ProgressSign extends BaseObject {
+    ProgressBarBg progressBar;
+    Paint textPaint;
+
+    public ProgressSign(Activity activity, DisplayMetrics displayMetrics,
+                        double percentage, ProgressBarBg progressBar) {
+        super(activity, displayMetrics, percentage);
+        this.progressBar = progressBar;
+
+        setPositions((int) (progressBar.getXPos() + progressBar.getWidth() * 0.5),
+                (int) (progressBar.getYPos() + progressBar.getHeight() * 1.1));
+
+        textPaint = new Paint();
+        textPaint.setColor(Color.BLACK);
+        textPaint.setTextSize(40);
+        textPaint.setTextAlign(Paint.Align.CENTER);
+    }
+
+
+    public void draw(Canvas canvas, int distance) {
+
+        canvas.drawText(String.valueOf(distance / 100)
+                , xPosition
+                , yPosition, textPaint);
     }
 
 }
@@ -102,24 +135,6 @@ class ProgressBar extends BaseObject {
         setPositions(xPos, yPos);
     }
 
-//    public void draw(Canvas canvas, int distance) {
-//        double percent = (double) distance / maxDistance;
-//
-//        if(yPosition > minYPos && percent > 0) {
-//            height = maxHeight * percent;
-//
-//            if(height > 1) {
-//                yPosition = (int) (extremePoint - height);
-//                image = Bitmap.createScaledBitmap(image
-//                        , (int) width, (int) height, true);
-//            }
-//        }
-//
-//        canvas.drawBitmap(image, xPosition, yPosition,
-//                null);
-//
-//    }
-
     public void draw(Canvas canvas, int distance) {
         double newHeight = interpolateHeight(distance);
 
@@ -142,6 +157,22 @@ class ProgressBar extends BaseObject {
         } else {
             return maxHeight * (0.60 + (percent - 0.75) / (1.00 - 0.75) * (1.00 - 0.60));
         }
+    }
+
+    public int getYPos() {
+        return yPosition;
+    }
+
+    public int getXPos() {
+        return xPosition;
+    }
+
+    public double getWidth() {
+        return width;
+    }
+
+    public double getHeight() {
+        return height;
     }
 }
 

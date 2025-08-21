@@ -47,9 +47,8 @@ public class FreeLevel extends BaseLevel implements Runnable{
                         gamePlayManager.drawBackGround(canvas); //Добавляем фон
                         gamePlayManager.drawAirBalloon(canvas); //Добавляем шарик
                         gamePlayManager.startObjectsGeneration(canvas, selectedLevel); //Добавляем генерацию игровых объектов
-                        gamePlayManager.drawCountCoins(canvas, displayMetrics); //Добавляем количество монет
-                        gamePlayManager.drawHp(canvas, displayMetrics); //Добавляем количество здоровья
-                        gamePlayManager.drawDistance(canvas, displayMetrics); //Добавляем дистанцию
+                        gamePlayManager.drawCountCoins(canvas, displayMetrics); //Рисуем количество собранных монет
+                        gamePlayManager.countDistance(); //Увеличиваем пройденную дистацнию
                         gamePlayManager.drawLevelProgress(canvas);
 
                         if(isPaused && !levelCompleted) {
@@ -159,7 +158,7 @@ public class FreeLevel extends BaseLevel implements Runnable{
 
     public static HashMap<Integer, Integer> loadLevelFinishInfo() {
         HashMap<Integer, Integer> levelsInfo = new HashMap<>();
-        levelsInfo.put(1, 1000);
+        levelsInfo.put(1, 500);
         levelsInfo.put(2, 500);
         levelsInfo.put(3, 500);
         levelsInfo.put(4, 500);
