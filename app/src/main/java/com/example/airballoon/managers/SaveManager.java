@@ -48,9 +48,8 @@ public class SaveManager {
             Gson gson = new Gson();
 
             // Десериализация объекта из строки
-            System.out.println("content " + content);
-
             user = gson.fromJson(String.valueOf(content), User.class);
+
 
             //Если не получили информацию по выбранному шарику
             if(user.getSelectAirBalloon() == 0) {

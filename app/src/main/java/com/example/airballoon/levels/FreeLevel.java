@@ -20,6 +20,7 @@ import java.util.HashMap;
 public class FreeLevel extends BaseLevel implements Runnable{
     private final int selectedLevel;
     private boolean levelCompleted = false;
+    private static int stars = 0;
     private final HashMap<Integer, Integer> levelsFinishDistance = loadLevelFinishInfo();
 
     public FreeLevel(Activity activity, int selectedLevel) {
@@ -64,8 +65,21 @@ public class FreeLevel extends BaseLevel implements Runnable{
                         }
 
                         if(levelCompleted) {
-                            gamePlayManager.drawLevelCompleted(canvas, displayMetrics, 3); //Считаем, что уровень пройден
+                            gamePlayManager.drawLevelCompleted(canvas, displayMetrics, getStars()); //Считаем, что уровень пройден
                             GamePlayManager.speed = 0;
+
+                            //Сохраняем прогресс по уровню
+                            if(needSave) {
+                                user.addCoins(gamePlayManager.getCollectedCoins());
+                                user.addMaxDistanceLevelFirst(gamePlayManager.getDistance());
+                                //Сохраняем прогресс по уровню
+                                if(user.getMaxLevelStars(selectedLevel) < getStars()) {
+                                    user.setLevelsProgress(selectedLevel, getStars());
+                                }
+
+                                SaveManager.save(activity, user); //Сохраняем прогресс в файл.
+                                needSave = false;
+                            }
                         }
 
 
@@ -74,16 +88,20 @@ public class FreeLevel extends BaseLevel implements Runnable{
                             GamePlayManager.speed = 0;
 
                             gamePlayManager.switchStatusGame(true);
-                            gamePlayManager.drawGameOver(canvas, displayMetrics, selectedLevel); //Выводим сообщение о конце игры
+                            gamePlayManager.drawLevelCompleted(canvas, displayMetrics, getStars());
 
                             if(needSave) {
                                 user.addCoins(gamePlayManager.getCollectedCoins());
                                 user.addMaxDistanceLevelFirst(gamePlayManager.getDistance());
+                                //Сохраняем прогресс по уровню
+                                if(user.getMaxLevelStars(selectedLevel) < getStars()) {
+                                    user.setLevelsProgress(selectedLevel, getStars());
+                                }
+
+
                                 SaveManager.save(activity, user); //Сохраняем прогресс в файл.
                                 needSave = false;
                             }
-
-                            gamePlayManager.drawMenuEnd(canvas);
                         }
                     }
 
@@ -155,17 +173,31 @@ public class FreeLevel extends BaseLevel implements Runnable{
 
     public static HashMap<Integer, Integer> loadLevelFinishInfo() {
         HashMap<Integer, Integer> levelsInfo = new HashMap<>();
-        levelsInfo.put(1, 600);
+        levelsInfo.put(1, 50);
         levelsInfo.put(2, 700);
-        levelsInfo.put(3, 500);
-        levelsInfo.put(4, 500);
-        levelsInfo.put(5, 500);
-        levelsInfo.put(6, 500);
-        levelsInfo.put(7, 500);
-        levelsInfo.put(8, 500);
-        levelsInfo.put(9, 500);
-        levelsInfo.put(10, 500);
+        levelsInfo.put(3, 750);
+        levelsInfo.put(4, 800);
+        levelsInfo.put(5, 800);
+        levelsInfo.put(6, 800);
+        levelsInfo.put(7, 800);
+        levelsInfo.put(8, 1000);
+        levelsInfo.put(9, 1150);
+        levelsInfo.put(10, 1500);
+        levelsInfo.put(11, 1700);
+        levelsInfo.put(12, 1900);
+        levelsInfo.put(13, 2000);
+        levelsInfo.put(14, 2300);
+        levelsInfo.put(15, 2500);
+        levelsInfo.put(16, 3000);
 
         return levelsInfo;
+    }
+
+    public static void addStars() {
+        stars++;
+    }
+
+    public static int getStars() {
+        return stars;
     }
 }

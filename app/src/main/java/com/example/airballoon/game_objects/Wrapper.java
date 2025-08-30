@@ -60,7 +60,7 @@ public class Wrapper {
                 maxCount = 1;
                 break;
             case "star":
-                maxCount = 1;
+                maxCount = 0;
                 break;
         }
     } //Максимальное количество возможных объектов в пуле
@@ -117,6 +117,12 @@ public class Wrapper {
 
     public int getDrawCount() {
         return drawCount;
+    }
+
+    public void setMaxCount(int maxCount) {
+        this.maxCount = maxCount;
+        generateGameObjects();
+
     }
     public boolean drawObjects(Canvas canvas, Integer count, String wrapperType) {
 

@@ -1,5 +1,8 @@
 package com.example.airballoon.managers;
 
+import static com.example.airballoon.levels.FreeLevel.addStars;
+import static com.example.airballoon.levels.FreeLevel.getStars;
+
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -220,12 +223,21 @@ class StarProgress extends BaseObject {
         if(starNumber == 1 && !yellowStar && distance > (yellowStarDistance * 100)) {
             image = yellowStarImage;
             calculateSize(displayMetrics);
+            if(getStars() < 1) {
+                addStars();
+            }
         } else if(starNumber == 2 && !yellowStar && distance > (yellowStarDistance * 100)) {
             image = yellowStarImage;
             calculateSize(displayMetrics);
+            if(getStars() < 2) {
+                addStars();
+            }
         } else if(starNumber == 3 && !yellowStar && distance >= (yellowStarDistance * 100)) {
             image = yellowStarImage;
             calculateSize(displayMetrics);
+            if(getStars() < 3) {
+                addStars();
+            }
         }
     }
 

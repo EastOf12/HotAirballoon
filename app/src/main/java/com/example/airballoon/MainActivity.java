@@ -1,5 +1,7 @@
 package com.example.airballoon;
 
+import static com.example.airballoon.managers.SaveManager.delete;
+
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
@@ -17,6 +19,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+//        delete(this);
 
         // Fullscreen mode
         requestWindowFeature(Window.FEATURE_NO_TITLE);

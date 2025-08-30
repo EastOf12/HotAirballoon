@@ -15,7 +15,7 @@ public class AirBalloonObject extends GameObject{
     float startX, startY;
     float offsetX, offsetY;
     private int collectedCoins = 0;
-    private int hp = 1000;
+    private int hp = 1;
     private final int maxXp = 1;
     private boolean hadShield = false;
     private boolean hadMagnet = false;
@@ -26,7 +26,7 @@ public class AirBalloonObject extends GameObject{
     private LocalDateTime magnetEndTime;
 
 
-    private int timeActionShield = 5; //Время действия щита.
+    private int timeActionShield = 10; //Время действия щита.
     private int timeActionMagnet = 10; //Время действия магнита.
     ShieldIcon shieldIcon;
     MagnetIcon magnetIcon;

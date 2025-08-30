@@ -86,12 +86,15 @@ public class SelectLevelActivity extends AppCompatActivity {
         levels = new ArrayList<>();
 
         for(int i = 1; i <= countLevels; i++) {
+            int countStars = user.getMaxLevelStars(i);
 
-            if(i == 16) {
-                levels.add(new MenuLevel(this, view, i, false, 0));
+            if(i == 1) {
+                levels.add(new MenuLevel(this, view, i, true, countStars));
             } else {
-                levels.add(new MenuLevel(this, view, i, true, 0));
+                boolean levelAv = user.getMaxLevelStars(i - 1) > 0;
+                levels.add(new MenuLevel(this, view, i, levelAv, countStars));
             }
+
         }
     } //Загружаем кнопки уровней
 

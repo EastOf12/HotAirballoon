@@ -94,6 +94,11 @@ public class ObjectsGeneration {
         return stars.getDrawCount() >= 0;
     } //Проверяет, можем ли отрисовать звезды.
 
+    public void setMaxBirds(int maxCount) {
+        birds.setMaxCount(maxCount);
+        updateCount();
+    }
+
     public ArrayList<Wrapper> getUsedObjects() {
         return usedObjects;
     }

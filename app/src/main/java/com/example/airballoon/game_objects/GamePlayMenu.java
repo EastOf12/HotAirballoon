@@ -67,8 +67,6 @@ public class GamePlayMenu {
 
         buttonNext = new ButtonNext(activity, displayMetrics, R.drawable.next_level, 0.4,
                 cube);
-
-        resultText = new ResultText(activity, displayMetrics, R.drawable.result_text, 0.3, cube);
     }
 
     private void calculateSize() {
@@ -122,6 +120,12 @@ public class GamePlayMenu {
 
     public void drawLevelCompleted(Canvas canvas, int starCount) {
 //        backGroundLevelCompleted.draw(canvas);
+
+        if(starCount == 0) {
+            resultText = new ResultText(activity, displayMetrics, R.drawable.result_text_lose, 0.3, cube);
+        } else {
+            resultText = new ResultText(activity, displayMetrics, R.drawable.result_text, 0.3, cube);
+        }
 
         if(stars.isEmpty()) {
             for(int i = 1; i < 4; i++) {

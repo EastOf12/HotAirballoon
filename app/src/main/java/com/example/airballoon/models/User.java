@@ -2,6 +2,7 @@ package com.example.airballoon.models;
 
 import androidx.annotation.NonNull;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class User {
@@ -16,10 +17,19 @@ public class User {
     private int selectAirBalloon;
     private List<Integer> availableBalls;
 
+    private final HashMap<Integer, Integer> levelsProgress = new HashMap<>();
+    private final int maxLevelsCount = 16; //Количество уровней в игре
+
+
     public User() {
         availableBalls = new ArrayList<>();
         availableBalls.add(1);
         selectAirBalloon = 1;
+
+        //Запоминаем, что нет пройденных уровней
+        for (int i=1; i <= maxLevelsCount; i++) {
+            levelsProgress.put(i, 0);
+        }
     }
 
     @NonNull
@@ -31,6 +41,7 @@ public class User {
                 ", lastCoins=" + lastCoins +
                 ", selectAirBalloon=" + selectAirBalloon +
                 ", availableBalls=" + availableBalls +
+                ", levelsProgress=" + levelsProgress +
                 '}';
     }
 
@@ -88,6 +99,14 @@ public class User {
 
     public void setSelectAirBalloon(int selectAirBalloon) {
         this.selectAirBalloon = selectAirBalloon;
+    }
+
+    public void setLevelsProgress(int levelNum, int starsCount) {
+        levelsProgress.put(levelNum, starsCount);
+    }
+
+    public int getMaxLevelStars(int levelNum) {
+        return levelsProgress.get(levelNum);
     }
 
     public int getStars() {
