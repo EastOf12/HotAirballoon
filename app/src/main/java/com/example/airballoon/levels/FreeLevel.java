@@ -33,6 +33,7 @@ public class FreeLevel extends BaseLevel implements Runnable{
     @Override
     public void run() {
         gamePlayManager.startMusic();
+        stars = 0;
 
         while (running) {
             if (managerFPS.lockFPS()) {
@@ -173,7 +174,7 @@ public class FreeLevel extends BaseLevel implements Runnable{
 
     public static HashMap<Integer, Integer> loadLevelFinishInfo() {
         HashMap<Integer, Integer> levelsInfo = new HashMap<>();
-        levelsInfo.put(1, 50);
+        levelsInfo.put(1, 500);
         levelsInfo.put(2, 700);
         levelsInfo.put(3, 750);
         levelsInfo.put(4, 800);
