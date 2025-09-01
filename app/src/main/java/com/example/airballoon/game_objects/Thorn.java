@@ -127,14 +127,28 @@ public class Thorn {
     }
 
 
-    public boolean checkCollision() {
-        boolean result = airBalloon.getRect().intersect(rect);
+//    public boolean checkCollision() {
+//        boolean result = airBalloon.getRect().intersect(rect);
+//
+//        if (result) {
+//            airBalloon.removeHp();
+//        }
+//
+//        return result;
+//    }
 
-        if (result) {
+    public boolean checkCollision() {
+        boolean resultCenter = airBalloon.getRects().get(0).intersect(rect);
+        boolean resultUp = airBalloon.getRects().get(1).intersect(rect);
+        boolean resultBottom = airBalloon.getRects().get(2).intersect(rect);
+        boolean res = false;
+
+        if (resultCenter || resultUp || resultBottom) {
             airBalloon.removeHp();
+            res = true;
         }
 
-        return result;
+        return res;
     }
 
     public boolean isNeedDraw() {

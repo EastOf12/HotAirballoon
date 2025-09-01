@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.example.airballoon.GamePlayActivity;
 import com.example.airballoon.R;
 import com.example.airballoon.SelectLevelActivity;
+import com.example.airballoon.SelectModeActivity;
 import com.example.airballoon.models.User;
 
 import java.time.Duration;
@@ -204,8 +205,12 @@ public class MenuManager {
 ////                Скрыть кнопку
 //                selectLevel.setVisibility(View.INVISIBLE);
 
-                // Запустить игру
-                Intent intent = new Intent(activity, SelectLevelActivity.class);
+                //Открыть экран выбора уровня
+//                Intent intent = new Intent(activity, SelectLevelActivity.class);
+//                activity.startActivity(intent);
+
+                //Открыть экран выбора режима
+                Intent intent = new Intent(activity, SelectModeActivity.class);
                 activity.startActivity(intent);
 
                 //Убираем анимацию перехода.

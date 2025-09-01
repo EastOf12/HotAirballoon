@@ -40,7 +40,7 @@ public abstract class GameObject {
         this.percentage = percentage;
     }
 
-    protected void createRect() {
+    public void createRect() {
         rect = new Rect(xPosition, yPosition, (int) (xPosition + width)
                 , (int) (yPosition + height));
     }

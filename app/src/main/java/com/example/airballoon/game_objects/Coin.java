@@ -66,15 +66,29 @@ public class Coin extends GameObject{
         }
     }
 
+//    public boolean checkCollisionAirBalloon() {
+//
+//        boolean result = airBalloon.getRect().intersect(rect);
+//
+//        if (result) {
+//            airBalloon.addCollectedCoins();
+//        }
+//
+//        return result;
+//    }
+
     public boolean checkCollisionAirBalloon() {
+        boolean resultCenter = airBalloon.getRects().get(0).intersect(rect);
+        boolean resultUp = airBalloon.getRects().get(1).intersect(rect);
+        boolean resultBottom = airBalloon.getRects().get(2).intersect(rect);
+        boolean res = false;
 
-        boolean result = airBalloon.getRect().intersect(rect);
-
-        if (result) {
+        if (resultCenter || resultUp || resultBottom) {
             airBalloon.addCollectedCoins();
+            res = true;
         }
 
-        return result;
+        return res;
     }
 
     public boolean isNeedDraw() {

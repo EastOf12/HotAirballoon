@@ -59,15 +59,29 @@ public class Shield extends GameObject{
         yPosition += GamePlayManager.speed;
     }
 
+//    public boolean checkCollisionAirBalloon() {
+//
+//        boolean result = airBalloon.getRect().intersect(rect);
+//
+//        if (result) {
+//            airBalloon.addShield();
+//        }
+//
+//        return result;
+//    }
+
     public boolean checkCollisionAirBalloon() {
+        boolean resultCenter = airBalloon.getRects().get(0).intersect(rect);
+        boolean resultUp = airBalloon.getRects().get(1).intersect(rect);
+        boolean resultBottom = airBalloon.getRects().get(2).intersect(rect);
+        boolean res = false;
 
-        boolean result = airBalloon.getRect().intersect(rect);
-
-        if (result) {
+        if (resultCenter || resultUp || resultBottom) {
             airBalloon.addShield();
+            res = true;
         }
 
-        return result;
+        return res;
     }
 
     @Override

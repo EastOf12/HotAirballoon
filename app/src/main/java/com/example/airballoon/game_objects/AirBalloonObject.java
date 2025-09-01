@@ -10,6 +10,8 @@ import android.view.MotionEvent;
 import com.example.airballoon.models.AirBalloon;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AirBalloonObject extends GameObject{
     float startX, startY;
@@ -24,6 +26,7 @@ public class AirBalloonObject extends GameObject{
     private LocalDateTime shieldEndTime;
     private LocalDateTime nowTimeMagnet;
     private LocalDateTime magnetEndTime;
+    List<Rect> rects;
 
 
     private int timeActionShield = 10; //Время действия щита.
@@ -48,6 +51,7 @@ public class AirBalloonObject extends GameObject{
         shieldAirballoonAnimation.calculateSize();
 
         magnetIcon = new MagnetIcon(activity, displayMetrics);
+        rects = createRects();
     }
 
     @Override
@@ -56,15 +60,55 @@ public class AirBalloonObject extends GameObject{
         yPosition = (int) (displayMetrics.heightPixels * 0.7);
     }
 
-    @Override
+//    @Override
+//    public void draw(Canvas canvas) {
+//        rect.left = xPosition;
+//        rect.top = yPosition;
+//        rect.right = (int) (xPosition + width);
+//        rect.bottom = (int) (yPosition + height);
+//        canvas.drawBitmap(image, xPosition, yPosition, null);
+//        shieldTimeCounter(canvas);
+//        magnetTimeCounter(canvas);
+//    }
+
+        @Override
     public void draw(Canvas canvas) {
-        rect.left = xPosition;
-        rect.top = yPosition;
-        rect.right = (int) (xPosition + width);
-        rect.bottom = (int) (yPosition + height);
+        rects.get(0).left = (int) (xPosition + width * 0.05);
+        rects.get(0).top = (int) (yPosition + height * 0.2);
+        rects.get(0).right = (int) (xPosition + width * 0.95);
+        rects.get(0).bottom =(int) (yPosition + height * 0.5);
+        rects.get(1).left = (int) (xPosition + width * 0.35);
+        rects.get(1).top = yPosition;
+        rects.get(1).right = (int) (xPosition + width * 0.65);
+        rects.get(1).bottom = (int) (yPosition + height * 0.2);
+        rects.get(2).left = (int) (xPosition + width * 0.4);
+        rects.get(2).top = (int) (yPosition + height * 0.5);
+        rects.get(2).right = (int) (xPosition + width * 0.6);
+        rects.get(2).bottom = (int) (yPosition + height * 0.95);
         canvas.drawBitmap(image, xPosition, yPosition, null);
         shieldTimeCounter(canvas);
         magnetTimeCounter(canvas);
+    }
+
+
+    public List<Rect> createRects() {
+        List<Rect> rectList = new ArrayList<>();
+
+        Rect centerCube = new Rect((int) (xPosition + width * 0.05), (int) (yPosition + height * 0.2),
+                (int) (xPosition + width * 0.95), (int) (yPosition + height * 0.5) );
+
+        Rect upCube = new Rect((int) (xPosition + width * 0.35), yPosition,
+                (int) (xPosition + width * 0.65), (int) (yPosition + height * 0.2) );
+
+        Rect bottomCube = new Rect((int) (xPosition + width * 0.4), (int) (yPosition + height * 0.5),
+                (int) (xPosition + width * 0.6), (int) (yPosition + height * 0.95) );
+
+
+        rectList.add(centerCube);
+        rectList.add(upCube);
+        rectList.add(bottomCube);
+
+        return rectList;
     }
 
     public boolean onTouch(MotionEvent event) {
@@ -92,6 +136,10 @@ public class AirBalloonObject extends GameObject{
 
     public Rect getRect() {
         return rect;
+    }
+
+    public List<Rect> getRects() {
+        return rects;
     }
 
     public void addCollectedCoins() {
