@@ -4,9 +4,12 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.media.MediaPlayer;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 
+import com.example.airballoon.R;
+import com.example.airballoon.managers.SoundManager;
 import com.example.airballoon.models.AirBalloon;
 
 import java.time.LocalDateTime;
@@ -26,6 +29,7 @@ public class AirBalloonObject extends GameObject{
     private LocalDateTime shieldEndTime;
     private LocalDateTime nowTimeMagnet;
     private LocalDateTime magnetEndTime;
+    SoundManager soundManager;
     List<Rect> rects;
 
 
@@ -36,7 +40,7 @@ public class AirBalloonObject extends GameObject{
     ShieldIcon shieldAirballoonAnimation;
 
 
-    public AirBalloonObject(Activity activity, DisplayMetrics displayMetrics, Bitmap image) {
+    public AirBalloonObject(Activity activity, DisplayMetrics displayMetrics, Bitmap image, SoundManager soundManager) {
         super(activity, displayMetrics);
 
         setPercentage(0.12);
@@ -52,6 +56,8 @@ public class AirBalloonObject extends GameObject{
 
         magnetIcon = new MagnetIcon(activity, displayMetrics);
         rects = createRects();
+
+        this.soundManager = soundManager;
     }
 
     @Override
@@ -144,6 +150,7 @@ public class AirBalloonObject extends GameObject{
 
     public void addCollectedCoins() {
         collectedCoins++;
+        soundManager.getCoin();
     }
 
     public int getCollectedCoins() {
@@ -156,6 +163,9 @@ public class AirBalloonObject extends GameObject{
     public void removeHp() {
         if(!hadShield) {
             hp--;
+            soundManager.getDamage();
+        } else {
+            soundManager.shieldCrush();
         }
     }
 
@@ -172,6 +182,7 @@ public class AirBalloonObject extends GameObject{
         hadShield = true;
         nowTimeShield = LocalDateTime.now();
         shieldEndTime = nowTimeShield.plusSeconds(timeActionShield);
+        soundManager.getShield();
 
         activity.runOnUiThread(() -> {
             shieldIcon.startShieldTimer(timeActionShield * 1000L);
@@ -182,6 +193,7 @@ public class AirBalloonObject extends GameObject{
         hadMagnet = true;
         nowTimeMagnet = LocalDateTime.now();
         magnetEndTime = nowTimeMagnet.plusSeconds(timeActionMagnet);
+        soundManager.getMagnet();
 
         activity.runOnUiThread(() -> {
             magnetIcon.startMagnetTimer(timeActionMagnet * 1000L);

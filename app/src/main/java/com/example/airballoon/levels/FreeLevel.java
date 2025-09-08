@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Canvas;
+import android.media.MediaPlayer;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -49,6 +50,7 @@ public class FreeLevel extends BaseLevel implements Runnable{
                         gamePlayManager.drawCountCoins(canvas, displayMetrics); //Рисуем количество собранных монет
                         gamePlayManager.countDistance(); //Увеличиваем пройденную дистацнию
                         gamePlayManager.drawLevelProgress(canvas);
+                        gamePlayManager.restartMusic(); //Перезапускаем мелодию фона, если она доиграла до конца
 
                         if(isPaused && !levelCompleted) {
                             gamePlayManager.drawGamePlayMenu(canvas);
@@ -59,7 +61,7 @@ public class FreeLevel extends BaseLevel implements Runnable{
                         gamePlayManager.drawGearWheel(canvas); //Добавляем кнопку настроек
 
 
-                        if(gamePlayManager.checkLevelProgress(levelsFinishDistance.get(selectedLevel)) && !isPaused) {
+                        if(selectedLevel > 0 && gamePlayManager.checkLevelProgress(levelsFinishDistance.get(selectedLevel)) && !isPaused) {
                             levelCompleted = true;
                             GamePlayManager.speed = 0;
                             switchGameStatus();
@@ -95,7 +97,7 @@ public class FreeLevel extends BaseLevel implements Runnable{
                                 user.addCoins(gamePlayManager.getCollectedCoins());
                                 user.addMaxDistanceLevelFirst(gamePlayManager.getDistance());
                                 //Сохраняем прогресс по уровню
-                                if(user.getMaxLevelStars(selectedLevel) < getStars()) {
+                                if(selectedLevel > 0 && user.getMaxLevelStars(selectedLevel) < getStars()) {
                                     user.setLevelsProgress(selectedLevel, getStars());
                                 }
 

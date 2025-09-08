@@ -72,7 +72,7 @@ public class LevelDistanceInfo {
             dSLevel.put(750_00, 26);
             dSLevel.put(770_00, 29);
             dSLevel.put(790_00, 31);
-            dSLevel.put(810_00, 33);
+
 
         } else if (levelNum == 9) {
             dSLevel.put(0, 22);

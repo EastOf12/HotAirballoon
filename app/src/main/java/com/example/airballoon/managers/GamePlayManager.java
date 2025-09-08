@@ -73,6 +73,7 @@ public class GamePlayManager {
     //Все что относится к генерации
     private ObjectsGeneration objectsGeneration;
     private ArrayList<Wrapper> usedObjects;
+    private final SoundManager soundManager;
     boolean needZeroCoins = true;
     boolean needZeroThorn;
     boolean needZeroLongThorn;
@@ -115,7 +116,12 @@ public class GamePlayManager {
         this.displayMetrics = displayMetrics;
         this.user = user;
         gamePlayMenu = new GamePlayMenu(activity, displayMetrics, gameStatus);
-        levelProgressManager = new LevelProgressManager(activity, displayMetrics, levelNum);
+        soundManager = new SoundManager(activity);
+
+        if(levelNum > 0) {
+            levelProgressManager = new LevelProgressManager(activity, displayMetrics, levelNum);
+        }
+
         this.levelNum = levelNum;
 
         backGround = new BackGround(activity, displayMetrics, R.drawable.game_bg); //В дальнейшем нужно будет доработать, тк фон для разных уровней может быть разным.
@@ -135,7 +141,7 @@ public class GamePlayManager {
         }
 
         //Создаем объект шарика исходя из полученного id выбранного шарика пользователем.
-        airBalloon = new AirBalloonObject(activity, displayMetrics, image);
+        airBalloon = new AirBalloonObject(activity, displayMetrics, image, soundManager);
         textPaint = new Paint();
         textPaint.setColor(Color.BLACK);
         textPaint.setTextSize(60);
@@ -152,10 +158,10 @@ public class GamePlayManager {
 
         textPaintDistance = new Paint();
         textPaintDistance.setColor(Color.BLACK);
-        textPaintDistance.setTextSize(70);
+        textPaintDistance.setTextSize(60);
         textPaintDistance.setTextAlign(Paint.Align.RIGHT);
         // Устанавливаем стиль текста
-        textPaintDistance.setTextSkewX(-0.25f); //Наклон текста
+//        textPaintDistance.setTextSkewX(-0.25f); //Наклон текста
 
         //Устанавлияем первое время ускорения.
         currentTime =  LocalTime.now().plusSeconds(speedUpInterval);
@@ -208,6 +214,25 @@ public class GamePlayManager {
         distance += speed;
     }
 
+    private void drawDistanceLevelFree(Canvas canvas) {
+        canvas.drawText("Высота: " + (distance / 100)
+                , (int) (displayMetrics.widthPixels * 0.93)
+                , (int) (displayMetrics.heightPixels * 0.15), textPaintDistance);
+
+        long maxDistance;
+
+        if(distance / 100 > user.getMaxDistanceLevelFirst()) {
+            maxDistance = distance / 100;
+        } else {
+            maxDistance = user.getMaxDistanceLevelFirst();
+        }
+
+        canvas.drawText("Рекорд: " + maxDistance
+                , (int) (displayMetrics.widthPixels * 0.93)
+                , (int) (displayMetrics.heightPixels * 0.2), textPaintDistance);
+    }
+
+
     public void drawGameOver(Canvas canvas, DisplayMetrics displayMetrics, int selectedLevel) {
         boolean freeLevel = selectedLevel == 0;
         double heightPixels = 0.4;
@@ -251,6 +276,7 @@ public class GamePlayManager {
     }
 
     public void drawLevelCompleted(Canvas canvas, DisplayMetrics displayMetrics, int starCount) {
+        soundManager.levelCompleted();
         gamePlayMenu.drawLevelCompleted(canvas, starCount);
     }
 
@@ -275,7 +301,11 @@ public class GamePlayManager {
     }
 
     public void drawLevelProgress(Canvas canvas) {
-        levelProgressManager.run(canvas, distance);
+        if(levelNum > 0) {
+            levelProgressManager.run(canvas, distance);
+        } else {
+            drawDistanceLevelFree(canvas);
+        }
     } //Выводит информацию по прогрессу уровня.
 
 
@@ -314,7 +344,14 @@ public class GamePlayManager {
     }
 
     public void startMusic() {
+        mediaPlayer.setVolume(0.5f, 0.5f);
         mediaPlayer.start();
+    }
+
+    public void restartMusic() {
+        if(!mediaPlayer.isPlaying()) {
+            mediaPlayer.start();
+        }
     }
 
     public void releaseMusic() {
@@ -377,6 +414,8 @@ public class GamePlayManager {
     }
 
     public void switchStatusGame(Boolean isPaused) {
+        soundManager.pause();
+
         ArrayList<Object> objects = usedObjects.get(3).getObjects();
         if(objects.isEmpty()) {
             return;
@@ -488,8 +527,10 @@ public class GamePlayManager {
                 countBird++; //Добавляем птичку в пул
                 distanceAdditionObject = getNewDistanceAdditionObject((minDistanceAdditionObject * 2), (int) (maxDistanceAdditionObject * 1.4), distance);
                 pullCoinsCount = 0;
-            } else if (objectsGeneration.getUsedObjects().get(4).getDrawCount() > countShield) {
+            } else if (distance > shieldDistanceAddition + shieldMinDistanceAddition &&
+                    objectsGeneration.getUsedObjects().get(4).getDrawCount() > countShield) {
                 countShield++; //Добавляем щит в пул
+                shieldDistanceAddition = distance;
                 distanceAdditionObject = getNewDistanceAdditionObject(minDistanceAdditionObject, maxDistanceAdditionObject, distance);
                 pullCoinsCount = 0;
             } else if (objectsGeneration.getUsedObjects().get(5).getDrawCount() > countMagnet) {

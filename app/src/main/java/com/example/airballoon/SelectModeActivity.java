@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -57,14 +58,13 @@ public class SelectModeActivity extends AppCompatActivity {
         modeFree.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-
-                //Переходим к экрану выбора уровня в первом режиме
-                Intent intent = new Intent(activity, SelectLevelActivity.class);
+                // Запустить игру
+                Intent intent = new Intent(activity, GamePlayActivity.class);
+                intent.putExtra("levelNumber", 0);
                 activity.startActivity(intent);
-
-
+                //Убираем анимацию перехода.
+//                    activity.overridePendingTransition(0, 0);
                 activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-
                 // Завершить текущую активность
                 activity.finish();
             }
