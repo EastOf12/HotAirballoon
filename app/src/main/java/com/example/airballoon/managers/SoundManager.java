@@ -12,7 +12,9 @@ public class SoundManager {
     private final MediaPlayer magnetSound;
     private final MediaPlayer shieldCrush;
     private final MediaPlayer levelCompleted;
+    private final MediaPlayer bgSound;
     private final MediaPlayer pause;
+    private boolean statusBgSound = true;
     public SoundManager(Activity activity) {
         coinSound = MediaPlayer.create(activity, R.raw.get_coin);
         damageSound = MediaPlayer.create(activity, R.raw.get_damage);
@@ -21,6 +23,7 @@ public class SoundManager {
         shieldCrush = MediaPlayer.create(activity, R.raw.shield_crush);
         levelCompleted = MediaPlayer.create(activity, R.raw.level_complited);
         pause = MediaPlayer.create(activity, R.raw.pause);
+        bgSound = MediaPlayer.create(activity, R.raw.game_play_music);
     }
 
     //Звук сбора монетки
@@ -39,6 +42,22 @@ public class SoundManager {
 //                    coinSound.release();
                 }
             });
+        }
+    }
+
+    //Фоновая мелодия
+    public void getBgSound() {
+        if (bgSound != null) {
+            if(!bgSound.isPlaying()) {
+                bgSound.start();
+                bgSound.setVolume(0.3f, 0.3f);
+            }
+        }
+    }
+
+    public void stopBgSound() {
+        if (bgSound != null) {
+            bgSound.stop();
         }
     }
 
@@ -123,17 +142,22 @@ public class SoundManager {
         if (levelCompleted != null) {
             levelCompleted.start();
 
-            levelCompleted.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-                @Override
-                public void onCompletion(MediaPlayer mp) {
-                    levelCompleted.release();
-                    coinSound.release();
-                    damageSound.release();
-                    shieldSound.release();
-                    magnetSound.release();
-                    shieldCrush.release();
-                }
-            });
+            if(statusBgSound) {
+                bgSound.stop();
+                statusBgSound = false;
+            }
+
+//            levelCompleted.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+//                @Override
+//                public void onCompletion(MediaPlayer mp) {
+//                    levelCompleted.release();
+//                    coinSound.release();
+//                    damageSound.release();
+//                    shieldSound.release();
+//                    magnetSound.release();
+//                    shieldCrush.release();
+//                }
+//            });
         }
     }
 

@@ -2,16 +2,19 @@ package com.example.airballoon;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.Window;
 import android.view.WindowManager;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.airballoon.levels.FreeLevel;
+import com.example.airballoon.managers.DataManager;
+import com.example.airballoon.managers.SaveManager;
+
+import java.time.LocalDateTime;
 
 public class GamePlayActivity extends AppCompatActivity {
-    int selectedLevel;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

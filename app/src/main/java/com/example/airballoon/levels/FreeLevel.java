@@ -1,5 +1,7 @@
 package com.example.airballoon.levels;
 
+import static com.example.airballoon.managers.DataManager.getLevelFinishInfo;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -8,13 +10,17 @@ import android.media.MediaPlayer;
 import android.view.MotionEvent;
 import android.view.View;
 
+import com.example.airballoon.GamePlayActivity;
+import com.example.airballoon.LoadLevelActivity;
 import com.example.airballoon.MainActivity;
 import com.example.airballoon.R;
 import com.example.airballoon.RewardedAdActivity;
+import com.example.airballoon.managers.DataManager;
 import com.example.airballoon.managers.GamePlayManager;
 import com.example.airballoon.managers.MenuActions;
 import com.example.airballoon.managers.SaveManager;
 
+import java.time.LocalDateTime;
 import java.util.HashMap;
 
 @SuppressLint("ViewConstructor")
@@ -22,19 +28,34 @@ public class FreeLevel extends BaseLevel implements Runnable{
     private final int selectedLevel;
     private boolean levelCompleted = false;
     private static int stars = 0;
-    private final HashMap<Integer, Integer> levelsFinishDistance = loadLevelFinishInfo();
+    private final HashMap<Integer, Integer> levelsFinishDistance = getLevelFinishInfo();
 
     public FreeLevel(Activity activity, int selectedLevel) {
         super(activity);
-        gamePlayManager = new GamePlayManager(activity, displayMetrics, user, selectedLevel);
+
+        while (!gamePlayManagerLoaded()) {
+            gamePlayManager = DataManager.getGamePlayManager(selectedLevel);
+
+            try {
+                Thread.sleep(10); // Пауза на 0.01 секунды
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+                e.printStackTrace();
+            }
+        }
+
         this.selectedLevel = selectedLevel;
+    }
+
+    private boolean gamePlayManagerLoaded() {
+        return gamePlayManager != null;
     }
 
     //Основной цикл игры.
     @Override
     public void run() {
-        gamePlayManager.startMusic();
         stars = 0;
+        gamePlayManager.startBgSound();
 
         while (running) {
             if (managerFPS.lockFPS()) {
@@ -50,7 +71,7 @@ public class FreeLevel extends BaseLevel implements Runnable{
                         gamePlayManager.drawCountCoins(canvas, displayMetrics); //Рисуем количество собранных монет
                         gamePlayManager.countDistance(); //Увеличиваем пройденную дистацнию
                         gamePlayManager.drawLevelProgress(canvas);
-                        gamePlayManager.restartMusic(); //Перезапускаем мелодию фона, если она доиграла до конца
+
 
                         if(isPaused && !levelCompleted) {
                             gamePlayManager.drawGamePlayMenu(canvas);
@@ -122,6 +143,38 @@ public class FreeLevel extends BaseLevel implements Runnable{
                         if(gamePlayManager.getGamePlayMenu().onTouch(event, isPaused, levelCompleted) == MenuActions.RESUME) { //Обрабатываем нажатия в меню.
                             switchGameStatus();
                         } else if((gamePlayManager.getHpAirBalloon() <= 0 || isPaused)
+                                && gamePlayManager.getGamePlayMenu().onTouch(event, isPaused, levelCompleted) == MenuActions.NEXT) {
+
+                            int nextLevel = selectedLevel;
+
+                            if(selectedLevel < 16) {
+                                nextLevel++;
+                            }
+
+                            running = false; //Останавливаем поток
+
+                            if(needSave) {
+                                user.addCoins(gamePlayManager.getCollectedCoins());
+                                user.addMaxDistanceLevelFirst(gamePlayManager.getDistance());
+                                //Сохраняем прогресс по уровню
+                                if(selectedLevel > 0 && user.getMaxLevelStars(selectedLevel) < getStars()) {
+                                    user.setLevelsProgress(selectedLevel, getStars());
+                                }
+
+                                SaveManager.save(activity, user); //Сохраняем прогресс в файл.
+                                needSave = false;
+                            }
+
+                            //Перейти к загрузке уровня
+                            Intent intent = new Intent(activity, GamePlayActivity.class);
+                            intent.putExtra("levelNumber", nextLevel);
+                            activity.startActivity(intent);
+                            activity.overridePendingTransition(0, 0);
+                            activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                            // Завершить текущую активность
+                            activity.finish();
+
+                        } else if((gamePlayManager.getHpAirBalloon() <= 0 || isPaused)
                                 && gamePlayManager.getGamePlayMenu().onTouch(event, isPaused, levelCompleted) == MenuActions.EXIT) {
                             running = false; //Останавливаем поток
 
@@ -130,23 +183,45 @@ public class FreeLevel extends BaseLevel implements Runnable{
                             activity.startActivity(intent);
 
                             activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-
+                            gamePlayManager.bgStopSound();
                             // Завершить текущую активность
                             activity.finish();
                         } else if((levelCompleted || gamePlayManager.getHpAirBalloon() <= 0) && gamePlayManager.
                                 getGamePlayMenu().onTouch(event, isPaused, levelCompleted) == MenuActions.RESTART) {
+                            running = false; //Останавливаем поток
 
-                            restartGame();
+                            if(needSave) {
+                                user.addCoins(gamePlayManager.getCollectedCoins());
+                                user.addMaxDistanceLevelFirst(gamePlayManager.getDistance());
+                                //Сохраняем прогресс по уровню
+                                if(selectedLevel > 0 && user.getMaxLevelStars(selectedLevel) < getStars()) {
+                                    user.setLevelsProgress(selectedLevel, getStars());
+                                }
+
+
+                                SaveManager.save(activity, user); //Сохраняем прогресс в файл.
+                                needSave = false;
+                            }
+
+                            //Перейти к загрузке уровня
+                            Intent intent = new Intent(activity, GamePlayActivity.class);
+                            intent.putExtra("levelNumber", selectedLevel);
+                            activity.startActivity(intent);
+                            activity.overridePendingTransition(0, 0);
+                            activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                            // Завершить текущую активность
+                            activity.finish();
+
                         }
 
 /*
-                        else if(gamePlayManager.getHpAirBalloon() <= 0 && gamePlayManager.
-                                getGamePlayMenu().onTouch(event) == MenuActions.MARKETING) {
-                            running = false;
+                    else if(gamePlayManager.getHpAirBalloon() <= 0 && gamePlayManager.
+                            getGamePlayMenu().onTouch(event) == MenuActions.MARKETING) {
+                        running = false;
 
-                            Intent intent = new Intent(activity, RewardedAdActivity.class); //Создаем активность с рекламой
-                            activity.startActivity(intent);
-                        } //Логика запуска рекламы
+                        Intent intent = new Intent(activity, RewardedAdActivity.class); //Создаем активность с рекламой
+                        activity.startActivity(intent);
+                    } //Логика запуска рекламы
 */
 
                         if(!isPaused && gamePlayManager.getHpAirBalloon()> 0) {
@@ -158,42 +233,6 @@ public class FreeLevel extends BaseLevel implements Runnable{
                 });
             }
         }
-
-        gamePlayManager.releaseMusic();
-    }
-
-    private void restartGame() {
-        gamePlayManager.restartAirballoon();
-        gamePlayManager.restartSpeed();
-        gamePlayManager.restartDistance();
-        gamePlayManager.restartCoins();
-        gamePlayManager.restartGeneration();
-        gamePlayManager.restartBackGround();
-        levelCompleted=false;
-        switchGameStatus();
-        needSave = true;
-    } //Перезапуск уровня. Работает коряво, нужно пересобирать.
-
-    public static HashMap<Integer, Integer> loadLevelFinishInfo() {
-        HashMap<Integer, Integer> levelsInfo = new HashMap<>();
-        levelsInfo.put(1, 500);
-        levelsInfo.put(2, 700);
-        levelsInfo.put(3, 750);
-        levelsInfo.put(4, 800);
-        levelsInfo.put(5, 800);
-        levelsInfo.put(6, 800);
-        levelsInfo.put(7, 800);
-        levelsInfo.put(8, 1000);
-        levelsInfo.put(9, 1150);
-        levelsInfo.put(10, 1500);
-        levelsInfo.put(11, 1700);
-        levelsInfo.put(12, 1900);
-        levelsInfo.put(13, 2000);
-        levelsInfo.put(14, 2300);
-        levelsInfo.put(15, 2500);
-        levelsInfo.put(16, 3000);
-
-        return levelsInfo;
     }
 
     public static void addStars() {

@@ -16,6 +16,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.airballoon.GamePlayActivity;
+import com.example.airballoon.LoadLevelActivity;
 import com.example.airballoon.R;
 import com.example.airballoon.managers.SaveManager;
 import com.example.airballoon.models.User;
@@ -77,16 +78,12 @@ public class MenuLevel {
         imageButton.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                // Отобразить ProgressBar
-                ProgressBar progressBar = view.findViewById(R.id.progress_bar);
-                progressBar.setVisibility(View.VISIBLE);
 
-                // Запустить игру
-                Intent intent = new Intent(activity, GamePlayActivity.class);
+                //Перейти к загрузке уровня
+                Intent intent = new Intent(activity, LoadLevelActivity.class);
                 intent.putExtra("levelNumber", levelNumber);
                 activity.startActivity(intent);
-                //Убираем анимацию перехода.
-//                    activity.overridePendingTransition(0, 0);
+                activity.overridePendingTransition(0, 0);
                 activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
                 // Завершить текущую активность
                 activity.finish();

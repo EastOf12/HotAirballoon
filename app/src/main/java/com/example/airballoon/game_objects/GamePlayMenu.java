@@ -10,6 +10,7 @@ import android.view.MotionEvent;
 import com.example.airballoon.managers.GameStatus;
 import com.example.airballoon.managers.MenuActions;
 import com.example.airballoon.R;
+import com.example.airballoon.models.User;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,13 +42,19 @@ public class GamePlayMenu {
     ButtonNext buttonNext;
     BackGroundLevelCompleted backGroundLevelCompleted;
     ResultText resultText;
+    private final int levelNumber;
+    private int starCount;
+    User user;
 
     Cube cube;
 
-    public GamePlayMenu(Activity activity, DisplayMetrics displayMetrics, GameStatus gameStatus) {
+    public GamePlayMenu(Activity activity, DisplayMetrics displayMetrics, GameStatus gameStatus,
+                        int levelNumber, User user) {
         this.activity = activity;
         this.displayMetrics = displayMetrics;
         this.gameStatus = gameStatus;
+        this.levelNumber = levelNumber;
+        this.user = user;
 
         buttonResume = BitmapFactory.decodeResource(activity.getResources(), R.drawable.resume);
         buttonExit = BitmapFactory.decodeResource(activity.getResources(), R.drawable.exit_game_play);
@@ -119,7 +126,7 @@ public class GamePlayMenu {
     } //Рисуем кнопки, когда игра завершена.
 
     public void drawLevelCompleted(Canvas canvas, int starCount) {
-//        backGroundLevelCompleted.draw(canvas);
+        this.starCount = starCount;
 
         if(starCount == 0) {
             resultText = new ResultText(activity, displayMetrics, R.drawable.result_text_lose, 0.3, cube);
@@ -161,7 +168,10 @@ public class GamePlayMenu {
         //Рисуем кнопки
         buttonEx.draw(canvas);
         buttonRest.draw(canvas);
-        buttonNext.draw(canvas);
+
+        if(levelNumber != 0 && (user.getMaxLevelStars(levelNumber) > 0 || starCount > 0)) {
+            buttonNext.draw(canvas);
+        }
     } //Рисуем экран пройденного уровня
 
     public Enum onTouch(MotionEvent event, boolean isPaused, boolean levelCompleted) {
@@ -193,8 +203,15 @@ public class GamePlayMenu {
 
             if(touchX >= buttonRest.xPosition && touchX <(buttonRest.xPosition + buttonRest.width)
                     && touchY >= buttonRest.yPosition && touchY < ( buttonRest.yPosition
-                    + buttonRest.height)) {
+                    + buttonRest.height) && (!isPaused || levelCompleted)) {
                 actions = MenuActions.RESTART;
+            }
+
+            if(touchX >= buttonNext.xPosition && touchX <(buttonNext.xPosition + buttonNext.width)
+                    && touchY >= buttonNext.yPosition && touchY < ( buttonNext.yPosition
+                    + buttonNext.height) && (!isPaused || levelCompleted)
+                    && levelNumber != 0 && (user.getMaxLevelStars(levelNumber) > 0 || starCount > 0)) {
+                actions = MenuActions.NEXT;
             }
         }
 

@@ -30,6 +30,9 @@
             android:name=".RewardedAdActivity"
             android:exported="true" />
         <activity
+            android:name=".LoadLevelActivity"
+            android:exported="true" />
+        <activity
             android:name=".SelectLevelActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:exported="false"

@@ -4,5 +4,6 @@ public enum MenuActions {
     RESUME,
     EXIT,
     RESTART,
-    PENDING
+    PENDING,
+    NEXT
 }

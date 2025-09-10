@@ -2,6 +2,7 @@ package com.example.airballoon.managers;
 
 import static com.example.airballoon.levels.FreeLevel.addStars;
 import static com.example.airballoon.levels.FreeLevel.getStars;
+import static com.example.airballoon.managers.DataManager.getLevelFinishInfo;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -10,11 +11,9 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.DisplayMetrics;
-import android.util.StateSet;
 
 import com.example.airballoon.R;
 import com.example.airballoon.game_objects.BaseObject;
-import com.example.airballoon.levels.FreeLevel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -106,7 +105,7 @@ class ProgressBarBg extends BaseObject {
 }
 
 class ProgressBar extends BaseObject {
-    HashMap<Integer, Integer> levelsInfo = FreeLevel.loadLevelFinishInfo();
+    HashMap<Integer, Integer> levelsInfo = getLevelFinishInfo();
     double minYPos;
     int extremePoint; //Крайняя точка по Y внизу
     int maxHeight;
@@ -180,7 +179,7 @@ class ProgressBar extends BaseObject {
 }
 
 class StarProgress extends BaseObject {
-    HashMap<Integer, Integer> levelsInfo = FreeLevel.loadLevelFinishInfo();
+    HashMap<Integer, Integer> levelsInfo = getLevelFinishInfo();
     boolean yellowStar = false;
     Bitmap yellowStarImage;
     int yellowStarDistance;

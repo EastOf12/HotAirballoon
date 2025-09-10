@@ -1,5 +1,6 @@
 package com.example.airballoon.managers;
 
+import static androidx.core.content.ContextCompat.startActivity;
 import static com.example.airballoon.managers.LevelDistanceInfo.addMagnetCounter;
 import static com.example.airballoon.managers.LevelDistanceInfo.addShieldCounter;
 import static com.example.airballoon.managers.LevelDistanceInfo.getBirdStartDistance;
@@ -11,6 +12,7 @@ import static com.example.airballoon.managers.LevelDistanceInfo.hadShield;
 import static com.example.airballoon.managers.LevelDistanceInfo.resetCounter;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -21,6 +23,7 @@ import android.media.MediaPlayer;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 
+import com.example.airballoon.GamePlayActivity;
 import com.example.airballoon.game_objects.AirBalloonObject;
 import com.example.airballoon.game_objects.BackGround;
 import com.example.airballoon.game_objects.BaseObject;
@@ -108,14 +111,17 @@ public class GamePlayManager {
     private boolean needStar = false;
     LevelProgressManager levelProgressManager;
     Coins coinsCount;
+
     private final int levelNum;
     private final Bird bird;
+    private boolean needDataLoad = true;
+    private boolean dataLoaded = false;
 
     public GamePlayManager(Activity activity, DisplayMetrics displayMetrics, User user, int levelNum) {
         this.activity = activity;
         this.displayMetrics = displayMetrics;
         this.user = user;
-        gamePlayMenu = new GamePlayMenu(activity, displayMetrics, gameStatus);
+        gamePlayMenu = new GamePlayMenu(activity, displayMetrics, gameStatus, levelNum, user);
         soundManager = new SoundManager(activity);
 
         if(levelNum > 0) {
@@ -280,6 +286,28 @@ public class GamePlayManager {
         gamePlayMenu.drawLevelCompleted(canvas, starCount);
     }
 
+    class LoadLevel extends Thread {
+        public void run() {
+            loadLevel();
+        }
+    }
+
+    public boolean getDataLoaded() {
+        return dataLoaded;
+    }
+
+    private void loadLevel() {
+        DataManager.loadData(activity, SaveManager.readFromFile(activity), levelNum);
+        int next;
+
+        if(levelNum == 16) {
+            next = 16;
+        } else {
+            next = levelNum+1;
+        }
+        dataLoaded = DataManager.loadData(activity, SaveManager.readFromFile(activity), next);
+    }
+
     public void drawGamePlayMenu(Canvas canvas) {
         gamePlayMenu.drawMenuButtons(canvas);
     }
@@ -290,6 +318,18 @@ public class GamePlayManager {
 
     public void drawBackGround(Canvas canvas) {
         backGround.drawBackgroundImage(canvas, speed);
+
+        //Загружаем данные по текущему уровню
+        if(needDataLoad) {
+            LoadLevel thread = new LoadLevel();
+            thread.start();
+
+            needDataLoad = false;
+        }
+    }
+
+    public void startBgSound() {
+        soundManager.getBgSound();
     }
 
     public void drawGearWheel(Canvas canvas) {
@@ -334,6 +374,10 @@ public class GamePlayManager {
         return false;
     } //В зависимости от пройденной дистанции определяет, нужно ли заменить маленький шип на большой
 
+    public void bgStopSound() {
+        soundManager.stopBgSound();
+    }
+
 
     public int getHpAirBalloon() {
         return airBalloon.getHp();
@@ -341,21 +385,6 @@ public class GamePlayManager {
 
     public boolean onTouchAirBalloon(MotionEvent event) {
         return airBalloon.onTouch(event);
-    }
-
-    public void startMusic() {
-        mediaPlayer.setVolume(0.5f, 0.5f);
-        mediaPlayer.start();
-    }
-
-    public void restartMusic() {
-        if(!mediaPlayer.isPlaying()) {
-            mediaPlayer.start();
-        }
-    }
-
-    public void releaseMusic() {
-        mediaPlayer.release();
     }
 
     public int getCollectedCoins() {
@@ -1640,6 +1669,10 @@ public class GamePlayManager {
 
     private void setMaxBirds(int maxCount) {
         objectsGeneration.setMaxBirds(maxCount);
+    }
+
+    public int getLevelNum() {
+        return levelNum;
     }
 }
 
