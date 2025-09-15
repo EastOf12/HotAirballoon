@@ -5,5 +5,7 @@ public enum MenuActions {
     EXIT,
     RESTART,
     PENDING,
-    NEXT
+    NEXT,
+    MARKETING_MONEY,
+    MARKETING_ADD_HP
 }

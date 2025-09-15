@@ -13,6 +13,8 @@ import com.example.airballoon.managers.SaveManager;
 
 public class LoadLevelActivity extends AppCompatActivity {
     private int selectedLevel;
+    private int distance;
+    private int coins;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +22,8 @@ public class LoadLevelActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         selectedLevel = intent.getIntExtra("levelNumber", 0);
+        distance = intent.getIntExtra("distance", 0);
+        coins = intent.getIntExtra("coins", 0);
 
         // Fullscreen mode
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -34,7 +38,7 @@ public class LoadLevelActivity extends AppCompatActivity {
 
 
     private void loadLevel() {
-        boolean dataLoaded = DataManager.loadData(this, SaveManager.readFromFile(this), selectedLevel);
+        boolean dataLoaded = DataManager.loadData(this, SaveManager.readFromFile(this), selectedLevel, distance, coins);
 
         if (dataLoaded) {
             // Если данные загружены успешно, переходим к игровому процессу

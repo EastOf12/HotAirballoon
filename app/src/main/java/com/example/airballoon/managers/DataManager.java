@@ -19,9 +19,9 @@ public class DataManager extends Thread{
     }
 
     //Загружаем все данные
-    public static boolean loadData(Activity activity, User user, int levelNum) {
+    public static boolean loadData(Activity activity, User user, int levelNum, int distance, int coins) {
         loadLevelFinishInfo();
-        loadGamePlayManager(activity, user, levelNum);
+        loadGamePlayManager(activity, user, levelNum, distance, coins);
         return true;
     }
 
@@ -35,10 +35,10 @@ public class DataManager extends Thread{
         return gamePlayManagerList.get(gamePlayManagerList.size() - 1);
     }
 
-    private static void loadGamePlayManager(Activity activity, User user, int levelNum) {
+    private static void loadGamePlayManager(Activity activity, User user, int levelNum, int distance, int coins) {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        gamePlayManagerList.add(new GamePlayManager(activity, displayMetrics, user, levelNum));
+        gamePlayManagerList.add(new GamePlayManager(activity, displayMetrics, user, levelNum, distance, coins));
 
         if(gamePlayManagerList.size() >= 4) {
             gamePlayManagerList.remove(0);
@@ -61,13 +61,13 @@ public class DataManager extends Thread{
         levelsInfo.put(6, 800);
         levelsInfo.put(7, 800);
         levelsInfo.put(8, 1000);
-        levelsInfo.put(9, 1150);
-        levelsInfo.put(10, 1500);
-        levelsInfo.put(11, 1700);
-        levelsInfo.put(12, 1900);
-        levelsInfo.put(13, 2000);
-        levelsInfo.put(14, 2300);
-        levelsInfo.put(15, 2500);
-        levelsInfo.put(16, 3000);
+        levelsInfo.put(9, 1000);
+        levelsInfo.put(10, 1000);
+        levelsInfo.put(11, 1100);
+        levelsInfo.put(12, 1200);
+        levelsInfo.put(13, 1300);
+        levelsInfo.put(14, 1300);
+        levelsInfo.put(15, 1400);
+        levelsInfo.put(16, 1500);
     }
 }

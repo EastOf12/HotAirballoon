@@ -36,7 +36,7 @@ android {
 
 dependencies {
     implementation ("com.google.code.gson:gson:2.8.8")
-    implementation ("com.yandex.android:mobileads:7.3.0")
+    implementation ("com.yandex.android:mobileads:7.15.2")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.12.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")

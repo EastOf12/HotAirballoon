@@ -48,8 +48,6 @@ public class LevelDistanceInfo {
             dSLevel.put(450_00, 24);
             dSLevel.put(480_00, 25);
             dSLevel.put(510_00, 27);
-            dSLevel.put(515_00, 29);
-            dSLevel.put(550_00, 32);
         } else if (levelNum == 8) {
             dSLevel.put(0, 20);
             dSLevel.put(80_00, 21);
@@ -59,30 +57,15 @@ public class LevelDistanceInfo {
             dSLevel.put(370_00, 25);
             dSLevel.put(395_00, 26);
             dSLevel.put(410_00, 27);
-            dSLevel.put(450_00, 28);
-            dSLevel.put(480_00, 29);
-            dSLevel.put(510_00, 30);
-            dSLevel.put(515_00, 31);
-            dSLevel.put(550_00, 32);
-            dSLevel.put(570_00, 30);
-            dSLevel.put(590_00, 28);
-            dSLevel.put(610_00, 25);
-            dSLevel.put(630_00, 24);
-            dSLevel.put(650_00, 23);
-            dSLevel.put(750_00, 26);
-            dSLevel.put(770_00, 29);
-            dSLevel.put(790_00, 31);
-
-
         } else if (levelNum == 9) {
-            dSLevel.put(0, 22);
-            dSLevel.put(80_00, 24);
-            dSLevel.put(160_00, 26);
-            dSLevel.put(260_00, 28);
-            dSLevel.put(340_00, 29);
-            dSLevel.put(370_00, 30);
-            dSLevel.put(395_00, 31);
-            dSLevel.put(410_00, 32);
+            dSLevel.put(0, 20);
+            dSLevel.put(80_00, 21);
+            dSLevel.put(160_00, 22);
+            dSLevel.put(260_00, 23);
+            dSLevel.put(340_00, 24);
+            dSLevel.put(370_00, 25);
+            dSLevel.put(395_00, 26);
+            dSLevel.put(410_00, 27);
         } else if (levelNum == 10) {
             dSLevel.put(0, 16);
             dSLevel.put(80_00, 17);
@@ -98,89 +81,75 @@ public class LevelDistanceInfo {
             dSLevel.put(515_00, 26);
             dSLevel.put(550_00, 27);
         } else if (levelNum == 11) {
-            dSLevel.put(0, 22);
-            dSLevel.put(80_00, 24);
-            dSLevel.put(160_00, 26);
-            dSLevel.put(260_00, 28);
-            dSLevel.put(340_00, 29);
-            dSLevel.put(370_00, 30);
-            dSLevel.put(395_00, 31);
-            dSLevel.put(410_00, 32);
-            dSLevel.put(770_00, 31);
-            dSLevel.put(790_00, 30);
-            dSLevel.put(810_00, 27);
-            dSLevel.put(1000_00, 26);
-            dSLevel.put(1100_00, 28);
-            dSLevel.put(1150_00, 30);
-            dSLevel.put(1200_00, 31);
-            dSLevel.put(1300_00, 32);
+            dSLevel.put(0, 16);
+            dSLevel.put(80_00, 17);
+            dSLevel.put(160_00, 18);
+            dSLevel.put(260_00, 19);
+            dSLevel.put(340_00, 19);
+            dSLevel.put(370_00, 20);
+            dSLevel.put(395_00, 21);
+            dSLevel.put(410_00, 22);
+            dSLevel.put(450_00, 23);
+            dSLevel.put(480_00, 24);
+            dSLevel.put(510_00, 25);
+            dSLevel.put(515_00, 26);
+            dSLevel.put(550_00, 27);
         }else if (levelNum == 12) {
-            dSLevel.put(0, 23);
-            dSLevel.put(80_00, 24);
-            dSLevel.put(160_00, 27);
-            dSLevel.put(260_00, 29);
-            dSLevel.put(340_00, 30);
-            dSLevel.put(370_00, 31);
-            dSLevel.put(395_00, 32);
-            dSLevel.put(1150_00, 30);
-            dSLevel.put(1200_00, 29);
-            dSLevel.put(1300_00, 28);
-            dSLevel.put(1350_00, 27);
-            dSLevel.put(1400_00, 26);
+            dSLevel.put(0, 16);
+            dSLevel.put(80_00, 17);
+            dSLevel.put(160_00, 18);
+            dSLevel.put(260_00, 19);
+            dSLevel.put(340_00, 19);
+            dSLevel.put(370_00, 20);
+            dSLevel.put(395_00, 21);
+            dSLevel.put(410_00, 22);
+            dSLevel.put(450_00, 23);
+            dSLevel.put(480_00, 24);
+            dSLevel.put(510_00, 25);
+            dSLevel.put(515_00, 26);
+            dSLevel.put(550_00, 27);
         } else if (levelNum == 13) {
-            dSLevel.put(0, 20);
-            dSLevel.put(80_00, 21);
-            dSLevel.put(160_00, 22);
-            dSLevel.put(260_00, 23);
-            dSLevel.put(340_00, 24);
-            dSLevel.put(370_00, 25);
-            dSLevel.put(395_00, 26);
-            dSLevel.put(410_00, 27);
-            dSLevel.put(450_00, 28);
-            dSLevel.put(480_00, 29);
-            dSLevel.put(510_00, 30);
-            dSLevel.put(515_00, 31);
-            dSLevel.put(550_00, 32);
-            dSLevel.put(570_00, 30);
-            dSLevel.put(590_00, 28);
-            dSLevel.put(610_00, 25);
-            dSLevel.put(630_00, 24);
-            dSLevel.put(650_00, 23);
-            dSLevel.put(750_00, 26);
-            dSLevel.put(770_00, 29);
-            dSLevel.put(790_00, 31);
+            dSLevel.put(0, 16);
+            dSLevel.put(80_00, 17);
+            dSLevel.put(160_00, 18);
+            dSLevel.put(260_00, 19);
+            dSLevel.put(340_00, 19);
+            dSLevel.put(370_00, 20);
+            dSLevel.put(395_00, 21);
+            dSLevel.put(410_00, 22);
+            dSLevel.put(450_00, 23);
+            dSLevel.put(480_00, 24);
+            dSLevel.put(510_00, 25);
+            dSLevel.put(515_00, 26);
+            dSLevel.put(550_00, 27);
         } else if (levelNum == 14) {
-            dSLevel.put(0, 23);
-            dSLevel.put(80_00, 24);
-            dSLevel.put(160_00, 27);
-            dSLevel.put(260_00, 29);
-            dSLevel.put(340_00, 30);
-            dSLevel.put(370_00, 31);
-            dSLevel.put(395_00, 32);
-            dSLevel.put(1150_00, 30);
-            dSLevel.put(1200_00, 29);
-            dSLevel.put(1300_00, 28);
-            dSLevel.put(1350_00, 27);
-            dSLevel.put(1400_00, 26);
-            dSLevel.put(1500_00, 28);
-            dSLevel.put(1600_00, 30);
-            dSLevel.put(1700_00, 32);
+            dSLevel.put(0, 16);
+            dSLevel.put(80_00, 17);
+            dSLevel.put(160_00, 18);
+            dSLevel.put(260_00, 19);
+            dSLevel.put(340_00, 19);
+            dSLevel.put(370_00, 20);
+            dSLevel.put(395_00, 21);
+            dSLevel.put(410_00, 22);
+            dSLevel.put(450_00, 23);
+            dSLevel.put(480_00, 24);
+            dSLevel.put(510_00, 25);
+            dSLevel.put(515_00, 26);
+            dSLevel.put(550_00, 27);
         } else if (levelNum == 15 || levelNum == 16) {
-            dSLevel.put(0, 20);
-            dSLevel.put(80_00, 21);
-            dSLevel.put(160_00, 22);
-            dSLevel.put(260_00, 23);
-            dSLevel.put(340_00, 25);
-            dSLevel.put(370_00, 26);
-            dSLevel.put(395_00, 27);
-            dSLevel.put(410_00, 28);
-            dSLevel.put(450_00, 29);
-            dSLevel.put(480_00, 30);
-            dSLevel.put(510_00, 31);
-            dSLevel.put(515_00, 32);
-            dSLevel.put(810_00, 30);
-            dSLevel.put(1000_00, 31);
-            dSLevel.put(1100_00, 32);
+            dSLevel.put(0, 16);
+            dSLevel.put(80_00, 17);
+            dSLevel.put(160_00, 18);
+            dSLevel.put(260_00, 19);
+            dSLevel.put(340_00, 19);
+            dSLevel.put(370_00, 20);
+            dSLevel.put(395_00, 21);
+            dSLevel.put(410_00, 22);
+            dSLevel.put(450_00, 23);
+            dSLevel.put(480_00, 24);
+            dSLevel.put(510_00, 25);
+            dSLevel.put(515_00, 26);
+            dSLevel.put(550_00, 27);
         }else {
             dSLevel.put(0, 16);
             dSLevel.put(80_00, 17);
@@ -236,14 +205,14 @@ public class LevelDistanceInfo {
 
 
         if(levelNum == 1 || levelNum == 2) {
-            dALevel.put("minDistanceAdditionObject", 350);
-            dALevel.put("maxDistanceAdditionObject", 400);
+            dALevel.put("minDistanceAdditionObject", 450);
+            dALevel.put("maxDistanceAdditionObject", 500);
         } else if (levelNum == 3) {
-            dALevel.put("minDistanceAdditionObject", 350);
-            dALevel.put("maxDistanceAdditionObject", 400);
+            dALevel.put("minDistanceAdditionObject", 450);
+            dALevel.put("maxDistanceAdditionObject", 500);
         } else {
-            dALevel.put("minDistanceAdditionObject", 350);
-            dALevel.put("maxDistanceAdditionObject", 400);
+            dALevel.put("minDistanceAdditionObject", 450);
+            dALevel.put("maxDistanceAdditionObject", 500);
         }
 
         return dALevel;

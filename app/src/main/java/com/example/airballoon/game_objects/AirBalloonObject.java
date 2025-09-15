@@ -160,6 +160,10 @@ public class AirBalloonObject extends GameObject{
         collectedCoins = 0;
     }
 
+    public void setCollectedCoins(int coins) {
+        collectedCoins = coins;
+    }
+
     public void removeHp() {
         if(!hadShield) {
             hp--;
@@ -171,6 +175,10 @@ public class AirBalloonObject extends GameObject{
 
     public int getHp() {
         return hp;
+    }
+
+    public void addHp() {
+        hp++;
     }
 
     public void restartAirBalloon() {

@@ -21,6 +21,8 @@ public class GamePlayMenu {
     Bitmap buttonResume;
     Bitmap buttonExit;
     Bitmap buttonRestart;
+    Bitmap buttonMarketingMoney;
+    Bitmap buttonMarketingHp;
     int xPositionButtonResume;
     int yPositionButtonResume;
 
@@ -28,6 +30,10 @@ public class GamePlayMenu {
     int yPositionButtonExit;
     int xPositionButtonRestart;
     int yPositionButtonRestart;
+    int xPositionButtonMarketingMoney;
+    int yPositionButtonMarketingMoney;
+    int xPositionButtonMarketingHp;
+    int yPositionButtonMarketingHp;
     double percentage = 0.25; // Размер изображения относительно экрана
     double widthButtonResume;
     double heightButtonResume;
@@ -35,11 +41,17 @@ public class GamePlayMenu {
     double heightButtonExit;
     double widthButtonRestart;
     double heightButtonRestart;
+    double widthButtonMarketingMoney;
+    double heightButtonMarketingMoney;
+    double widthButtonMarketingHp;
+    double heightButtonMarketingHp;
     GameStatus gameStatus;
     HashMap<Integer, StarObject> stars = new HashMap<>();
     ButtonExit buttonEx;
     ButtonRestart buttonRest;
     ButtonNext buttonNext;
+    ButtonMarketingMoney marketingMoney;
+    ButtonMarketingHp marketingHp;
     BackGroundLevelCompleted backGroundLevelCompleted;
     ResultText resultText;
     private final int levelNumber;
@@ -60,6 +72,10 @@ public class GamePlayMenu {
         buttonExit = BitmapFactory.decodeResource(activity.getResources(), R.drawable.exit_game_play);
         buttonRestart = BitmapFactory.decodeResource(activity.getResources(),
                 R.drawable.button_restart);
+        buttonMarketingMoney = BitmapFactory.decodeResource(activity.getResources(),
+                R.drawable.marketing_money_button);
+        buttonMarketingHp = BitmapFactory.decodeResource(activity.getResources(),
+                R.drawable.marketing_hp_button);
 
         calculateSize();
         calculateStartPosition();
@@ -72,7 +88,11 @@ public class GamePlayMenu {
         buttonRest = new ButtonRestart(activity, displayMetrics, R.drawable.button_restart,
                 0.15, cube);
 
-        buttonNext = new ButtonNext(activity, displayMetrics, R.drawable.next_level, 0.4,
+        buttonNext = new ButtonNext(activity, displayMetrics, R.drawable.next_level, 0.165,
+                cube);
+        marketingMoney = new ButtonMarketingMoney(activity, displayMetrics, R.drawable.marketing_money_button, 0.35,
+                cube);
+        marketingHp = new ButtonMarketingHp(activity, displayMetrics, R.drawable.marketing_hp_button, 0.35,
                 cube);
     }
 
@@ -91,12 +111,26 @@ public class GamePlayMenu {
         buttonExit = Bitmap.createScaledBitmap(buttonExit
                 , (int) widthButtonExit, (int) heightButtonExit, true);
 
-        //Для кнопки рекламы
+        //Для кнопки рестарта
         widthButtonRestart = displayMetrics.widthPixels * percentage;
         proportion = (double) buttonRestart.getWidth() / buttonRestart.getHeight();
         heightButtonRestart = widthButtonRestart / proportion;
         buttonRestart = Bitmap.createScaledBitmap(buttonRestart
                 , (int) widthButtonRestart, (int) heightButtonRestart, true);
+
+        //Для кнопки рекламы монетки
+        widthButtonMarketingMoney = displayMetrics.widthPixels * percentage;
+        proportion = (double) buttonMarketingMoney.getWidth() / buttonMarketingMoney.getHeight();
+        heightButtonMarketingMoney = widthButtonMarketingMoney / proportion;
+        buttonMarketingMoney = Bitmap.createScaledBitmap(buttonMarketingMoney
+                , (int) widthButtonMarketingMoney, (int) heightButtonMarketingMoney, true);
+
+        //Для кнопки рекламы доп хп
+        widthButtonMarketingHp = displayMetrics.widthPixels * percentage;
+        proportion = (double) buttonMarketingHp.getWidth() / buttonMarketingHp.getHeight();
+        heightButtonMarketingHp = widthButtonMarketingHp / proportion;
+        buttonMarketingHp = Bitmap.createScaledBitmap(buttonMarketingHp
+                , (int) widthButtonMarketingHp, (int) heightButtonMarketingHp, true);
     }
 
     private void calculateStartPosition() {
@@ -108,6 +142,12 @@ public class GamePlayMenu {
 
         xPositionButtonRestart = (int) (displayMetrics.widthPixels * 0.55);
         yPositionButtonRestart = (int) (displayMetrics.heightPixels * 0.6);
+
+        xPositionButtonMarketingMoney = (int) (displayMetrics.widthPixels * 0.55);
+        yPositionButtonMarketingMoney = (int) (displayMetrics.heightPixels * 0.6);
+
+        xPositionButtonMarketingHp = (int) (displayMetrics.widthPixels * 0.55);
+        yPositionButtonMarketingHp = (int) (displayMetrics.heightPixels * 0.6);
     }
 
     public void drawMenuButtons(Canvas canvas) {
@@ -168,6 +208,11 @@ public class GamePlayMenu {
         //Рисуем кнопки
         buttonEx.draw(canvas);
         buttonRest.draw(canvas);
+        marketingMoney.draw(canvas);
+
+        if(starCount < 3) {
+            marketingHp.draw(canvas);
+        }
 
         if(levelNumber != 0 && (user.getMaxLevelStars(levelNumber) > 0 || starCount > 0)) {
             buttonNext.draw(canvas);
@@ -192,6 +237,7 @@ public class GamePlayMenu {
                     touchY >= (int) (displayMetrics.heightPixels * 0.4) && touchY < ((int) (displayMetrics.heightPixels * 0.4) + heightButtonResume)
             && isPaused) {
                 actions = MenuActions.EXIT;
+//                actions = MenuActions.EXIT;
             }
 
             //Обрабатываем нажатия на экране завершения уровня
@@ -199,6 +245,7 @@ public class GamePlayMenu {
                     && touchY >= buttonEx.yPosition && touchY < (buttonEx.yPosition
                     +  buttonEx.height) && (!isPaused || levelCompleted)) {
                 actions = MenuActions.EXIT;
+//                actions = MenuActions.EXIT;
             }
 
             if(touchX >= buttonRest.xPosition && touchX <(buttonRest.xPosition + buttonRest.width)
@@ -212,6 +259,18 @@ public class GamePlayMenu {
                     + buttonNext.height) && (!isPaused || levelCompleted)
                     && levelNumber != 0 && (user.getMaxLevelStars(levelNumber) > 0 || starCount > 0)) {
                 actions = MenuActions.NEXT;
+            }
+
+            if(touchX >= marketingMoney.xPosition && touchX <(marketingMoney.xPosition + marketingMoney.width)
+                    && touchY >= marketingMoney.yPosition && touchY < ( marketingMoney.yPosition
+                    + marketingMoney.height) && (!isPaused || levelCompleted)) {
+                actions = MenuActions.MARKETING_MONEY;
+            }
+
+            if(touchX >= marketingHp.xPosition && touchX <(marketingHp.xPosition + marketingHp.width)
+                    && touchY >= marketingHp.yPosition && touchY < ( marketingHp.yPosition
+                    + marketingHp.height) && (!isPaused || levelCompleted) && starCount < 3) {
+                actions = MenuActions.MARKETING_ADD_HP;
             }
         }
 
@@ -252,8 +311,8 @@ class ButtonExit extends BaseObject {
         loadImage(activity, resourceId);
         calculateSize(displayMetrics);
 
-        setPositions(cube.getXPos() + (int) (cube.width * 0.65),
-                cube.getYPos() + (int) (cube.height * 0.6));
+        setPositions(cube.getXPos() + (int) (cube.width * 0.69),
+                cube.getYPos() + (int) (cube.height * 0.5));
     }
 }
 
@@ -265,8 +324,8 @@ class ButtonNext extends BaseObject {
         loadImage(activity, resourceId);
         calculateSize(displayMetrics);
 
-        setPositions(cube.getXPos() + (int) (cube.width * 0.1),
-                cube.getYPos() + (int) (cube.height * 0.4));
+        setPositions(cube.getXPos() + (int) (cube.width * 0.4),
+                cube.getYPos() + (int) (cube.height * 0.48));
     }
 }
 
@@ -278,8 +337,34 @@ class ButtonRestart extends BaseObject {
         loadImage(activity, resourceId);
         calculateSize(displayMetrics);
 
-        setPositions(cube.getXPos() + (int) (cube.width * 0.75),
-                cube.getYPos() + (int) (cube.height * 0.25));
+        setPositions(cube.getXPos() + (int) (cube.width * 0.13),
+                cube.getYPos() + (int) (cube.height * 0.5));
+    }
+}
+
+class ButtonMarketingMoney extends BaseObject {
+    public ButtonMarketingMoney(Activity activity, DisplayMetrics displayMetrics, int resourceId,
+                         double percentage, Cube cube) {
+        super(activity, displayMetrics, percentage);
+
+        loadImage(activity, resourceId);
+        calculateSize(displayMetrics);
+
+        setPositions(cube.getXPos() + (int) (cube.width * 0.28),
+                cube.getYPos() + (int) (cube.height * 1.2));
+    }
+}
+
+class ButtonMarketingHp extends BaseObject {
+    public ButtonMarketingHp(Activity activity, DisplayMetrics displayMetrics, int resourceId,
+                                double percentage, Cube cube) {
+        super(activity, displayMetrics, percentage);
+
+        loadImage(activity, resourceId);
+        calculateSize(displayMetrics);
+
+        setPositions(cube.getXPos() + (int) (cube.width * 0.28),
+                cube.getYPos() + (int) (cube.height * 1.6));
     }
 }
 

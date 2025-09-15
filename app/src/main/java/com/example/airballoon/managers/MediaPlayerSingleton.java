@@ -19,7 +19,9 @@ public class MediaPlayerSingleton {
     }
 
     public static void stop() {
-        mediaPlayer.stop();
-        status = false;
+        if(mediaPlayer != null) {
+            mediaPlayer.stop();
+            status = false;
+        }
     }
 }

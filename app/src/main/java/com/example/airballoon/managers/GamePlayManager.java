@@ -1,6 +1,5 @@
 package com.example.airballoon.managers;
 
-import static androidx.core.content.ContextCompat.startActivity;
 import static com.example.airballoon.managers.LevelDistanceInfo.addMagnetCounter;
 import static com.example.airballoon.managers.LevelDistanceInfo.addShieldCounter;
 import static com.example.airballoon.managers.LevelDistanceInfo.getBirdStartDistance;
@@ -12,7 +11,6 @@ import static com.example.airballoon.managers.LevelDistanceInfo.hadShield;
 import static com.example.airballoon.managers.LevelDistanceInfo.resetCounter;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -23,7 +21,6 @@ import android.media.MediaPlayer;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 
-import com.example.airballoon.GamePlayActivity;
 import com.example.airballoon.game_objects.AirBalloonObject;
 import com.example.airballoon.game_objects.BackGround;
 import com.example.airballoon.game_objects.BaseObject;
@@ -33,7 +30,6 @@ import com.example.airballoon.game_objects.GamePlayMenu;
 import com.example.airballoon.game_objects.GearWheel;
 import com.example.airballoon.game_objects.LongThorn;
 import com.example.airballoon.game_objects.Magnet;
-import com.example.airballoon.game_objects.PosX;
 import com.example.airballoon.game_objects.Shield;
 import com.example.airballoon.game_objects.Star;
 import com.example.airballoon.game_objects.Thorn;
@@ -117,12 +113,13 @@ public class GamePlayManager {
     private boolean needDataLoad = true;
     private boolean dataLoaded = false;
 
-    public GamePlayManager(Activity activity, DisplayMetrics displayMetrics, User user, int levelNum) {
+    public GamePlayManager(Activity activity, DisplayMetrics displayMetrics, User user, int levelNum, int distance, int coins) {
         this.activity = activity;
         this.displayMetrics = displayMetrics;
         this.user = user;
         gamePlayMenu = new GamePlayMenu(activity, displayMetrics, gameStatus, levelNum, user);
         soundManager = new SoundManager(activity);
+        this.distance = distance;
 
         if(levelNum > 0) {
             levelProgressManager = new LevelProgressManager(activity, displayMetrics, levelNum);
@@ -176,11 +173,6 @@ public class GamePlayManager {
         mediaPlayer = MediaPlayer.create(activity, R.raw.game_play_music);
 
         gameStatus = GameStatus.GAME;
-
-        //Добавляем объект рекламы
-//        rewardedAdActivity = new RewardedAdActivity();
-
-
         //Все что относится к генерации
         objectsGeneration =  new ObjectsGeneration(activity, displayMetrics, getAirBalloon());
         setMaxBirds(LevelDistanceInfo.getMaxBirdCount(levelNum));
@@ -201,6 +193,8 @@ public class GamePlayManager {
         bird = new Bird(activity, displayMetrics, getAirBalloon());
 
         resetCounter();
+
+        airBalloon.setCollectedCoins(coins);
     }
 
     public void drawAirBalloon(Canvas canvas) {
@@ -218,6 +212,10 @@ public class GamePlayManager {
 
     public void countDistance() {
         distance += speed;
+    }
+
+    public void setDistance(int distance) {
+        this.distance = distance;
     }
 
     private void drawDistanceLevelFree(Canvas canvas) {
@@ -297,7 +295,7 @@ public class GamePlayManager {
     }
 
     private void loadLevel() {
-        DataManager.loadData(activity, SaveManager.readFromFile(activity), levelNum);
+        DataManager.loadData(activity, SaveManager.readFromFile(activity), levelNum, 0, 0);
         int next;
 
         if(levelNum == 16) {
@@ -305,7 +303,7 @@ public class GamePlayManager {
         } else {
             next = levelNum+1;
         }
-        dataLoaded = DataManager.loadData(activity, SaveManager.readFromFile(activity), next);
+        dataLoaded = DataManager.loadData(activity, SaveManager.readFromFile(activity), next, 0, 0);
     }
 
     public void drawGamePlayMenu(Canvas canvas) {
@@ -381,6 +379,10 @@ public class GamePlayManager {
 
     public int getHpAirBalloon() {
         return airBalloon.getHp();
+    }
+
+    public void addHp() {
+        airBalloon.addHp();
     }
 
     public boolean onTouchAirBalloon(MotionEvent event) {

@@ -32,23 +32,8 @@ public class FreeLevel extends BaseLevel implements Runnable{
 
     public FreeLevel(Activity activity, int selectedLevel) {
         super(activity);
-
-        while (!gamePlayManagerLoaded()) {
-            gamePlayManager = DataManager.getGamePlayManager(selectedLevel);
-
-            try {
-                Thread.sleep(10); // Пауза на 0.01 секунды
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-                e.printStackTrace();
-            }
-        }
-
+        gamePlayManager = DataManager.getGamePlayManager(selectedLevel);
         this.selectedLevel = selectedLevel;
-    }
-
-    private boolean gamePlayManagerLoaded() {
-        return gamePlayManager != null;
     }
 
     //Основной цикл игры.
@@ -166,14 +151,15 @@ public class FreeLevel extends BaseLevel implements Runnable{
                             }
 
                             //Перейти к загрузке уровня
-                            Intent intent = new Intent(activity, GamePlayActivity.class);
-                            intent.putExtra("levelNumber", nextLevel);
-                            activity.startActivity(intent);
-                            activity.overridePendingTransition(0, 0);
-                            activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                            // Завершить текущую активность
-                            activity.finish();
-
+                            if(gamePlayManager.getDataLoaded()) {
+                                Intent intent = new Intent(activity, GamePlayActivity.class);
+                                intent.putExtra("levelNumber", nextLevel);
+                                activity.startActivity(intent);
+                                activity.overridePendingTransition(0, 0);
+                                activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                                // Завершить текущую активность
+                                activity.finish();
+                            }
                         } else if((gamePlayManager.getHpAirBalloon() <= 0 || isPaused)
                                 && gamePlayManager.getGamePlayMenu().onTouch(event, isPaused, levelCompleted) == MenuActions.EXIT) {
                             running = false; //Останавливаем поток
@@ -204,25 +190,38 @@ public class FreeLevel extends BaseLevel implements Runnable{
                             }
 
                             //Перейти к загрузке уровня
-                            Intent intent = new Intent(activity, GamePlayActivity.class);
-                            intent.putExtra("levelNumber", selectedLevel);
-                            activity.startActivity(intent);
-                            activity.overridePendingTransition(0, 0);
-                            activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                            // Завершить текущую активность
-                            activity.finish();
-
+                            if(gamePlayManager.getDataLoaded()) {
+                                Intent intent = new Intent(activity, GamePlayActivity.class);
+                                intent.putExtra("levelNumber", selectedLevel);
+                                activity.startActivity(intent);
+                                activity.overridePendingTransition(0, 0);
+                                activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                                // Завершить текущую активность
+                                activity.finish();
+                            }
                         }
 
-/*
-                    else if(gamePlayManager.getHpAirBalloon() <= 0 && gamePlayManager.
-                            getGamePlayMenu().onTouch(event) == MenuActions.MARKETING) {
-                        running = false;
+                        else if((levelCompleted || gamePlayManager.getHpAirBalloon() <= 0) &&
+                                gamePlayManager.getGamePlayMenu().onTouch(event, isPaused, levelCompleted) == MenuActions.MARKETING_MONEY) {
 
-                        Intent intent = new Intent(activity, RewardedAdActivity.class); //Создаем активность с рекламой
-                        activity.startActivity(intent);
-                    } //Логика запуска рекламы
-*/
+                            running = false;
+                            Intent intent = new Intent(activity, RewardedAdActivity.class); //Создаем активность с рекламой
+                            intent.putExtra("typeReward", 1);
+                            activity.startActivity(intent);
+                            activity.finish(); // Завершаем текущую активность
+                        } //Удваиваем деньги
+
+                        else if((levelCompleted || gamePlayManager.getHpAirBalloon() <= 0) &&
+                                gamePlayManager.getGamePlayMenu().onTouch(event, isPaused, levelCompleted) == MenuActions.MARKETING_ADD_HP) {
+                            running = false;
+                            Intent intent = new Intent(activity, RewardedAdActivity.class); //Создаем активность с рекламой
+                            intent.putExtra("levelNumber", selectedLevel);
+                            intent.putExtra("distance", gamePlayManager.getDistance());
+                            intent.putExtra("coins", gamePlayManager.getCollectedCoins());
+                            activity.startActivity(intent);
+                            activity.finish(); // Завершаем текущую активность
+                        } //Даем еще одну попытку
+
 
                         if(!isPaused && gamePlayManager.getHpAirBalloon()> 0) {
                             return gamePlayManager.onTouchAirBalloon(event);
