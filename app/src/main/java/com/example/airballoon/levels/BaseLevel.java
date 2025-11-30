@@ -8,6 +8,7 @@ import android.view.SurfaceView;
 
 import com.example.airballoon.managers.GamePlayManager;
 import com.example.airballoon.managers.ManagerFPS;
+import com.example.airballoon.managers.MediaPlayerSingleton;
 import com.example.airballoon.managers.SaveManager;
 import com.example.airballoon.models.User;
 
@@ -26,19 +27,21 @@ abstract class BaseLevel extends SurfaceView implements Runnable{
     //Поля состояний (В целом можно когда-нибудь вынести в отдельный класс)
     protected volatile boolean running = false;
     protected boolean isPaused = false;
-    int startSpeed = 15;
+    int startSpeed = GamePlayManager.speed;
     boolean needSave = true;
 
     @SuppressLint("UseCompatLoadingForDrawables")
     public BaseLevel(Activity activity) {
         super(activity);
         this.activity = activity;
+        //Останавливаем мелодию меню
+        MediaPlayerSingleton.stop();
+
         surfaceHolder = getHolder();
         user = SaveManager.readFromFile(activity);
         displayMetrics = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         managerFPS = new ManagerFPS();
-        gamePlayManager = new GamePlayManager(activity, displayMetrics, user);
     }
 
     //Запускаем уровень
@@ -56,8 +59,10 @@ abstract class BaseLevel extends SurfaceView implements Runnable{
 
         if(isPaused) {
             GamePlayManager.speed = 0;
+            gamePlayManager.switchStatusGame(isPaused);
         } else {
             GamePlayManager.speed = 15;
+            gamePlayManager.switchStatusGame(isPaused);
         }
     }
 }

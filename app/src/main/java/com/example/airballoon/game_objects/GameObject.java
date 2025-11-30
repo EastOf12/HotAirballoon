@@ -36,11 +36,11 @@ public abstract class GameObject {
     //Отрисовка объекта
     protected abstract void draw(Canvas canvas);
 
-    protected void setPercentage(double percentage) {
+    public void setPercentage(double percentage) {
         this.percentage = percentage;
     }
 
-    protected void createRect() {
+    public void createRect() {
         rect = new Rect(xPosition, yPosition, (int) (xPosition + width)
                 , (int) (yPosition + height));
     }

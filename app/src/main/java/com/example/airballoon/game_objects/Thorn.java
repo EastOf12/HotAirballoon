@@ -10,16 +10,17 @@ import android.util.DisplayMetrics;
 import com.example.airballoon.managers.GamePlayManager;
 import com.example.airballoon.R;
 
+import java.util.Objects;
 import java.util.Random;
 
 public class Thorn {
-    Activity activity;
-    DisplayMetrics displayMetrics;
-    Bitmap thornImage;
-    Rect rect;
-    int xPosition;
-    int yPosition;
-    double percentage = 0.2; // Размер изображения относительно экрана
+    protected Activity activity;
+    private DisplayMetrics displayMetrics;
+    protected Bitmap thornImage;
+    private final Rect rect;
+    private int xPosition;
+    private int yPosition;
+    protected double percentage; // Размер изображения относительно экрана
     double width;
     double height;
     AirBalloonObject airBalloon;
@@ -30,9 +31,23 @@ public class Thorn {
         this.displayMetrics = displayMetrics;
         this.airBalloon = airBalloon;
         needDraw = true;
-        thornImage = BitmapFactory.decodeResource(activity.getResources(), R.drawable.thorn);
+        calculatePercentage();
+        loadThornImage();
         calculateSize();
         calculateStartPosition();
+        rect = new Rect(xPosition, yPosition, (int) (xPosition + width)
+                , (int) (yPosition + height));
+    }
+
+    public Thorn(Activity activity, DisplayMetrics displayMetrics, AirBalloonObject airBalloon, PosX posX, int yPosition) {
+        this.activity = activity;
+        this.displayMetrics = displayMetrics;
+        this.airBalloon = airBalloon;
+        needDraw = true;
+        calculatePercentage();
+        loadThornImage();
+        calculateSize();
+        calculateStartPosition(posX, yPosition);
         rect = new Rect(xPosition, yPosition, (int) (xPosition + width)
                 , (int) (yPosition + height));
     }
@@ -45,11 +60,41 @@ public class Thorn {
                 , (int) width, (int) height, true);
     }
 
+    protected void loadThornImage() {
+        thornImage = BitmapFactory.decodeResource(activity.getResources(), R.drawable.thorn);
+    }
+
+    protected void calculatePercentage() {
+        percentage = 0.2;
+    } //Определяем насколько большим по отношению к экрана должен быть шип
+
     public void calculateStartPosition() {
         needDraw = true;
         Random random = new Random();
         xPosition = random.nextInt((int) (displayMetrics.widthPixels - width));
         yPosition = -50;
+    }
+
+    public void calculateStartPosition(PosX posX, int yPosition) {
+        switch (posX) {
+            case LEFT:
+                xPosition = 0;
+                break;
+            case LEFT2:
+                xPosition = (int) (width);
+                break;
+            case CENTER:
+                xPosition = (int) (width * 2);
+                break;
+            case RIGHT1:
+                xPosition = (int) (displayMetrics.widthPixels - (width * 2));
+                break;
+            case RIGHT2:
+                xPosition = (int) (displayMetrics.widthPixels - width);
+                break;
+        }
+
+        this.yPosition = yPosition;
     }
 
     private void calculateNewPosition(Canvas canvas) {
@@ -75,24 +120,55 @@ public class Thorn {
 
             canvas.drawBitmap(thornImage, xPosition, yPosition, null);
         }
-    } //Рисуем монетку.
+    } //Рисуем шип
 
     public void setYPosition(int yPosition) {
         this.yPosition = yPosition;
     }
 
 
-    public boolean checkCollision() {
-        boolean result = airBalloon.getRect().intersect(rect);
+//    public boolean checkCollision() {
+//        boolean result = airBalloon.getRect().intersect(rect);
+//
+//        if (result) {
+//            airBalloon.removeHp();
+//        }
+//
+//        return result;
+//    }
 
-        if (result) {
+    public boolean checkCollision() {
+        boolean resultCenter = airBalloon.getRects().get(0).intersect(rect);
+        boolean resultUp = airBalloon.getRects().get(1).intersect(rect);
+        boolean resultBottom = airBalloon.getRects().get(2).intersect(rect);
+        boolean res = false;
+
+        if (resultCenter || resultUp || resultBottom) {
             airBalloon.removeHp();
+            res = true;
         }
 
-        return result;
+        return res;
     }
 
     public boolean isNeedDraw() {
         return needDraw;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Thorn thorn = (Thorn) o;
+        return xPosition == thorn.xPosition && yPosition == thorn.yPosition && Double.compare(thorn.percentage, percentage) == 0 && Double.compare(thorn.width, width) == 0 && Double.compare(thorn.height, height) == 0 && needDraw == thorn.needDraw && Objects.equals(activity, thorn.activity) && Objects.equals(displayMetrics, thorn.displayMetrics) && Objects.equals(thornImage, thorn.thornImage) && Objects.equals(rect, thorn.rect) && Objects.equals(airBalloon, thorn.airBalloon);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(activity, displayMetrics, thornImage, rect, xPosition, yPosition, percentage, width, height, airBalloon, needDraw);
+    }
+
+    public int getYPosition() {
+        return yPosition;
     }
 }

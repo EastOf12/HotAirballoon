@@ -1,27 +1,40 @@
 package com.example.airballoon;
 
+import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.airballoon.levels.MenuLevel;
+import com.example.airballoon.managers.MediaPlayerSingleton;
+import com.example.airballoon.managers.SaveManager;
+import com.example.airballoon.models.User;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class SelectLevelActivity extends AppCompatActivity {
     private View view;
-    private ImageButton buttonStart;
     private ImageButton buttonResumeMenu;
-    private ImageButton buttonLevel1Image;
-    boolean isLevel1 = false;
+    private List<MenuLevel> levels;
+    private final int countLevels = 16;
+    private User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         // Fullscreen mode
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -31,51 +44,19 @@ public class SelectLevelActivity extends AppCompatActivity {
         setContentView(R.layout.select_level_activity);
         view = getWindow().getDecorView();
 
-        View view = this.getWindow().getDecorView();
-        buttonStart = addButtonStart(view);
-        useButtonStart(this);
-
         buttonResumeMenu = addButtonResumeMenu(this);
         useButtonResumeMenu(this);
 
-        buttonLevel1Image = addButtonLevel1(this);
-        useButtonLevel1(this);
-
-
+//        buttonLevel1Image = addButtonLevel1(this);
+//        useButtonLevel1(this);
+        user = SaveManager.readFromFile(this);
+        drawCoins();
+        drawStars();
 
 
         //Если нужно будет добавить анимацю перехода
 //        overridePendingTransition(R.anim.slide_in_center, R.anim.slide_out_center);
-
-    }
-
-    private void useButtonStart(Activity activity) {
-        buttonStart.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                System.out.println("Нажали на кнопку старт");
-                if(isLevel1) {
-                    // Отобразить ProgressBar
-                    ProgressBar progressBar = view.findViewById(R.id.progress_bar);
-                    progressBar.setVisibility(View.VISIBLE);
-
-                    // Запустить игру
-                    Intent intent = new Intent(activity, GamePlayActivity.class);
-                    activity.startActivity(intent);
-
-                    //Убираем анимацию перехода.
-                    activity.overridePendingTransition(0, 0);
-
-                    // Завершить текущую активность
-                    activity.finish();
-                }
-            }
-        });
-    }
-
-    @SuppressLint("WrongViewCast")
-    private ImageButton addButtonStart(View view) {
-        return view.findViewById(R.id.button_start);
+        loadLevels();
     }
 
     private ImageButton addButtonResumeMenu(Activity activity) {
@@ -86,55 +67,44 @@ public class SelectLevelActivity extends AppCompatActivity {
         buttonResumeMenu.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("Нажали на кнопку возврата в меню");
-
                 //Возвращаемся в меню.
-                Intent intent = new Intent(activity, MainActivity.class);
+                Intent intent = new Intent(activity, SelectModeActivity.class);
                 startActivity(intent);
 
                 //Убираем анимацию перехода.
-                overridePendingTransition(0, 0);
+//                overridePendingTransition(0, 0);
+
+                activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
                 // Завершить текущую активность
                 finish();
             }
         });
-    }
+    } //Используем кнопку возврата в меню
 
-    private ImageButton addButtonLevel1(Activity activity) {
-        return buttonResumeMenu = activity.findViewById(R.id.level_1_image);
-    }
+    private void loadLevels() {
+        levels = new ArrayList<>();
 
-    private boolean selectButtonLevel1() {
-        isLevel1 = !isLevel1;
+        for(int i = 1; i <= countLevels; i++) {
+            int countStars = user.getMaxLevelStars(i);
 
-        //Меняем цвет кнопки (Пока только для уровня 1, исправить при рефакторе)
-        if (isLevel1) {
-            buttonLevel1Image.setImageResource(R.drawable.button_level_1_selected);
-        } else {
-            buttonLevel1Image.setImageResource(R.drawable.button_level_1);
-        }
-
-        return false;
-    }
-
-    private void useButtonLevel1(Activity activity) {
-        buttonLevel1Image.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                System.out.println("Нажали на кнопку уровня 1");
-                selectButtonLevel1();
-
-//                //Возвращаемся в меню.
-//                Intent intent = new Intent(activity, MainActivity.class);
-//                startActivity(intent);
-//
-//                //Убираем анимацию перехода.
-//                overridePendingTransition(0, 0);
-//
-//                // Завершить текущую активность
-//                finish();
+            if(i == 1) {
+                levels.add(new MenuLevel(this, view, i, true, countStars));
+            } else {
+                boolean levelAv = user.getMaxLevelStars(i - 1) > 0;
+                levels.add(new MenuLevel(this, view, i, levelAv, countStars));
             }
-        });
-    }
+
+        }
+    } //Загружаем кнопки уровней
+
+    private void drawCoins() {
+        TextView coinCountView = view.findViewById(R.id.coin_count);
+        coinCountView.setText(String.valueOf(user.getCoins()));
+    } //Отображаем количество монет
+
+    private void drawStars() {
+        TextView coinCountView = view.findViewById(R.id.stars_count);
+        coinCountView.setText(String.valueOf(user.getStars()));
+    } //Отображаем количество монет
 }

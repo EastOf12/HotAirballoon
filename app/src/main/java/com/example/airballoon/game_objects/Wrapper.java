@@ -5,9 +5,8 @@ import android.graphics.Canvas;
 import android.util.DisplayMetrics;
 
 import androidx.annotation.NonNull;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Random;
 
 //Обертка для всех объектов, которые будут генироваться в игре
@@ -17,11 +16,10 @@ public class Wrapper {
     private final AirBalloonObject airBalloonObject;
 
     private int maxCount; //Максимальное количество объектов
-    private int minCount; //Минимальное количество объектов
     private int drawCount; //Общее количество доступных объектов на отрисовку в рамках игровой итерации
     private final String type; //Название объектов
 
-    private ArrayList<Object> objects; //Игровые объекты, например монетки
+    private ArrayList<Object> objects; //Игровые объекты, зависит от переданного типа
     private boolean newIteration;
 
     Random random;
@@ -38,38 +36,80 @@ public class Wrapper {
     }
 
     public void generateRandomCount() {
-        drawCount = random.nextInt(maxCount - minCount + 1) + minCount;
-    } //Генерирует случайное количество повторений объекта в игровой итерации
+        drawCount = maxCount - 1;
+    } //Генерирует количество повторений объекта в игровой итерации. Когда 0, будет 1 объект, а если -1, то объекта не будет.
 
     private void generateMaxMin() {
         switch (type) {
             case "coin":
-                maxCount = 5;
-                minCount = 5;
+                maxCount = 5; //8
                 break;
             case "thorn":
-                maxCount = 15;
-                minCount = 5;
+                maxCount = 10; //4
+                break;
+            case "long_thorn":
+                maxCount = 0; //0
+                break;
+            case "bird":
+                maxCount = 0; //0
+                break;
+            case "shield":
+                maxCount = 1; //0
+                break;
+            case "magnet":
+                maxCount = 1;
+                break;
+            case "star":
+                maxCount = 0;
                 break;
         }
-    } //Генерирует максимальное и минимальное количество объектов в зависимости от их типа.
+    } //Максимальное количество возможных объектов в пуле
 
     private void generateGameObjects() {
         objects = new ArrayList<>();
 
         switch (type) {
             case "coin":
-
                 //Создаем необходимое количество объектов монет
-                for(int i = 0; i <= maxCount; i++) {
+                for(int i = 0; i <= maxCount - 1; i++) {
                     objects.add(new Coin(activity, displayMetrics, airBalloonObject));
                 }
-
                 break;
             case "thorn":
                 //Создаем необходимое количество объектов шипов
                 for(int i = 0; i <= maxCount; i++) {
                     objects.add(new Thorn(activity, displayMetrics, airBalloonObject));
+                }
+                break;
+            case "long_thorn":
+                //Создаем необходимое количество длинных шипов
+                for(int i = 0; i <= maxCount; i++) {
+                    objects.add(new LongThorn(activity, displayMetrics, airBalloonObject));
+                }
+                break;
+            case "bird":
+                //Создаем необходимое количество птиц
+                for(int i = 0; i <= maxCount; i++) {
+                    objects.add(new Bird(activity, displayMetrics, airBalloonObject));
+                }
+                break;
+            case "shield":
+                //Создаем необходимое количество щитов
+                for(int i = 0; i <= maxCount; i++) {
+                    objects.add(new Shield(activity, displayMetrics, airBalloonObject));
+                }
+                break;
+            case "magnet":
+                //Создаем необходимое количество магнитов
+                for(int i = 0; i <= maxCount; i++) {
+                    objects.add(new Magnet(activity, displayMetrics, airBalloonObject));
+                }
+                break;
+
+            case "star":
+                //Создаем необходимое количество звезд
+                for(int i = 0; i <= maxCount; i++) {
+                    objects.add(new Star(activity, displayMetrics, airBalloonObject));
                 }
                 break;
         }
@@ -79,34 +119,14 @@ public class Wrapper {
         return drawCount;
     }
 
-    public void setDrawCount(int drawCount) {
-        this.drawCount = drawCount;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public int getMaxCount() {
-        return maxCount;
-    }
-
     public void setMaxCount(int maxCount) {
         this.maxCount = maxCount;
-    }
+        generateGameObjects();
 
-    public int getMinCount() {
-        return minCount;
-    }
-
-    public void setMinCount(int minCount) {
-        this.minCount = minCount;
     }
     public boolean drawObjects(Canvas canvas, Integer count, String wrapperType) {
 
         newIteration = true;
-
-
 
         //Не даем отрисовать больше чем можем.
         if(count > drawCount) {
@@ -131,8 +151,52 @@ public class Wrapper {
                     newIteration = false;
                 }
             }
-        }
+        } else if (wrapperType.equals("long_thorn")) {
+            for(int i = 0; i <= count; i++ ) {
+                LongThorn longThorn = (LongThorn) objects.get(i);
+                longThorn.drawThorn(canvas);
 
+                if(longThorn.isNeedDraw()) {
+                    newIteration = false;
+                }
+            }
+        } else if (wrapperType.equals("bird")) {
+            for(int i = 0; i <= count; i++ ) {
+                Bird bird = (Bird) objects.get(i);
+                bird.draw(canvas);
+
+                if(bird.isNeedDraw()) {
+                    newIteration = false;
+                }
+            }
+        } else if (wrapperType.equals("shield")) {
+            for(int i = 0; i <= count; i++ ) {
+                Shield shield = (Shield) objects.get(i);
+                shield.draw(canvas);
+
+                if(shield.isNeedDraw()) {
+                    newIteration = false;
+                }
+            }
+        } else if (wrapperType.equals("magnet")) {
+            for(int i = 0; i <= count; i++ ) {
+                Magnet magnet = (Magnet) objects.get(i);
+                magnet.draw(canvas);
+
+                if(magnet.isNeedDraw()) {
+                    newIteration = false;
+                }
+            }
+        } else if (wrapperType.equals("star")) {
+            for(int i = 0; i <= count; i++ ) {
+                Star star = (Star) objects.get(i);
+                star.draw(canvas);
+
+                if(star.isNeedDraw()) {
+                    newIteration = false;
+                }
+            }
+        }
 
         return newIteration;
     }
@@ -146,10 +210,58 @@ public class Wrapper {
     public String toString() {
         return "Wrapper{" +
                 "maxCount=" + maxCount +
-                ", minCount=" + minCount +
                 ", drawCount=" + drawCount +
                 ", type='" + type + '\'' +
                 ", random=" + random +
+                ", objects=" + objects +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Wrapper wrapper = (Wrapper) o;
+        return maxCount == wrapper.maxCount && drawCount == wrapper.drawCount && newIteration == wrapper.newIteration && Objects.equals(activity, wrapper.activity) && Objects.equals(displayMetrics, wrapper.displayMetrics) && Objects.equals(airBalloonObject, wrapper.airBalloonObject) && Objects.equals(type, wrapper.type) && Objects.equals(objects, wrapper.objects) && Objects.equals(random, wrapper.random);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(activity, displayMetrics, airBalloonObject, maxCount, drawCount, type, objects, newIteration, random);
+    }
+
+    public void removeObject() {
+        objects.remove(objects.size() - 1);
+        drawCount--;
+    } //Удаляем первый объект в пуле
+
+    public void addObject() {
+        switch (type) {
+            case "long_thorn":
+                objects.add(new LongThorn(activity, displayMetrics, airBalloonObject));
+                drawCount++;
+                break;
+            case "bird":
+                objects.add(new Bird(activity, displayMetrics, airBalloonObject));
+                drawCount++;
+                break;
+            case "shield":
+                objects.add(new Shield(activity, displayMetrics, airBalloonObject));
+                drawCount++;
+                break;
+            case "magnet":
+                objects.add(new Magnet(activity, displayMetrics, airBalloonObject));
+                drawCount++;
+                break;
+            case "star":
+                objects.add(new Star(activity, displayMetrics, airBalloonObject));
+                drawCount++;
+                break;
+        }
+    } //Добавляем объект в пул
+
+    public void addObject(Bird bird) {
+        objects.add(bird);
+        drawCount++;
+    } //Для птички отдельно, тк ее нужно создавать на экране загрузки либо в concurrent
 }

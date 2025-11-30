@@ -7,7 +7,9 @@ import android.util.DisplayMetrics;
 
 import com.example.airballoon.managers.GamePlayManager;
 import com.example.airballoon.R;
+import com.example.airballoon.managers.SoundManager;
 
+import java.util.Objects;
 import java.util.Random;
 
 public class Coin extends GameObject{
@@ -27,6 +29,7 @@ public class Coin extends GameObject{
         calculateStartPosition();
         createRect();
     }
+
     @Override
     public void calculateStartPosition() {
         xPosition = random.nextInt((int) (displayMetrics.widthPixels - width));
@@ -47,9 +50,14 @@ public class Coin extends GameObject{
 
     @Override
     public void draw(Canvas canvas) {
-
         if(needDraw) {
-            calculateNewPosition(canvas);
+            if(airBalloon.getHadMagnet() && needMagnetCoin()) { //Рассчитываем новую позицию монеток, когда включен магнит
+                calculateNewPositionMagnet(canvas);
+            } else {
+                calculateNewPosition(canvas);
+            }
+
+
             rect.left = xPosition;
             rect.top = yPosition;
             rect.right = (int) (xPosition + width);
@@ -59,22 +67,90 @@ public class Coin extends GameObject{
         }
     }
 
+//    public boolean checkCollisionAirBalloon() {
+//
+//        boolean result = airBalloon.getRect().intersect(rect);
+//
+//        if (result) {
+//            airBalloon.addCollectedCoins();
+//        }
+//
+//        return result;
+//    }
+
     public boolean checkCollisionAirBalloon() {
+        boolean resultCenter = airBalloon.getRects().get(0).intersect(rect);
+        boolean resultUp = airBalloon.getRects().get(1).intersect(rect);
+        boolean resultBottom = airBalloon.getRects().get(2).intersect(rect);
+        boolean res = false;
 
-        boolean result = airBalloon.getRect().intersect(rect);
-
-        if (result) {
+        if (resultCenter || resultUp || resultBottom) {
             airBalloon.addCollectedCoins();
+            res = true;
         }
 
-        return result;
-    }
-
-    public void setYPosition(int yPosition) {
-        this.yPosition = yPosition;
+        return res;
     }
 
     public boolean isNeedDraw() {
         return needDraw;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Coin coin = (Coin) o;
+        return needDraw == coin.needDraw && Objects.equals(random, coin.random) && Objects.equals(airBalloon, coin.airBalloon);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(random, airBalloon, needDraw);
+    }
+
+    private void calculateNewPositionMagnet(Canvas canvas) {
+        if (yPosition >= canvas.getHeight() || checkCollisionAirBalloon()) {
+            yPosition = random.nextInt(500) - 1000;
+            xPosition = random.nextInt((int) (displayMetrics.widthPixels - width));
+            needDraw = !needDraw;
+        } else {
+            int xAirballoonPosition = airBalloon.xPosition;
+            int yAirballoonPosition = airBalloon.yPosition;
+
+            //Изменяем позицию монетки ближе к шарику
+            boolean needCalculate = !(yPosition > yAirballoonPosition && yPosition < yAirballoonPosition + airBalloon.height);
+
+            if(needCalculate) {
+                if(yPosition < yAirballoonPosition) {
+                    yPosition += GamePlayManager.speed * 2.5;
+                } else if(yPosition > yAirballoonPosition){
+                    yPosition = (int) (yPosition - (GamePlayManager.speed * 2.5));
+                }
+            }
+
+            needCalculate = !(xPosition > xAirballoonPosition && xPosition < xAirballoonPosition + (airBalloon.width * 0.5));
+
+            if(needCalculate) {
+                if(xPosition < xAirballoonPosition) {
+                    xPosition += GamePlayManager.speed * 1.5;
+                } else if (xPosition > xAirballoonPosition){
+                    xPosition -= GamePlayManager.speed * 1.5;
+                }
+            }
+        }
+    }
+
+    private boolean needMagnetCoin() {
+        boolean xNeedMagnet = xPosition + (airBalloon.width * 2) > airBalloon.xPosition && xPosition < (airBalloon.xPosition + (airBalloon.width * 3));
+
+
+        boolean yNeedMagnet = yPosition > (airBalloon.yPosition - airBalloon.height * 1.5) && yPosition < (airBalloon.yPosition + airBalloon.height * 2);
+
+        return xNeedMagnet && yNeedMagnet;
+    }
+
+    public int getYPosition() {
+        return yPosition;
     }
 }

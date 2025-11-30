@@ -4,35 +4,61 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.media.MediaPlayer;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 
+import com.example.airballoon.R;
+import com.example.airballoon.managers.SoundManager;
 import com.example.airballoon.models.AirBalloon;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 public class AirBalloonObject extends GameObject{
     float startX, startY;
     float offsetX, offsetY;
+
     private int collectedCoins = 0;
-    private int hp = 5;
+    private int hp = 1;
+    private final int maxXp = 1;
+    private boolean hadShield = false;
+    private boolean hadMagnet = false;
     float newX;
-    AirBalloon airBalloonInfo;
-
-    // Добавляем переменную для отслеживания состояния перемещения
-    private boolean isDragging = false;
-
-    float previousX = 0;
-
-    float speed = 0.5f; //Скорость перемещения шарика.
+    private LocalDateTime nowTimeShield;
+    private LocalDateTime shieldEndTime;
+    private LocalDateTime nowTimeMagnet;
+    private LocalDateTime magnetEndTime;
+    SoundManager soundManager;
+    List<Rect> rects;
 
 
-    public AirBalloonObject(Activity activity, DisplayMetrics displayMetrics, Bitmap image) {
+    private int timeActionShield = 10; //Время действия щита.
+    private int timeActionMagnet = 10; //Время действия магнита.
+    ShieldIcon shieldIcon;
+    MagnetIcon magnetIcon;
+    ShieldIcon shieldAirballoonAnimation;
+
+
+    public AirBalloonObject(Activity activity, DisplayMetrics displayMetrics, Bitmap image, SoundManager soundManager) {
         super(activity, displayMetrics);
 
-        setPercentage(0.15);
+        setPercentage(0.13);
         this.image = image;
         calculateSize();
         calculateStartPosition();
         createRect();
+
+        shieldIcon = new ShieldIcon(activity, displayMetrics);
+        shieldAirballoonAnimation = new ShieldIcon(activity, displayMetrics);
+        shieldAirballoonAnimation.setPercentage(0.05); //Устанавливаем размер щитов, которые будут вокруг
+        shieldAirballoonAnimation.calculateSize();
+
+        magnetIcon = new MagnetIcon(activity, displayMetrics);
+        rects = createRects();
+
+        this.soundManager = soundManager;
     }
 
     @Override
@@ -41,66 +67,46 @@ public class AirBalloonObject extends GameObject{
         yPosition = (int) (displayMetrics.heightPixels * 0.7);
     }
 
-    @Override
+        @Override
     public void draw(Canvas canvas) {
-//        calculateNewPosition();
-
-        rect.left = xPosition;
-        rect.top = yPosition;
-        rect.right = (int) (xPosition + width);
-        rect.bottom = (int) (yPosition + height);
+        rects.get(0).left = (int) (xPosition + width * 0.05);
+        rects.get(0).top = (int) (yPosition + height * 0.2);
+        rects.get(0).right = (int) (xPosition + width * 0.95);
+        rects.get(0).bottom =(int) (yPosition + height * 0.5);
+        rects.get(1).left = (int) (xPosition + width * 0.35);
+        rects.get(1).top = yPosition;
+        rects.get(1).right = (int) (xPosition + width * 0.65);
+        rects.get(1).bottom = (int) (yPosition + height * 0.2);
+        rects.get(2).left = (int) (xPosition + width * 0.4);
+        rects.get(2).top = (int) (yPosition + height * 0.5);
+        rects.get(2).right = (int) (xPosition + width * 0.6);
+        rects.get(2).bottom = (int) (yPosition + height * 0.95);
         canvas.drawBitmap(image, xPosition, yPosition, null);
+        shieldTimeCounter(canvas);
+        magnetTimeCounter(canvas);
     }
 
-    private void calculateNewPosition() {
-        xPosition +=1 ;
+
+    public List<Rect> createRects() {
+        List<Rect> rectList = new ArrayList<>();
+
+        Rect centerCube = new Rect((int) (xPosition + width * 0.05), (int) (yPosition + height * 0.2),
+                (int) (xPosition + width * 0.95), (int) (yPosition + height * 0.5) );
+
+        Rect upCube = new Rect((int) (xPosition + width * 0.35), yPosition,
+                (int) (xPosition + width * 0.65), (int) (yPosition + height * 0.2) );
+
+        Rect bottomCube = new Rect((int) (xPosition + width * 0.4), (int) (yPosition + height * 0.5),
+                (int) (xPosition + width * 0.6), (int) (yPosition + height * 0.95) );
+
+
+        rectList.add(centerCube);
+        rectList.add(upCube);
+        rectList.add(bottomCube);
+
+        return rectList;
     }
 
-    //Тут логика с фиксированной скоростью, она не оч. Возможно стоит доработать хз
-
-//    public boolean onTouch(MotionEvent event) {
-//        switch (event.getAction()) {
-//            case MotionEvent.ACTION_DOWN:
-//                // Запоминаем начальную позицию пальца
-//                startX = event.getRawX();
-//                offsetX = xPosition - startX;
-//                previousX = startX; // Сохраняем начальную позицию как предыдущую
-//                isDragging = true;   // Пользователь начал движение
-//                System.out.println("Нажатие");
-//                break;
-//
-//            case MotionEvent.ACTION_MOVE:
-//                if (isDragging) {
-//                    float currentX = event.getRawX();
-//                    float deltaX = currentX - previousX; // Вычисляем изменение X
-//                    previousX = currentX; // Обновляем предыдущую позицию
-//
-//                    // Устанавливаем заранее определенную скорость
-//                    float newX = xPosition + (deltaX * speed); // Обновляем позицию шарика
-//
-//                    // Обновляем позицию шарика с учетом ограничений экрана
-//                    if (newX >= 0 && newX <= (displayMetrics.widthPixels - width)) {
-//                        xPosition = (int) newX;
-//
-//                        // Выводим направление движения
-//                        if (deltaX > 0) {
-//                            System.out.println("Перемещение вправо");
-//                        } else if (deltaX < 0) {
-//                            System.out.println("Перемещение влево");
-//                        }
-//                    }
-//                }
-//                break;
-//
-//            case MotionEvent.ACTION_CANCEL:
-//            case MotionEvent.ACTION_UP: // Обработка отпускания пальца
-//                // Пользователь отпустил палец, прекращаем движение
-//                isDragging = false;
-//                System.out.println("Отпустил");
-//                break;
-//        }
-//        return true;
-//    }
     public boolean onTouch(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
@@ -114,10 +120,6 @@ public class AirBalloonObject extends GameObject{
                 // Рассчитываем новую позицию шарика в соответствии с перемещением пальца
                 newX = event.getRawX() + offsetX;
 
-                System.out.println("newX " + newX);
-                System.out.println("event.getRawX() " + event.getRawX());
-
-
                 // Обновляем позицию шарика с учетом ограничений экрана
                 if (newX >= 0 && newX <= (displayMetrics.widthPixels - width)) {
                     xPosition = (int) newX;
@@ -128,23 +130,100 @@ public class AirBalloonObject extends GameObject{
         return true;
     }
 
-    public Rect getRect() {
-        return rect;
+    public List<Rect> getRects() {
+        return rects;
     }
 
     public void addCollectedCoins() {
         collectedCoins++;
+        soundManager.getCoin();
     }
 
     public int getCollectedCoins() {
         return collectedCoins;
     }
 
+    public void setCollectedCoins(int coins) {
+        collectedCoins = coins;
+    }
+
     public void removeHp() {
-        hp--;
+        if(!hadShield) {
+            hp--;
+            soundManager.getDamage();
+        } else {
+            soundManager.shieldCrush();
+        }
     }
 
     public int getHp() {
         return hp;
+    }
+
+    public void addHp() {
+        hp++;
+    }
+
+    public void rebootAirBalloon() {
+        hp = maxXp;
+        hadShield = false;
+        hadMagnet = false;
+        collectedCoins = 0;
+        calculateStartPosition();
+    }
+
+    public void addShield() {
+        hadShield = true;
+        nowTimeShield = LocalDateTime.now();
+        shieldEndTime = nowTimeShield.plusSeconds(timeActionShield);
+        soundManager.getShield();
+
+        activity.runOnUiThread(() -> {
+            shieldIcon.startShieldTimer(timeActionShield * 1000L);
+        });
+    }
+
+    public void addMagnet() {
+        hadMagnet = true;
+        nowTimeMagnet = LocalDateTime.now();
+        magnetEndTime = nowTimeMagnet.plusSeconds(timeActionMagnet);
+        soundManager.getMagnet();
+
+        activity.runOnUiThread(() -> {
+            magnetIcon.startMagnetTimer(timeActionMagnet * 1000L);
+        });
+    }
+
+    public void removeShield() {
+        hadShield = false;
+    }
+
+    public void removeMagnet() {
+        hadMagnet = false;
+    }
+
+    public void shieldTimeCounter(Canvas canvas) {
+        nowTimeShield = LocalDateTime.now();
+
+        if(hadShield && nowTimeShield.isAfter(shieldEndTime)) {
+            removeShield();
+        } else if (hadShield) {
+            shieldIcon.draw(canvas);
+            shieldAirballoonAnimation.drawShieldAnimationAirballoon(canvas, image, xPosition, yPosition);
+        }
+    } //Обновляем время действия щита, удаляем щит если нужно.
+
+    public void magnetTimeCounter(Canvas canvas) {
+        nowTimeMagnet = LocalDateTime.now();
+
+        if(hadMagnet && nowTimeMagnet.isAfter(magnetEndTime)) {
+            removeMagnet();
+        } else if (hadMagnet) {
+            magnetIcon.draw(canvas);
+        }
+    } //Обновляем время действия магнита, удаляем если нужно.
+
+    public boolean getHadMagnet() {
+        return hadMagnet;
     }
 }

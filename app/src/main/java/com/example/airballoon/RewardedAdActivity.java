@@ -31,6 +31,7 @@ public class RewardedAdActivity extends AppCompatActivity {
     private RewardedAdLoader mRewardedAdLoader = null;
     ActivityRewardedAdBinding mBinding;
     Activity activity;
+    private boolean needBackActivity = false;
 
     public RewardedAdActivity() {
         super(R.layout.activity_rewarded_ad);
@@ -41,7 +42,6 @@ public class RewardedAdActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        System.out.println("Запустили рут метод отображения рекламы");
         Window w = getWindow();
         w.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
@@ -60,7 +60,6 @@ public class RewardedAdActivity extends AppCompatActivity {
             public void onAdLoaded(@NonNull final RewardedAd rewardedAd) {
                 mRewardedAd = rewardedAd;
                 // Реклама была успешно загружена. Теперь вы можете показывать загруженную рекламу.
-                System.out.println("Показываем объявление");
                 showAd();
             }
 
@@ -68,8 +67,6 @@ public class RewardedAdActivity extends AppCompatActivity {
             public void onAdFailedToLoad(@NonNull final AdRequestError adRequestError) {
                 // Не удалось загрузить объявление с помощью AdRequestError.
                 // Настоятельно не рекомендуется пытаться загрузить новое объявление с помощью метода onAdFailedToLoad().
-
-                System.out.println("Не смогли загрузить объявление");
                 // Закрыть текущую активность
                 finish();
 
@@ -83,10 +80,9 @@ public class RewardedAdActivity extends AppCompatActivity {
 
     private void loadRewardedAd() {
         if (mRewardedAdLoader != null ) {
-            System.out.println("Загрузили новый рекламный блок");
             final AdRequestConfiguration adRequestConfiguration =
-                    new AdRequestConfiguration.Builder("demo-rewarded-yandex").build(); //Тестовый, его нужно будет заменить
-            //                    new AdRequestConfiguration.Builder("R-M-11206968-1").build();
+                    new AdRequestConfiguration.Builder("R-M-17626805-1").build(); //Тестовый, его нужно будет заменить
+            //                    new AdRequestConfiguration.Builder("R-M-11206968-1").build(); или для теста demo-rewarded-yandex
             mRewardedAdLoader.loadAd(adRequestConfiguration);
         }
     }
@@ -116,7 +112,6 @@ public class RewardedAdActivity extends AppCompatActivity {
                 @Override
                 public void onAdDismissed() {
                     // Вызывается, когда объявление закрывается.
-                    System.out.println("Хочет закрыть объявление");
 
                     // Закрыть текущую активность
                     finish();
@@ -153,21 +148,36 @@ public class RewardedAdActivity extends AppCompatActivity {
                 @Override
                 public void onRewarded(@NonNull final Reward reward) {
                     // Вызывается, когда пользователь может быть вознагражден.
-                   System.out.println("Показали рекламу");
+                   Intent ints = getIntent();
+                   int rew = ints.getIntExtra("typeReward", 0);
 
-                   //Начисляем награду пользвателю
-                    User user = SaveManager.readFromFile(activity);
-                    user.addCoins(user.getLastCoins());
-                    SaveManager.save(activity, user);
-                    System.out.println("Начислили награду пользователю " + user.getLastCoins());
+                   if(rew == 1) {
+                       //Начисляем награду пользвателю
+                       User user = SaveManager.readFromFile(activity);
+                       user.addCoins(user.getLastCoins());
+                       SaveManager.save(activity, user);
+                   } else {
+                       //Перейти к загрузке уровня
+                       Intent intent = new Intent(activity, LoadLevelActivity.class);
+                       int levelNumber = ints.getIntExtra("levelNumber", 0);
+                       int distance = ints.getIntExtra("distance", 0);
+                       int coins = ints.getIntExtra("coins", 0);
 
+                       intent.putExtra("levelNumber", levelNumber);
+                       intent.putExtra("distance", distance);
+                       intent.putExtra("coins", coins);
+                       activity.startActivity(intent);
+                       activity.overridePendingTransition(0, 0);
+                       activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                       // Завершить текущую активность
+                       activity.finish();
+                   }
                 }
             });
 
             mRewardedAd.show(this);
         }
     }
-
 
     //Освобождение ресурсов
     @Override

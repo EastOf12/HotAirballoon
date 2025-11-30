@@ -11,23 +11,22 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Optional;
 
 public class SaveManager {
     public static void save(Activity activity, User user) {
         String filename = "save.txt"; // имя файла, который нужно сохранить
         String content = user.toString(); // контент файла
-        System.out.println("Пытаемся сохранить файл");
 
         try {
             File file = new File(activity.getFilesDir(), filename);
             FileOutputStream fileOutputStream = new FileOutputStream(file);
             fileOutputStream.write(content.getBytes());
             fileOutputStream.close();
-            System.out.println("Файл сохранен.");
         } catch (IOException e) {
             e.printStackTrace();
         }
-    } //Сохраняет прогресс в  файл
+    } //Сохраняет прогресс в файл
 
     public static User readFromFile(Activity activity) {
         String filename = "save.txt"; // имя файла, который нужно прочитать
@@ -49,9 +48,8 @@ public class SaveManager {
             Gson gson = new Gson();
 
             // Десериализация объекта из строки
-            System.out.println("content " + content);
-
             user = gson.fromJson(String.valueOf(content), User.class);
+
 
             //Если не получили информацию по выбранному шарику
             if(user.getSelectAirBalloon() == 0) {
@@ -59,14 +57,9 @@ public class SaveManager {
             }
 
             br.close();
-            System.out.println("Прочитанный контент: " + content);
-
-            System.out.println("Сам созданный класс " + user);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-        System.out.println("Пользователь которого вернули " + user);
 
         //Если нет файла сохранения, то создаем нового пользователя.
         if (user == null) {
@@ -75,4 +68,20 @@ public class SaveManager {
 
         return user;
     } //Читает файл с сохранением
+
+    public static boolean delete(Activity activity) {
+        String filename = "save.txt"; // имя файла, который нужно удалить
+        boolean result = false;
+
+        try {
+            File file = new File(activity.getFilesDir(), filename);
+            if (file.exists()) {
+                result = file.delete();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return result;
+    }
 }

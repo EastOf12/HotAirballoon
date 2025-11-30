@@ -10,49 +10,104 @@
         android:id="@+id/menu_bg"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="fitXY"
+        android:scaleType="centerCrop"
         app:srcCompat="@drawable/menu_bg"
         tools:ignore="ContentDescription"
         tools:layout_editor_absoluteX="26dp"
         tools:layout_editor_absoluteY="-44dp" />
 
     <ImageView
-        android:id="@+id/coins"
-        android:layout_width="97dp"
-        android:layout_height="78dp"
-        app:layout_constraintBottom_toBottomOf="@+id/menu_bg"
+        android:id="@+id/cloud_long"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="matrix"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.646"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/menu_bg"
-        app:layout_constraintVertical_bias="0.061"
+        app:layout_constraintVertical_bias="0.187"
+        app:srcCompat="@drawable/cloud_long" />
+
+    <ImageView
+        android:id="@+id/group_clouds"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="matrix"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/menu_bg"
+        app:layout_constraintVertical_bias="0.187"
+        app:srcCompat="@drawable/group_clouds" />
+
+    <ImageView
+        android:id="@+id/coins"
+        android:layout_width="55dp"
+        android:layout_height="46dp"
+        app:layout_constraintBottom_toBottomOf="@+id/menu_bg"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.727"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/menu_bg"
+        app:layout_constraintVertical_bias="0.054"
         app:srcCompat="@drawable/coins" />
 
     <TextView
         android:id="@+id/coin_count"
-        android:layout_width="93dp"
-        android:layout_height="26dp"
+        android:layout_width="78dp"
+        android:layout_height="33dp"
         android:text="@string/_0"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.47"
-        app:layout_constraintStart_toEndOf="@+id/coins"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.088"
         android:textColor="@color/white"
         android:textSize="20sp"
-        android:textStyle="italic"/>
+        android:textStyle="italic"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/coins"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.065" />
+
+    <ImageView
+        android:id="@+id/stars"
+        android:layout_width="55dp"
+        android:layout_height="46dp"
+        app:layout_constraintBottom_toBottomOf="@+id/menu_bg"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.727"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/menu_bg"
+        app:layout_constraintVertical_bias="0.14"
+        app:srcCompat="@drawable/star_yellow" />
+
+    <TextView
+        android:id="@+id/stars_count"
+        android:layout_width="78dp"
+        android:layout_height="30dp"
+        android:text="@string/_0"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="italic"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toEndOf="@+id/coins"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.147" />
 
     <HorizontalScrollView
         android:id="@+id/scrollable"
         android:layout_width="match_parent"
         android:layout_height="350dp"
+        android:fillViewport="true"
+        android:scrollbars="none"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/menu_bg"
-        app:layout_constraintVertical_bias="0.498"
-        android:scrollbars="none"
-        android:fillViewport="true">
+        app:layout_constraintVertical_bias="0.498">
 
         <LinearLayout
             android:id="@+id/linear_layout"
@@ -128,16 +183,16 @@
         app:layout_constraintVertical_bias="0.121" />
 
     <ImageButton
-        android:id="@+id/button_shop"
-        android:layout_width="108dp"
-        android:layout_height="48dp"
-        android:background="@drawable/button_shop"
+        android:id="@+id/button_buy"
+        android:layout_width="230dp"
+        android:layout_height="81dp"
+        android:background="@drawable/buy"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintEnd_toEndOf="@+id/menu_bg"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_start"
-        app:layout_constraintVertical_bias="0.397" />
+        app:layout_constraintTop_toBottomOf="@+id/scrollable"
+        app:layout_constraintVertical_bias="0.172" />
 
     <ProgressBar
         android:id="@+id/progress_bar"
@@ -152,18 +207,34 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.436" />
 
-    <ImageButton
-        android:id="@+id/button_setting"
-        android:layout_width="60dp"
-        android:layout_height="50dp"
-        android:background="@drawable/gear_wheel"
-        android:scaleType="fitCenter"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.048"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.075" />
+<!--    <ImageButton-->
+<!--        android:id="@+id/button_setting"-->
+<!--        android:layout_width="60dp"-->
+<!--        android:layout_height="50dp"-->
+<!--        android:background="@drawable/gear_wheel"-->
+<!--        android:scaleType="fitCenter"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintHorizontal_bias="0.048"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintVertical_bias="0.075" />-->
+
+    <TextView
+        android:id="@+id/price_airballoon"
+        android:layout_width="137dp"
+        android:layout_height="60dp"
+        android:gravity="center"
+        android:text="@string/_0"
+        android:textColor="@color/white"
+        android:textSize="45sp"
+        android:textStyle="normal"
+        app:layout_constraintBottom_toBottomOf="@+id/button_buy"
+        app:layout_constraintEnd_toEndOf="@+id/button_buy"
+        app:layout_constraintHorizontal_bias="0.505"
+        app:layout_constraintStart_toStartOf="@+id/button_buy"
+        app:layout_constraintTop_toTopOf="@+id/button_buy"
+        app:layout_constraintVertical_bias="0.428" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
