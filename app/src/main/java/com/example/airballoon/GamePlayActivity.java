@@ -2,17 +2,12 @@ package com.example.airballoon;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.view.Window;
 import android.view.WindowManager;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.airballoon.levels.FreeLevel;
-import com.example.airballoon.managers.DataManager;
-import com.example.airballoon.managers.SaveManager;
-
-import java.time.LocalDateTime;
 
 public class GamePlayActivity extends AppCompatActivity {
 
@@ -22,6 +17,9 @@ public class GamePlayActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         int selectedLevel = intent.getIntExtra("levelNumber", 0);
+        int distance = intent.getIntExtra("distance", 0);
+        int coins = intent.getIntExtra("coins", 0);
+
 
         // Fullscreen mode
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -29,7 +27,7 @@ public class GamePlayActivity extends AppCompatActivity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         //Запускаем уровень
-        FreeLevel freeLevel = new FreeLevel(this, selectedLevel);
+        FreeLevel freeLevel = new FreeLevel(this, selectedLevel, distance, coins);
         setContentView(freeLevel);
         freeLevel.start();
     }

@@ -1,6 +1,7 @@
 package com.example.airballoon.levels;
 
 import static com.example.airballoon.managers.DataManager.getLevelFinishInfo;
+import static com.example.airballoon.managers.DataManager.loadData;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -30,9 +31,11 @@ public class FreeLevel extends BaseLevel implements Runnable{
     private static int stars = 0;
     private final HashMap<Integer, Integer> levelsFinishDistance = getLevelFinishInfo();
 
-    public FreeLevel(Activity activity, int selectedLevel) {
+    public FreeLevel(Activity activity, int selectedLevel, int distance, int coins) {
         super(activity);
         gamePlayManager = DataManager.getGamePlayManager(selectedLevel);
+        gamePlayManager.setDistance(distance);
+        gamePlayManager.setCoins(coins);
         this.selectedLevel = selectedLevel;
     }
 
@@ -129,10 +132,9 @@ public class FreeLevel extends BaseLevel implements Runnable{
                             switchGameStatus();
                         } else if((gamePlayManager.getHpAirBalloon() <= 0 || isPaused)
                                 && gamePlayManager.getGamePlayMenu().onTouch(event, isPaused, levelCompleted) == MenuActions.NEXT) {
-
                             int nextLevel = selectedLevel;
 
-                            if(selectedLevel < 16) {
+                            if(selectedLevel <= DataManager.getLevelFinishInfo().size()) {
                                 nextLevel++;
                             }
 
@@ -150,16 +152,16 @@ public class FreeLevel extends BaseLevel implements Runnable{
                                 needSave = false;
                             }
 
-                            //Перейти к загрузке уровня
-                            if(gamePlayManager.getDataLoaded()) {
-                                Intent intent = new Intent(activity, GamePlayActivity.class);
-                                intent.putExtra("levelNumber", nextLevel);
-                                activity.startActivity(intent);
-                                activity.overridePendingTransition(0, 0);
-                                activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                                // Завершить текущую активность
-                                activity.finish();
-                            }
+//                            DataManager.updateGamePlayManagerList(activity, displayMetrics, user, selectedLevel);
+
+                            Intent intent = new Intent(activity, LoadLevelActivity.class);
+                            intent.putExtra("levelNumber", nextLevel);
+                            activity.startActivity(intent);
+                            activity.overridePendingTransition(0, 0);
+                            activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                            // Завершить текущую активность
+                            activity.finish();
+
                         } else if((gamePlayManager.getHpAirBalloon() <= 0 || isPaused)
                                 && gamePlayManager.getGamePlayMenu().onTouch(event, isPaused, levelCompleted) == MenuActions.EXIT) {
                             running = false; //Останавливаем поток
@@ -184,21 +186,18 @@ public class FreeLevel extends BaseLevel implements Runnable{
                                     user.setLevelsProgress(selectedLevel, getStars());
                                 }
 
-
                                 SaveManager.save(activity, user); //Сохраняем прогресс в файл.
                                 needSave = false;
                             }
 
-                            //Перейти к загрузке уровня
-                            if(gamePlayManager.getDataLoaded()) {
-                                Intent intent = new Intent(activity, GamePlayActivity.class);
-                                intent.putExtra("levelNumber", selectedLevel);
-                                activity.startActivity(intent);
-                                activity.overridePendingTransition(0, 0);
-                                activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
-                                // Завершить текущую активность
-                                activity.finish();
-                            }
+                            Intent intent = new Intent(activity, LoadLevelActivity.class);
+                            intent.putExtra("levelNumber", selectedLevel);
+                            activity.startActivity(intent);
+                            activity.overridePendingTransition(0, 0);
+                            activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                            // Завершить текущую активность
+                            activity.finish();
+
                         }
 
                         else if((levelCompleted || gamePlayManager.getHpAirBalloon() <= 0) &&
@@ -240,5 +239,9 @@ public class FreeLevel extends BaseLevel implements Runnable{
 
     public static int getStars() {
         return stars;
+    }
+
+    public static void rebootStars() {
+        stars = 0;
     }
 }

@@ -46,6 +46,12 @@ public class LevelProgressManager {
         }
     }
 
+    public void reboot(Activity activity, DisplayMetrics displayMetrics, int levelNum) {
+        for(int i = 1; i < 4; i++) {
+            StarProgress starProgress = new StarProgress(activity, displayMetrics, R.drawable.star_brown, 0.08, progressBarBg, i, levelNum);
+            stars.add(starProgress);
+        }
+    }
 }
 
 class ProgressSign extends BaseObject {
@@ -193,7 +199,7 @@ class StarProgress extends BaseObject {
         this.displayMetrics = displayMetrics;
         setYellowStarDistance(LevelNum);
 
-        yellowStarImage= BitmapFactory.decodeResource(activity.getResources(), R.drawable.star_yellow);
+        yellowStarImage = BitmapFactory.decodeResource(activity.getResources(), R.drawable.star_yellow);
 
         loadImage(activity, resourceId);
         calculateSize(displayMetrics);

@@ -21,6 +21,7 @@ import android.media.MediaPlayer;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 
+import com.example.airballoon.GamePlayActivity;
 import com.example.airballoon.game_objects.AirBalloonObject;
 import com.example.airballoon.game_objects.BackGround;
 import com.example.airballoon.game_objects.BaseObject;
@@ -35,6 +36,7 @@ import com.example.airballoon.game_objects.Star;
 import com.example.airballoon.game_objects.Thorn;
 import com.example.airballoon.R;
 import com.example.airballoon.game_objects.Wrapper;
+import com.example.airballoon.levels.FreeLevel;
 import com.example.airballoon.models.User;
 
 import java.util.HashMap;
@@ -54,10 +56,10 @@ public class GamePlayManager {
 
     public static int speed = 0; //Стартовая скорость
 
-    public final int initialSpeed = speed; //Скорость при перезапуске
     GamePlayMenu gamePlayMenu;
     Random random = new Random();
     private final int speedUpInterval = 15;
+
     int distance = 0;
     LocalTime currentTime;
 
@@ -72,7 +74,7 @@ public class GamePlayManager {
     //Все что относится к генерации
     private ObjectsGeneration objectsGeneration;
     private ArrayList<Wrapper> usedObjects;
-    private final SoundManager soundManager;
+    private SoundManager soundManager;
     boolean needZeroCoins = true;
     boolean needZeroThorn;
     boolean needZeroLongThorn;
@@ -80,11 +82,10 @@ public class GamePlayManager {
     boolean needZeroShield;
     boolean needZeroMagnet;
     boolean needZeroStar;
-    int shieldMinDistanceAddition = 300_00;
-    int shieldDistanceAddition = 0;
-    boolean needRemoveAllShield = false;
-    private int minDistanceAdditionObject = 250; //Минимальная пройденная дистанция, после которой можно добавить новый объект в пул
-    private int maxDistanceAdditionObject = 450; //Максимальная пройденная дистанция, после которой можно добавить новый объект в пул
+    private final int shieldMinDistanceAddition = 300_00;
+    private int shieldDistanceAddition = 0;
+    private final int minDistanceAdditionObject = 250; //Минимальная пройденная дистанция, после которой можно добавить новый объект в пул
+    private final int maxDistanceAdditionObject = 450; //Максимальная пройденная дистанция, после которой можно добавить новый объект в пул
     private int distanceAdditionObject = 35; //Дистацния при достижении которой добавляем новый объект в пул
     private int pullCoinsCount = 0; //Число монеток подряд добавленных в пул.
     private final int pullCoinsCountMax = 2; //Максимальное количество монет + 1, которые могут быть сгенерированы подряд, кроме случаев обновления пула
@@ -96,10 +97,10 @@ public class GamePlayManager {
     Integer countShield = -1;
     Integer countMagnet = -1;
     Integer countStar = -1;
-    int distanceBirdAdd = 20000;
+    private final int distanceBirdAdd = 20000;
     boolean birdAdd = true;
 
-    private final LinkedHashMap<Integer, Boolean> longThornAdded; //Дистацния и статус замены коротких шипов на длинные
+    private LinkedHashMap<Integer, Boolean> longThornAdded; //Дистацния и статус замены коротких шипов на длинные
 
     private final HashMap<Integer, Integer> distanceSpeed; //Дистация и скорость игры на данной дистации
 
@@ -110,10 +111,8 @@ public class GamePlayManager {
 
     private final int levelNum;
     private final Bird bird;
-    private boolean needDataLoad = true;
-    private boolean dataLoaded = false;
 
-    public GamePlayManager(Activity activity, DisplayMetrics displayMetrics, User user, int levelNum, int distance, int coins) {
+    public GamePlayManager(Activity activity, DisplayMetrics displayMetrics, User user, int levelNum) {
         this.activity = activity;
         this.displayMetrics = displayMetrics;
         this.user = user;
@@ -192,9 +191,62 @@ public class GamePlayManager {
 
         bird = new Bird(activity, displayMetrics, getAirBalloon());
 
+        FreeLevel.rebootStars();
+
+
+        resetCounter();
+    }
+
+    //Возвращает менеджер в прежнее состояние
+    public void rebootGamePlayManager() {
+        speed = 0; //Стартовая скорость
+        distance = 0;
+        needZeroCoins = true;
+        shieldDistanceAddition = 0;
+        distanceAdditionObject = 35; //Дистацния при достижении которой добавляем новый объект в пул
+        pullCoinsCount = 0; //Число монеток подряд добавленных в пул.
+
+        countCoins = -1; //Счетчик количества монет, которые запросили отрисовать.
+        countThorn = -1;
+        countLongThorn = -1;
+        countBird = -1;
+        countShield = -1;
+        countMagnet = -1;
+        countStar = -1;
+        birdAdd = true;
+
+        //Уровни где птичка будет не нужна
+        if(levelNum == 1) {
+            birdAdd = false;
+        }
+
+        starsAdded = 0;
+        needStar = false;
+        needZeroThorn = false;
+        needZeroLongThorn = false;
+        needZeroBird = false;
+        needZeroShield = false;
+        needZeroMagnet = false;
+        needZeroStar = false;
+        gameStatus = GameStatus.GAME;
+
+        airBalloon.rebootAirBalloon();
+        backGround.restartBackground();
+        gamePlayMenu.reboot();
+
+        currentTime =  LocalTime.now().plusSeconds(speedUpInterval);
+        mediaPlayer = MediaPlayer.create(activity, R.raw.game_play_music);
+        longThornAdded = getLongThornDistance(levelNum);
+
+        LevelDistanceInfo.reboot();
         resetCounter();
 
-        airBalloon.setCollectedCoins(coins);
+        if(levelNum > 0) {
+            levelProgressManager.reboot(activity, displayMetrics, levelNum);
+        }
+
+        soundManager = new SoundManager(activity);
+        switchStatusGame(false);
     }
 
     public void drawAirBalloon(Canvas canvas) {
@@ -214,9 +266,6 @@ public class GamePlayManager {
         distance += speed;
     }
 
-    public void setDistance(int distance) {
-        this.distance = distance;
-    }
 
     private void drawDistanceLevelFree(Canvas canvas) {
         canvas.drawText("Высота: " + (distance / 100)
@@ -236,94 +285,17 @@ public class GamePlayManager {
                 , (int) (displayMetrics.heightPixels * 0.2), textPaintDistance);
     }
 
-
-    public void drawGameOver(Canvas canvas, DisplayMetrics displayMetrics, int selectedLevel) {
-        boolean freeLevel = selectedLevel == 0;
-        double heightPixels = 0.4;
-
-        if(!freeLevel) {
-            heightPixels = 0.5;
-        }
-
-
-        canvas.save();
-
-        // Поворачиваем Canvas на 45 градусов
-        canvas.rotate(-5, (int) (displayMetrics.heightPixels * 0.26),
-                (int) (displayMetrics.widthPixels * 0.64));
-
-        String textEndGame = "Конец игры !";
-
-        canvas.drawText(textEndGame
-                , (int) (displayMetrics.widthPixels * 0.5)
-                , (int) (displayMetrics.heightPixels * heightPixels), textPaintEndGame);
-
-        if(freeLevel) {
-            canvas.drawText("Набранная высота: " + (distance / 100)
-                    , (int) (displayMetrics.widthPixels * 0.73)
-                    , (int) (displayMetrics.heightPixels * 0.45), textPaintDistance);
-
-            long maxDistance;
-
-            if(distance / 100 > user.getMaxDistanceLevelFirst()) {
-                maxDistance = distance / 100;
-            } else {
-                maxDistance = user.getMaxDistanceLevelFirst();
-            }
-
-            canvas.drawText("Рекорд высоты: " + maxDistance
-                    , (int) (displayMetrics.widthPixels * 0.73)
-                    , (int) (displayMetrics.heightPixels * 0.49), textPaintDistance);
-
-            canvas.restore();
-        }
-    }
-
     public void drawLevelCompleted(Canvas canvas, DisplayMetrics displayMetrics, int starCount) {
         soundManager.levelCompleted();
         gamePlayMenu.drawLevelCompleted(canvas, starCount);
-    }
-
-    class LoadLevel extends Thread {
-        public void run() {
-            loadLevel();
-        }
-    }
-
-    public boolean getDataLoaded() {
-        return dataLoaded;
-    }
-
-    private void loadLevel() {
-        DataManager.loadData(activity, SaveManager.readFromFile(activity), levelNum, 0, 0);
-        int next;
-
-        if(levelNum == 16) {
-            next = 16;
-        } else {
-            next = levelNum+1;
-        }
-        dataLoaded = DataManager.loadData(activity, SaveManager.readFromFile(activity), next, 0, 0);
     }
 
     public void drawGamePlayMenu(Canvas canvas) {
         gamePlayMenu.drawMenuButtons(canvas);
     }
 
-    public void drawMenuEnd(Canvas canvas) {
-        gamePlayMenu.drawMenuEnd(canvas);
-    }
-
     public void drawBackGround(Canvas canvas) {
         backGround.drawBackgroundImage(canvas, speed);
-
-        //Загружаем данные по текущему уровню
-        if(needDataLoad) {
-            LoadLevel thread = new LoadLevel();
-            thread.start();
-
-            needDataLoad = false;
-        }
     }
 
     public void startBgSound() {
@@ -405,45 +377,6 @@ public class GamePlayManager {
         return (int) (minDistanceAdditionObject + Math.random() * (maxDistanceAdditionObject - minDistanceAdditionObject)) + distance;
     } // Генерируем новую дистацию для добавления объекта в пул
 
-    public void restartAirballoon() {
-        airBalloon.restartAirBalloon();
-    } //Устанавливает дефолтные параметры для шарика
-
-    public void restartSpeed() {
-        speed = initialSpeed;
-    } //Устанавливает дефолтную скорость игры
-
-    public void restartDistance() {
-        distance = 0;
-    }
-
-    public void restartCoins() {
-        airBalloon.resetCoins();
-    }
-
-    public void restartGeneration() {
-        objectsGeneration =  new ObjectsGeneration(activity, displayMetrics, getAirBalloon());
-        usedObjects = objectsGeneration.getUsedObjects();
-
-        countCoins = -1;
-        countThorn = -1;
-        countLongThorn = -1;
-        countBird = -1;
-        countShield = -1;
-
-        distanceAdditionObject = 35;
-        birdAdd = true;
-
-        //Обнуляем статусы замен коротких шипов на длинные
-        for (Map.Entry<Integer, Boolean> entry : longThornAdded.entrySet()) {
-            if(entry.getValue()) {
-                entry.setValue(false);
-            }
-        }
-
-        airBalloon.removeShield();
-    }
-
     public void switchStatusGame(Boolean isPaused) {
         soundManager.pause();
 
@@ -469,10 +402,6 @@ public class GamePlayManager {
     public boolean checkLevelProgress(int needDistance) {
         return distance >= needDistance * 100;
     } //Возвращает ответ, можно ли считать уровень пройденным.
-
-    public void restartBackGround() {
-        backGround.restartBackground();
-    }
 
     //Генерация объектов для бесконечной игры
     public void startObjectsGeneration(Canvas canvas, int levelNum) {
@@ -1671,6 +1600,14 @@ public class GamePlayManager {
 
     private void setMaxBirds(int maxCount) {
         objectsGeneration.setMaxBirds(maxCount);
+    }
+
+    public void setDistance(int distance) {
+        this.distance = distance;
+    }
+
+    public void setCoins(int coins) {
+         airBalloon.setCollectedCoins(coins);
     }
 
     public int getLevelNum() {

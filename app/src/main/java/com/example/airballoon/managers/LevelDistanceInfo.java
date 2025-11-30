@@ -9,6 +9,11 @@ public class LevelDistanceInfo {
     private static int magnetCount = 0;
     private static int shieldCount = 0;
 
+    public static void reboot() {
+       magnetCount = 0;
+       shieldCount = 0;
+    }
+
     public static HashMap<Integer, Integer> getDistanceSpeeds(Integer levelNum) {
         HashMap<Integer, Integer> dSLevel = new HashMap<>();
 

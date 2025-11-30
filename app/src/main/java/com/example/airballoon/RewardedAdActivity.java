@@ -81,8 +81,8 @@ public class RewardedAdActivity extends AppCompatActivity {
     private void loadRewardedAd() {
         if (mRewardedAdLoader != null ) {
             final AdRequestConfiguration adRequestConfiguration =
-                    new AdRequestConfiguration.Builder("demo-rewarded-yandex").build(); //Тестовый, его нужно будет заменить
-            //                    new AdRequestConfiguration.Builder("R-M-11206968-1").build();
+                    new AdRequestConfiguration.Builder("R-M-17626805-1").build(); //Тестовый, его нужно будет заменить
+            //                    new AdRequestConfiguration.Builder("R-M-11206968-1").build(); или для теста demo-rewarded-yandex
             mRewardedAdLoader.loadAd(adRequestConfiguration);
         }
     }

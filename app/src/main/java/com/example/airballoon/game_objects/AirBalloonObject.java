@@ -19,6 +19,7 @@ import java.util.List;
 public class AirBalloonObject extends GameObject{
     float startX, startY;
     float offsetX, offsetY;
+
     private int collectedCoins = 0;
     private int hp = 1;
     private final int maxXp = 1;
@@ -43,7 +44,7 @@ public class AirBalloonObject extends GameObject{
     public AirBalloonObject(Activity activity, DisplayMetrics displayMetrics, Bitmap image, SoundManager soundManager) {
         super(activity, displayMetrics);
 
-        setPercentage(0.12);
+        setPercentage(0.13);
         this.image = image;
         calculateSize();
         calculateStartPosition();
@@ -65,17 +66,6 @@ public class AirBalloonObject extends GameObject{
         xPosition = (int) (displayMetrics.widthPixels * 0.4);
         yPosition = (int) (displayMetrics.heightPixels * 0.7);
     }
-
-//    @Override
-//    public void draw(Canvas canvas) {
-//        rect.left = xPosition;
-//        rect.top = yPosition;
-//        rect.right = (int) (xPosition + width);
-//        rect.bottom = (int) (yPosition + height);
-//        canvas.drawBitmap(image, xPosition, yPosition, null);
-//        shieldTimeCounter(canvas);
-//        magnetTimeCounter(canvas);
-//    }
 
         @Override
     public void draw(Canvas canvas) {
@@ -140,10 +130,6 @@ public class AirBalloonObject extends GameObject{
         return true;
     }
 
-    public Rect getRect() {
-        return rect;
-    }
-
     public List<Rect> getRects() {
         return rects;
     }
@@ -155,9 +141,6 @@ public class AirBalloonObject extends GameObject{
 
     public int getCollectedCoins() {
         return collectedCoins;
-    }
-    public void resetCoins() {
-        collectedCoins = 0;
     }
 
     public void setCollectedCoins(int coins) {
@@ -181,8 +164,11 @@ public class AirBalloonObject extends GameObject{
         hp++;
     }
 
-    public void restartAirBalloon() {
+    public void rebootAirBalloon() {
         hp = maxXp;
+        hadShield = false;
+        hadMagnet = false;
+        collectedCoins = 0;
         calculateStartPosition();
     }
 

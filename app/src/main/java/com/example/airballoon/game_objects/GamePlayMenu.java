@@ -96,6 +96,11 @@ public class GamePlayMenu {
                 cube);
     }
 
+    public void reboot() {
+        stars = new HashMap<>();
+        starCount = 0;
+    }
+
     private void calculateSize() {
         //Для кнопки продолжить
         widthButtonResume = displayMetrics.widthPixels * percentage;
@@ -156,15 +161,6 @@ public class GamePlayMenu {
                 (int) (displayMetrics.heightPixels * 0.4), null);
     } //Рисуем кнопки в меню во время паузы.
 
-    public void drawMenuEnd(Canvas canvas) {
-        //Кнопка выхода в меню
-        canvas.drawBitmap(buttonExit, xPositionButtonExit, yPositionButtonExit, null);
-
-        //Кнопка перезапуска
-        canvas.drawBitmap(buttonRestart, xPositionButtonRestart, yPositionButtonRestart,
-                null);
-    } //Рисуем кнопки, когда игра завершена.
-
     public void drawLevelCompleted(Canvas canvas, int starCount) {
         this.starCount = starCount;
 
@@ -214,7 +210,7 @@ public class GamePlayMenu {
             marketingHp.draw(canvas);
         }
 
-        if(levelNumber != 0 && (user.getMaxLevelStars(levelNumber) > 0 || starCount > 0)) {
+        if(levelNumber != 0 && (starCount > 0)) {
             buttonNext.draw(canvas);
         }
     } //Рисуем экран пройденного уровня
@@ -257,7 +253,7 @@ public class GamePlayMenu {
             if(touchX >= buttonNext.xPosition && touchX <(buttonNext.xPosition + buttonNext.width)
                     && touchY >= buttonNext.yPosition && touchY < ( buttonNext.yPosition
                     + buttonNext.height) && (!isPaused || levelCompleted)
-                    && levelNumber != 0 && (user.getMaxLevelStars(levelNumber) > 0 || starCount > 0)) {
+                    && levelNumber != 0 && starCount > 0) {
                 actions = MenuActions.NEXT;
             }
 

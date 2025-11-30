@@ -32,7 +32,7 @@ import java.util.Random;
 
 public class MenuManager {
     Activity activity;
-    private ImageButton buttonSetting;
+//    private ImageButton buttonSetting;
     private final ImageButton buttonStart;
     private final ImageButton buttonBuy;
     private final View view;
@@ -93,8 +93,8 @@ public class MenuManager {
         drawDesiredAirballoon();
         drawCoins();
         drawStars();
-        drawSettingButton();
-        useSettingButton();
+//        drawSettingButton();
+//        useSettingButton();
         selectAirballoon();
         calculateStartPositionCloud(longCloud);
         calculateStartPositionGroupClouds(groupClouds);
@@ -370,19 +370,19 @@ public class MenuManager {
         NOT_DIRECTION
     }
 
-    private void drawSettingButton() {
-        buttonSetting = activity.findViewById(R.id.button_setting);
+//    private void drawSettingButton() {
+//        buttonSetting = activity.findViewById(R.id.button_setting);
+//
+//    }
 
-    }
-
-    private void useSettingButton() {
-        buttonSetting.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                System.out.println("Нажали на кнопку настроек.");
-            }
-        });
-    }
+//    private void useSettingButton() {
+//        buttonSetting.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                System.out.println("Нажали на кнопку настроек.");
+//            }
+//        });
+//    }
 
     private boolean checkAvailableAirBalloon() {
         return user.getAvailableBalls().contains(selectAirballoon);
@@ -517,7 +517,7 @@ public class MenuManager {
     private void drawStars() {
         TextView coinCountView = view.findViewById(R.id.stars_count);
         coinCountView.setText(String.valueOf(user.getStars()));
-    } //Отображаем количество монет
+    } //Отображаем количество звезд
 }
 
 
