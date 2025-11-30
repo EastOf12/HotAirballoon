@@ -1,6 +1,5 @@
 package com.example.airballoon.managers;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
@@ -10,14 +9,14 @@ public class LevelDistanceInfo {
     private static int shieldCount = 0;
 
     public static void reboot() {
-       magnetCount = 0;
-       shieldCount = 0;
+        magnetCount = 0;
+        shieldCount = 0;
     }
 
     public static HashMap<Integer, Integer> getDistanceSpeeds(Integer levelNum) {
         HashMap<Integer, Integer> dSLevel = new HashMap<>();
 
-        if(levelNum == 1) {
+        if (levelNum == 1) {
             dSLevel.put(0, 13);
             dSLevel.put(260_00, 14);
             dSLevel.put(340_00, 15);
@@ -99,7 +98,7 @@ public class LevelDistanceInfo {
             dSLevel.put(510_00, 25);
             dSLevel.put(515_00, 26);
             dSLevel.put(550_00, 27);
-        }else if (levelNum == 12) {
+        } else if (levelNum == 12) {
             dSLevel.put(0, 16);
             dSLevel.put(80_00, 17);
             dSLevel.put(160_00, 18);
@@ -155,7 +154,7 @@ public class LevelDistanceInfo {
             dSLevel.put(510_00, 25);
             dSLevel.put(515_00, 26);
             dSLevel.put(550_00, 27);
-        }else {
+        } else {
             dSLevel.put(0, 16);
             dSLevel.put(80_00, 17);
             dSLevel.put(160_00, 18);
@@ -209,7 +208,7 @@ public class LevelDistanceInfo {
         HashMap<String, Integer> dALevel = new HashMap<>();
 
 
-        if(levelNum == 1 || levelNum == 2) {
+        if (levelNum == 1 || levelNum == 2) {
             dALevel.put("minDistanceAdditionObject", 450);
             dALevel.put("maxDistanceAdditionObject", 500);
         } else if (levelNum == 3) {
@@ -224,29 +223,29 @@ public class LevelDistanceInfo {
     }
 
     public static int getBirdStartDistance(Integer levelNum) {
-        if(levelNum == 5) {
+        if (levelNum == 5) {
             return 50_00;
-        } else if(levelNum == 9) {
+        } else if (levelNum == 9) {
             return 50_00;
-        } else if(levelNum == 10) {
+        } else if (levelNum == 10) {
             return 50_00;
-        } else if(levelNum == 11) {
+        } else if (levelNum == 11) {
             return 1000_00;
-        } else if(levelNum == 12) {
+        } else if (levelNum == 12) {
             return 100_00;
-        } else if(levelNum == 13) {
+        } else if (levelNum == 13) {
             return 300_00;
-        } else if(levelNum == 14) {
+        } else if (levelNum == 14) {
             return 800_00;
-        } else if(levelNum == 15 || levelNum == 16) {
+        } else if (levelNum == 15 || levelNum == 16) {
             return 500_00;
-        }else {
+        } else {
             return 0;
         }
     }
 
     public static int getMagnetStartDistance(Integer levelNum) {
-        if(levelNum == 3 || levelNum == 4|| levelNum == 5) {
+        if (levelNum == 3 || levelNum == 4 || levelNum == 5) {
             return 250_00;
         } else if (levelNum == 7) {
             return 550_00;
@@ -258,13 +257,13 @@ public class LevelDistanceInfo {
             return 100_00;
         } else if (levelNum == 15 || levelNum == 16) {
             return 600_00;
-        }else {
+        } else {
             return 0;
         }
     }
 
     public static int getShieldStartDistance(Integer levelNum) {
-        if(levelNum == 6) {
+        if (levelNum == 6) {
             return 450_00;
         } else if (levelNum == 9) {
             return 700_00;
@@ -276,43 +275,52 @@ public class LevelDistanceInfo {
             return 500_00;
         } else if (levelNum == 13) {
             return 1000_00;
-        }else if (levelNum == 14) {
+        } else if (levelNum == 14) {
             return 1000_00;
         } else if (levelNum == 15 || levelNum == 16) {
             return 1500_00;
-        }else {
+        } else {
             return 0;
         }
     }
 
     public static boolean hadMagnet(Integer levelNum) {
-        if(levelNum == 2 && magnetCount < 1) {
+        if (levelNum == 2 && magnetCount < 1) {
             return true;
-        } if(levelNum == 4 && magnetCount < 1) {
+        }
+        if (levelNum == 4 && magnetCount < 1) {
             return true;
-        } if(levelNum == 7 && magnetCount < 1) {
+        }
+        if (levelNum == 7 && magnetCount < 1) {
             return true;
-        } if(levelNum == 9 && magnetCount < 1) {
+        }
+        if (levelNum == 9 && magnetCount < 1) {
             return true;
-        } if(levelNum == 10 && magnetCount < 2) {
+        }
+        if (levelNum == 10 && magnetCount < 2) {
             return true;
-        } if(levelNum == 11 && magnetCount < 1) {
+        }
+        if (levelNum == 11 && magnetCount < 1) {
             return true;
-        } if(levelNum == 12 && magnetCount < 2) {
+        }
+        if (levelNum == 12 && magnetCount < 2) {
             return true;
-        } if(levelNum == 13 && magnetCount < 2) {
+        }
+        if (levelNum == 13 && magnetCount < 2) {
             return true;
-        } if(levelNum == 14 && magnetCount < 2) {
+        }
+        if (levelNum == 14 && magnetCount < 2) {
             return true;
-        } if((levelNum == 15 || levelNum == 16) && magnetCount < 2) {
+        }
+        if ((levelNum == 15 || levelNum == 16) && magnetCount < 2) {
             return true;
-        }else {
+        } else {
             return false;
         }
     } //Сколько раз можем отрисовать магнит в зависимости от уровня
 
     public static boolean hadShield(Integer levelNum) {
-        if(levelNum == 6 && shieldCount < 1) {
+        if (levelNum == 6 && shieldCount < 1) {
             return true;
         } else if (levelNum == 9 && shieldCount < 1) {
             return true;
@@ -328,9 +336,10 @@ public class LevelDistanceInfo {
             return true;
         } else if (levelNum == 14 && shieldCount < 1) {
             return true;
-        } if(levelNum == 15 || levelNum == 16 && shieldCount < 3) {
+        }
+        if (levelNum == 15 || levelNum == 16 && shieldCount < 3) {
             return true;
-        }else {
+        } else {
             return false;
         }
     } //Сколько раз можем отрисовать магнит в зависимости от уровня
@@ -338,13 +347,13 @@ public class LevelDistanceInfo {
     public static LinkedHashMap<Integer, Boolean> getLongThornDistance(int levelNum) {
         LinkedHashMap<Integer, Boolean> longThornDistance = new LinkedHashMap<>();
 
-        if(levelNum == 7 || levelNum == 3) {
+        if (levelNum == 7 || levelNum == 3) {
             longThornDistance.put(100_00, false);
             longThornDistance.put(150_00, false);
             longThornDistance.put(300_00, false);
         }
 
-        if(levelNum == 8) {
+        if (levelNum == 8) {
             longThornDistance.put(10_00, false);
             longThornDistance.put(30_00, false);
             longThornDistance.put(50_00, false);
@@ -355,7 +364,7 @@ public class LevelDistanceInfo {
             longThornDistance.put(220_00, false);
         }
 
-        if(levelNum == 9) {
+        if (levelNum == 9) {
             longThornDistance.put(10, false);
             longThornDistance.put(20, false);
             longThornDistance.put(30, false);
@@ -365,29 +374,29 @@ public class LevelDistanceInfo {
             longThornDistance.put(70, false);
         }
 
-        if(levelNum == 10) {
+        if (levelNum == 10) {
             longThornDistance.put(500_00, false);
             longThornDistance.put(800_00, false);
         }
 
-        if(levelNum == 11) {
+        if (levelNum == 11) {
             longThornDistance.put(50_00, false);
         }
 
-        if(levelNum == 12) {
+        if (levelNum == 12) {
             longThornDistance.put(50_00, false);
             longThornDistance.put(150_00, false);
             longThornDistance.put(550_00, false);
         }
 
-        if(levelNum == 13) {
+        if (levelNum == 13) {
             longThornDistance.put(50_00, false);
             longThornDistance.put(150_00, false);
             longThornDistance.put(550_00, false);
             longThornDistance.put(650_00, false);
         }
 
-        if(levelNum == 14) {
+        if (levelNum == 14) {
             longThornDistance.put(50_00, false);
             longThornDistance.put(150_00, false);
             longThornDistance.put(250_00, false);
@@ -395,7 +404,7 @@ public class LevelDistanceInfo {
             longThornDistance.put(450_00, false);
         }
 
-        if(levelNum == 15 || levelNum == 16) {
+        if (levelNum == 15 || levelNum == 16) {
             longThornDistance.put(50_00, false);
             longThornDistance.put(150_00, false);
             longThornDistance.put(250_00, false);

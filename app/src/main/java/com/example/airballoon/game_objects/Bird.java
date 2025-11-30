@@ -16,7 +16,12 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
-public class Bird extends GameObject{
+enum DirectionMovement {
+    LEFT,
+    RIGHT
+}
+
+public class Bird extends GameObject {
     private AirBalloonObject airBalloon;
     private Random random = new Random();
     private int birdSpeed = 7; //Скорость птицы
@@ -30,7 +35,8 @@ public class Bird extends GameObject{
 
 
     private boolean needDraw;
-    public Bird(Activity activity, DisplayMetrics displayMetrics,  AirBalloonObject airBalloon) {
+
+    public Bird(Activity activity, DisplayMetrics displayMetrics, AirBalloonObject airBalloon) {
         super(activity, displayMetrics);
         this.airBalloon = airBalloon;
         needDraw = true;
@@ -51,15 +57,15 @@ public class Bird extends GameObject{
     private void replaceImage() {
         frameCount++;
 
-        if(frameCount >= framePoint) {
+        if (frameCount >= framePoint) {
 
-            if(directionMovement.equals(DirectionMovement.LEFT)) {
-                image= imagesLeft.get(imageCounter);
+            if (directionMovement.equals(DirectionMovement.LEFT)) {
+                image = imagesLeft.get(imageCounter);
             } else {
                 image = imagesRight.get(imageCounter);
             }
 
-            if(imageCounter == imagesLeft.size() - 1) {
+            if (imageCounter == imagesLeft.size() - 1) {
                 imageCounter = 0;
             } else {
                 imageCounter++;
@@ -87,7 +93,7 @@ public class Bird extends GameObject{
         double proportion = (double) image.getWidth() / image.getHeight();
         height = width / proportion;
 
-        for(Bitmap im: imagesLeft) {
+        for (Bitmap im : imagesLeft) {
             img.add(Bitmap.createScaledBitmap(im
                     , (int) width, (int) height, true));
         }
@@ -99,7 +105,7 @@ public class Bird extends GameObject{
     public void calculateStartPosition() {
         //Определяем направление движения и инвертируем изображение при необходимости
         DirectionMovement newDirection = calculateDirection();
-        if(!directionMovement.equals(newDirection)) {
+        if (!directionMovement.equals(newDirection)) {
             directionMovement = newDirection;
         }
 
@@ -110,7 +116,7 @@ public class Bird extends GameObject{
 
     @Override
     protected void draw(Canvas canvas) {
-        if(needDraw) {
+        if (needDraw) {
             calculateNewPosition(canvas);
             rect.left = xPosition;
             rect.top = yPosition;
@@ -119,7 +125,7 @@ public class Bird extends GameObject{
 
             canvas.drawBitmap(image, xPosition, yPosition, null);
 
-            if(needAnimation) {
+            if (needAnimation) {
                 replaceImage();
             }
         }
@@ -134,14 +140,14 @@ public class Bird extends GameObject{
 
         yPosition += (GamePlayManager.speed);
 
-        if(GamePlayManager.speed != 0) {
+        if (GamePlayManager.speed != 0) {
             calculateNewXPosition();
         }
     }
 
     private int calculateStartXPosition() {
         int x;
-        if(directionMovement.equals(DirectionMovement.LEFT)) {
+        if (directionMovement.equals(DirectionMovement.LEFT)) {
             x = 10;
         } else {
             x = random.nextInt((int) (displayMetrics.widthPixels * 0.2)) + displayMetrics.widthPixels;
@@ -151,7 +157,7 @@ public class Bird extends GameObject{
     }
 
     private void calculateNewXPosition() {
-        if(directionMovement.equals(DirectionMovement.LEFT)) {
+        if (directionMovement.equals(DirectionMovement.LEFT)) {
             xPosition += birdSpeed;
         } else {
             xPosition -= birdSpeed;
@@ -187,7 +193,7 @@ public class Bird extends GameObject{
     }
 
     private DirectionMovement calculateDirection() {
-        if(random.nextInt(2) == 1) {
+        if (random.nextInt(2) == 1) {
             return DirectionMovement.LEFT;
         } else {
             return DirectionMovement.RIGHT;
@@ -198,7 +204,7 @@ public class Bird extends GameObject{
         Matrix matrix = new Matrix();
         matrix.preScale(-1.0f, 1.0f);
 
-        for(int i = 0; i < imagesLeft.size(); i++) {
+        for (int i = 0; i < imagesLeft.size(); i++) {
             imagesRight.add(Bitmap.createBitmap(imagesLeft.get(i), 0, 0, imagesLeft.get(i).getWidth(),
                     imagesLeft.get(i).getHeight(), matrix, false));
         }
@@ -224,9 +230,4 @@ public class Bird extends GameObject{
     public int hashCode() {
         return Objects.hash(airBalloon, random, needDraw);
     }
-}
-
-enum DirectionMovement {
-    LEFT,
-    RIGHT
 }

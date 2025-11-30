@@ -6,7 +6,7 @@ import android.util.DisplayMetrics;
 
 import com.example.airballoon.R;
 
-public class LongThorn extends Thorn{
+public class LongThorn extends Thorn {
     public LongThorn(Activity activity, DisplayMetrics displayMetrics, AirBalloonObject airBalloon) {
         super(activity, displayMetrics, airBalloon);
     }

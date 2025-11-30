@@ -14,19 +14,18 @@ import com.example.airballoon.models.User;
 
 //Шаблон уровня
 @SuppressLint("ViewConstructor")
-abstract class BaseLevel extends SurfaceView implements Runnable{
+abstract class BaseLevel extends SurfaceView implements Runnable {
 
+    protected final SurfaceHolder surfaceHolder; //Используется для управлением поверхностью на которой происходит отрисовка
+    //Поля состояний (В целом можно когда-нибудь вынести в отдельный класс)
+    protected volatile boolean running = false;
+    protected boolean isPaused = false;
     //Основные классы
     Activity activity;
-    protected final SurfaceHolder surfaceHolder; //Используется для управлением поверхностью на которой происходит отрисовка
     DisplayMetrics displayMetrics;
     ManagerFPS managerFPS;
     GamePlayManager gamePlayManager;
     User user;
-
-    //Поля состояний (В целом можно когда-нибудь вынести в отдельный класс)
-    protected volatile boolean running = false;
-    protected boolean isPaused = false;
     int startSpeed = GamePlayManager.speed;
     boolean needSave = true;
 
@@ -57,7 +56,7 @@ abstract class BaseLevel extends SurfaceView implements Runnable{
     public void switchGameStatus() {
         isPaused = !isPaused;
 
-        if(isPaused) {
+        if (isPaused) {
             GamePlayManager.speed = 0;
             gamePlayManager.switchStatusGame(isPaused);
         } else {

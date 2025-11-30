@@ -7,12 +7,12 @@ import android.graphics.Canvas;
 import android.util.DisplayMetrics;
 
 public class BackGround {
-    Bitmap backGroundImagePiece1;
-    Bitmap backGroundImagePiece2;
-    private int heightPixels;
     private final int weightPixels = 0;
     private final int displayMetricsHeight;
     private final int coefficient = 2; //Во сколько раз высота картинки должна быть больше, чем высота экрана
+    Bitmap backGroundImagePiece1;
+    Bitmap backGroundImagePiece2;
+    private int heightPixels;
 
     public BackGround(Activity activity, DisplayMetrics displayMetrics, int idImage) {
         displayMetricsHeight = displayMetrics.heightPixels;

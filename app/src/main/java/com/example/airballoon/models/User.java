@@ -1,22 +1,20 @@
 package com.example.airballoon.models;
 
 import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 public class User {
 
-    private long coins = 0;
-
-    private int lastCoins = 0; //Монетки, которые были начислены в крайней игре
-    private long maxDistanceLevelFirst = 0;
-
-    private int selectAirBalloon;
-    private List<Integer> availableBalls;
-
     private final HashMap<Integer, Integer> levelsProgress = new HashMap<>();
     private final int maxLevelsCount = 16; //Количество уровней в игре
+    private long coins = 0;
+    private int lastCoins = 0; //Монетки, которые были начислены в крайней игре
+    private long maxDistanceLevelFirst = 0;
+    private int selectAirBalloon;
+    private List<Integer> availableBalls;
 
 
     public User() {
@@ -25,7 +23,7 @@ public class User {
         selectAirBalloon = 1;
 
         //Запоминаем, что нет пройденных уровней
-        for (int i=1; i <= maxLevelsCount; i++) {
+        for (int i = 1; i <= maxLevelsCount; i++) {
             levelsProgress.put(i, 0);
         }
     }
@@ -44,23 +42,18 @@ public class User {
     }
 
 
-
     public void addCoins(long coins) {
         this.coins += coins;
         lastCoins = (int) coins;
     }
 
     public boolean takeCoins(int coins) {
-        if(this.coins >= coins) {
+        if (this.coins >= coins) {
             this.coins -= coins;
             return true;
         }
 
         return false;
-    }
-
-    public void setCoins(int coins) {
-        this.coins = coins;
     }
 
     public void addAirBalloon(Integer idAirballoon) {
@@ -84,6 +77,10 @@ public class User {
         return coins;
     }
 
+    public void setCoins(int coins) {
+        this.coins = coins;
+    }
+
     public int getLastCoins() {
         return lastCoins;
     }
@@ -91,6 +88,7 @@ public class User {
     public long getMaxDistanceLevelFirst() {
         return maxDistanceLevelFirst;
     }
+
     public int getSelectAirBalloon() {
         return selectAirBalloon;
     }

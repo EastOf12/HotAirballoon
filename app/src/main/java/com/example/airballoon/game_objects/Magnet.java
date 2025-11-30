@@ -36,7 +36,7 @@ public class Magnet extends GameObject {
 
     @Override
     protected void draw(Canvas canvas) {
-        if(needDraw) {
+        if (needDraw) {
             calculateNewPosition(canvas);
             rect.left = xPosition;
             rect.top = yPosition;

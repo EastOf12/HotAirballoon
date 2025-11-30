@@ -1,17 +1,14 @@
 package com.example.airballoon.levels;
 
 import static com.example.airballoon.managers.DataManager.getLevelFinishInfo;
-import static com.example.airballoon.managers.DataManager.loadData;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Canvas;
-import android.media.MediaPlayer;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.example.airballoon.GamePlayActivity;
 import com.example.airballoon.LoadLevelActivity;
 import com.example.airballoon.MainActivity;
 import com.example.airballoon.R;
@@ -21,15 +18,14 @@ import com.example.airballoon.managers.GamePlayManager;
 import com.example.airballoon.managers.MenuActions;
 import com.example.airballoon.managers.SaveManager;
 
-import java.time.LocalDateTime;
 import java.util.HashMap;
 
 @SuppressLint("ViewConstructor")
-public class FreeLevel extends BaseLevel implements Runnable{
-    private final int selectedLevel;
-    private boolean levelCompleted = false;
+public class FreeLevel extends BaseLevel implements Runnable {
     private static int stars = 0;
+    private final int selectedLevel;
     private final HashMap<Integer, Integer> levelsFinishDistance = getLevelFinishInfo();
+    private boolean levelCompleted = false;
 
     public FreeLevel(Activity activity, int selectedLevel, int distance, int coins) {
         super(activity);
@@ -37,6 +33,18 @@ public class FreeLevel extends BaseLevel implements Runnable{
         gamePlayManager.setDistance(distance);
         gamePlayManager.setCoins(coins);
         this.selectedLevel = selectedLevel;
+    }
+
+    public static void addStars() {
+        stars++;
+    }
+
+    public static int getStars() {
+        return stars;
+    }
+
+    public static void rebootStars() {
+        stars = 0;
     }
 
     //Основной цикл игры.
@@ -61,7 +69,7 @@ public class FreeLevel extends BaseLevel implements Runnable{
                         gamePlayManager.drawLevelProgress(canvas);
 
 
-                        if(isPaused && !levelCompleted) {
+                        if (isPaused && !levelCompleted) {
                             gamePlayManager.drawGamePlayMenu(canvas);
                         } else {
                             gamePlayManager.speedUp(); //Увеличиваем скорость игры
@@ -70,22 +78,22 @@ public class FreeLevel extends BaseLevel implements Runnable{
                         gamePlayManager.drawGearWheel(canvas); //Добавляем кнопку настроек
 
 
-                        if(selectedLevel > 0 && gamePlayManager.checkLevelProgress(levelsFinishDistance.get(selectedLevel)) && !isPaused) {
+                        if (selectedLevel > 0 && gamePlayManager.checkLevelProgress(levelsFinishDistance.get(selectedLevel)) && !isPaused) {
                             levelCompleted = true;
                             GamePlayManager.speed = 0;
                             switchGameStatus();
                         }
 
-                        if(levelCompleted) {
+                        if (levelCompleted) {
                             gamePlayManager.drawLevelCompleted(canvas, displayMetrics, getStars()); //Считаем, что уровень пройден
                             GamePlayManager.speed = 0;
 
                             //Сохраняем прогресс по уровню
-                            if(needSave) {
+                            if (needSave) {
                                 user.addCoins(gamePlayManager.getCollectedCoins());
                                 user.addMaxDistanceLevelFirst(gamePlayManager.getDistance());
                                 //Сохраняем прогресс по уровню
-                                if(user.getMaxLevelStars(selectedLevel) < getStars()) {
+                                if (user.getMaxLevelStars(selectedLevel) < getStars()) {
                                     user.setLevelsProgress(selectedLevel, getStars());
                                 }
 
@@ -95,18 +103,17 @@ public class FreeLevel extends BaseLevel implements Runnable{
                         }
 
 
-
-                        if(gamePlayManager.getHpAirBalloon() <= 0) { //Проверяем количество здоровья
+                        if (gamePlayManager.getHpAirBalloon() <= 0) { //Проверяем количество здоровья
                             GamePlayManager.speed = 0;
 
                             gamePlayManager.switchStatusGame(true);
                             gamePlayManager.drawLevelCompleted(canvas, displayMetrics, getStars());
 
-                            if(needSave) {
+                            if (needSave) {
                                 user.addCoins(gamePlayManager.getCollectedCoins());
                                 user.addMaxDistanceLevelFirst(gamePlayManager.getDistance());
                                 //Сохраняем прогресс по уровню
-                                if(selectedLevel > 0 && user.getMaxLevelStars(selectedLevel) < getStars()) {
+                                if (selectedLevel > 0 && user.getMaxLevelStars(selectedLevel) < getStars()) {
                                     user.setLevelsProgress(selectedLevel, getStars());
                                 }
 
@@ -124,27 +131,27 @@ public class FreeLevel extends BaseLevel implements Runnable{
                     @SuppressLint("ClickableViewAccessibility")
                     @Override
                     public boolean onTouch(View view, MotionEvent event) {
-                        if(gamePlayManager.onTouchGearWheel(event) && !isPaused && gamePlayManager.getHpAirBalloon() > 0) {
+                        if (gamePlayManager.onTouchGearWheel(event) && !isPaused && gamePlayManager.getHpAirBalloon() > 0) {
                             switchGameStatus();
                         }
 
-                        if(gamePlayManager.getGamePlayMenu().onTouch(event, isPaused, levelCompleted) == MenuActions.RESUME) { //Обрабатываем нажатия в меню.
+                        if (gamePlayManager.getGamePlayMenu().onTouch(event, isPaused, levelCompleted) == MenuActions.RESUME) { //Обрабатываем нажатия в меню.
                             switchGameStatus();
-                        } else if((gamePlayManager.getHpAirBalloon() <= 0 || isPaused)
+                        } else if ((gamePlayManager.getHpAirBalloon() <= 0 || isPaused)
                                 && gamePlayManager.getGamePlayMenu().onTouch(event, isPaused, levelCompleted) == MenuActions.NEXT) {
                             int nextLevel = selectedLevel;
 
-                            if(selectedLevel <= DataManager.getLevelFinishInfo().size()) {
+                            if (selectedLevel <= DataManager.getLevelFinishInfo().size()) {
                                 nextLevel++;
                             }
 
                             running = false; //Останавливаем поток
 
-                            if(needSave) {
+                            if (needSave) {
                                 user.addCoins(gamePlayManager.getCollectedCoins());
                                 user.addMaxDistanceLevelFirst(gamePlayManager.getDistance());
                                 //Сохраняем прогресс по уровню
-                                if(selectedLevel > 0 && user.getMaxLevelStars(selectedLevel) < getStars()) {
+                                if (selectedLevel > 0 && user.getMaxLevelStars(selectedLevel) < getStars()) {
                                     user.setLevelsProgress(selectedLevel, getStars());
                                 }
 
@@ -162,7 +169,7 @@ public class FreeLevel extends BaseLevel implements Runnable{
                             // Завершить текущую активность
                             activity.finish();
 
-                        } else if((gamePlayManager.getHpAirBalloon() <= 0 || isPaused)
+                        } else if ((gamePlayManager.getHpAirBalloon() <= 0 || isPaused)
                                 && gamePlayManager.getGamePlayMenu().onTouch(event, isPaused, levelCompleted) == MenuActions.EXIT) {
                             running = false; //Останавливаем поток
 
@@ -174,15 +181,15 @@ public class FreeLevel extends BaseLevel implements Runnable{
                             gamePlayManager.bgStopSound();
                             // Завершить текущую активность
                             activity.finish();
-                        } else if((levelCompleted || gamePlayManager.getHpAirBalloon() <= 0) && gamePlayManager.
+                        } else if ((levelCompleted || gamePlayManager.getHpAirBalloon() <= 0) && gamePlayManager.
                                 getGamePlayMenu().onTouch(event, isPaused, levelCompleted) == MenuActions.RESTART) {
                             running = false; //Останавливаем поток
 
-                            if(needSave) {
+                            if (needSave) {
                                 user.addCoins(gamePlayManager.getCollectedCoins());
                                 user.addMaxDistanceLevelFirst(gamePlayManager.getDistance());
                                 //Сохраняем прогресс по уровню
-                                if(selectedLevel > 0 && user.getMaxLevelStars(selectedLevel) < getStars()) {
+                                if (selectedLevel > 0 && user.getMaxLevelStars(selectedLevel) < getStars()) {
                                     user.setLevelsProgress(selectedLevel, getStars());
                                 }
 
@@ -198,9 +205,7 @@ public class FreeLevel extends BaseLevel implements Runnable{
                             // Завершить текущую активность
                             activity.finish();
 
-                        }
-
-                        else if((levelCompleted || gamePlayManager.getHpAirBalloon() <= 0) &&
+                        } else if ((levelCompleted || gamePlayManager.getHpAirBalloon() <= 0) &&
                                 gamePlayManager.getGamePlayMenu().onTouch(event, isPaused, levelCompleted) == MenuActions.MARKETING_MONEY) {
 
                             running = false;
@@ -210,7 +215,7 @@ public class FreeLevel extends BaseLevel implements Runnable{
                             activity.finish(); // Завершаем текущую активность
                         } //Удваиваем деньги
 
-                        else if((levelCompleted || gamePlayManager.getHpAirBalloon() <= 0) &&
+                        else if ((levelCompleted || gamePlayManager.getHpAirBalloon() <= 0) &&
                                 gamePlayManager.getGamePlayMenu().onTouch(event, isPaused, levelCompleted) == MenuActions.MARKETING_ADD_HP) {
                             running = false;
                             Intent intent = new Intent(activity, RewardedAdActivity.class); //Создаем активность с рекламой
@@ -222,7 +227,7 @@ public class FreeLevel extends BaseLevel implements Runnable{
                         } //Даем еще одну попытку
 
 
-                        if(!isPaused && gamePlayManager.getHpAirBalloon()> 0) {
+                        if (!isPaused && gamePlayManager.getHpAirBalloon() > 0) {
                             return gamePlayManager.onTouchAirBalloon(event);
                         } else {
                             return true;
@@ -231,17 +236,5 @@ public class FreeLevel extends BaseLevel implements Runnable{
                 });
             }
         }
-    }
-
-    public static void addStars() {
-        stars++;
-    }
-
-    public static int getStars() {
-        return stars;
-    }
-
-    public static void rebootStars() {
-        stars = 0;
     }
 }

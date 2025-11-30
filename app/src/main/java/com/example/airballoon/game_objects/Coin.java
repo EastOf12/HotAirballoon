@@ -5,14 +5,13 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.util.DisplayMetrics;
 
-import com.example.airballoon.managers.GamePlayManager;
 import com.example.airballoon.R;
-import com.example.airballoon.managers.SoundManager;
+import com.example.airballoon.managers.GamePlayManager;
 
 import java.util.Objects;
 import java.util.Random;
 
-public class Coin extends GameObject{
+public class Coin extends GameObject {
     Random random = new Random();
     AirBalloonObject airBalloon;
 
@@ -50,8 +49,8 @@ public class Coin extends GameObject{
 
     @Override
     public void draw(Canvas canvas) {
-        if(needDraw) {
-            if(airBalloon.getHadMagnet() && needMagnetCoin()) { //Рассчитываем новую позицию монеток, когда включен магнит
+        if (needDraw) {
+            if (airBalloon.getHadMagnet() && needMagnetCoin()) { //Рассчитываем новую позицию монеток, когда включен магнит
                 calculateNewPositionMagnet(canvas);
             } else {
                 calculateNewPosition(canvas);
@@ -121,20 +120,20 @@ public class Coin extends GameObject{
             //Изменяем позицию монетки ближе к шарику
             boolean needCalculate = !(yPosition > yAirballoonPosition && yPosition < yAirballoonPosition + airBalloon.height);
 
-            if(needCalculate) {
-                if(yPosition < yAirballoonPosition) {
+            if (needCalculate) {
+                if (yPosition < yAirballoonPosition) {
                     yPosition += GamePlayManager.speed * 2.5;
-                } else if(yPosition > yAirballoonPosition){
+                } else if (yPosition > yAirballoonPosition) {
                     yPosition = (int) (yPosition - (GamePlayManager.speed * 2.5));
                 }
             }
 
             needCalculate = !(xPosition > xAirballoonPosition && xPosition < xAirballoonPosition + (airBalloon.width * 0.5));
 
-            if(needCalculate) {
-                if(xPosition < xAirballoonPosition) {
+            if (needCalculate) {
+                if (xPosition < xAirballoonPosition) {
                     xPosition += GamePlayManager.speed * 1.5;
-                } else if (xPosition > xAirballoonPosition){
+                } else if (xPosition > xAirballoonPosition) {
                     xPosition -= GamePlayManager.speed * 1.5;
                 }
             }

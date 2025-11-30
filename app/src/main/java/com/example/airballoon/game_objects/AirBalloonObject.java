@@ -4,41 +4,35 @@ import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
-import android.media.MediaPlayer;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 
-import com.example.airballoon.R;
 import com.example.airballoon.managers.SoundManager;
-import com.example.airballoon.models.AirBalloon;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AirBalloonObject extends GameObject{
+public class AirBalloonObject extends GameObject {
+    private final int maxXp = 1;
     float startX, startY;
     float offsetX, offsetY;
-
+    float newX;
+    SoundManager soundManager;
+    List<Rect> rects;
+    ShieldIcon shieldIcon;
+    MagnetIcon magnetIcon;
+    ShieldIcon shieldAirballoonAnimation;
     private int collectedCoins = 0;
     private int hp = 1;
-    private final int maxXp = 1;
     private boolean hadShield = false;
     private boolean hadMagnet = false;
-    float newX;
     private LocalDateTime nowTimeShield;
     private LocalDateTime shieldEndTime;
     private LocalDateTime nowTimeMagnet;
     private LocalDateTime magnetEndTime;
-    SoundManager soundManager;
-    List<Rect> rects;
-
-
     private int timeActionShield = 10; //Время действия щита.
     private int timeActionMagnet = 10; //Время действия магнита.
-    ShieldIcon shieldIcon;
-    MagnetIcon magnetIcon;
-    ShieldIcon shieldAirballoonAnimation;
 
 
     public AirBalloonObject(Activity activity, DisplayMetrics displayMetrics, Bitmap image, SoundManager soundManager) {
@@ -67,12 +61,12 @@ public class AirBalloonObject extends GameObject{
         yPosition = (int) (displayMetrics.heightPixels * 0.7);
     }
 
-        @Override
+    @Override
     public void draw(Canvas canvas) {
         rects.get(0).left = (int) (xPosition + width * 0.05);
         rects.get(0).top = (int) (yPosition + height * 0.2);
         rects.get(0).right = (int) (xPosition + width * 0.95);
-        rects.get(0).bottom =(int) (yPosition + height * 0.5);
+        rects.get(0).bottom = (int) (yPosition + height * 0.5);
         rects.get(1).left = (int) (xPosition + width * 0.35);
         rects.get(1).top = yPosition;
         rects.get(1).right = (int) (xPosition + width * 0.65);
@@ -91,13 +85,13 @@ public class AirBalloonObject extends GameObject{
         List<Rect> rectList = new ArrayList<>();
 
         Rect centerCube = new Rect((int) (xPosition + width * 0.05), (int) (yPosition + height * 0.2),
-                (int) (xPosition + width * 0.95), (int) (yPosition + height * 0.5) );
+                (int) (xPosition + width * 0.95), (int) (yPosition + height * 0.5));
 
         Rect upCube = new Rect((int) (xPosition + width * 0.35), yPosition,
-                (int) (xPosition + width * 0.65), (int) (yPosition + height * 0.2) );
+                (int) (xPosition + width * 0.65), (int) (yPosition + height * 0.2));
 
         Rect bottomCube = new Rect((int) (xPosition + width * 0.4), (int) (yPosition + height * 0.5),
-                (int) (xPosition + width * 0.6), (int) (yPosition + height * 0.95) );
+                (int) (xPosition + width * 0.6), (int) (yPosition + height * 0.95));
 
 
         rectList.add(centerCube);
@@ -148,7 +142,7 @@ public class AirBalloonObject extends GameObject{
     }
 
     public void removeHp() {
-        if(!hadShield) {
+        if (!hadShield) {
             hp--;
             soundManager.getDamage();
         } else {
@@ -205,7 +199,7 @@ public class AirBalloonObject extends GameObject{
     public void shieldTimeCounter(Canvas canvas) {
         nowTimeShield = LocalDateTime.now();
 
-        if(hadShield && nowTimeShield.isAfter(shieldEndTime)) {
+        if (hadShield && nowTimeShield.isAfter(shieldEndTime)) {
             removeShield();
         } else if (hadShield) {
             shieldIcon.draw(canvas);
@@ -216,7 +210,7 @@ public class AirBalloonObject extends GameObject{
     public void magnetTimeCounter(Canvas canvas) {
         nowTimeMagnet = LocalDateTime.now();
 
-        if(hadMagnet && nowTimeMagnet.isAfter(magnetEndTime)) {
+        if (hadMagnet && nowTimeMagnet.isAfter(magnetEndTime)) {
             removeMagnet();
         } else if (hadMagnet) {
             magnetIcon.draw(canvas);

@@ -11,11 +11,12 @@ import com.example.airballoon.managers.GamePlayManager;
 import java.util.Objects;
 import java.util.Random;
 
-public class Star extends GameObject{
+public class Star extends GameObject {
     Random random = new Random();
     AirBalloonObject airBalloon;
 
     private boolean needDraw;
+
     public Star(Activity activity, DisplayMetrics displayMetrics, AirBalloonObject airBalloon) {
         super(activity, displayMetrics);
 
@@ -37,7 +38,7 @@ public class Star extends GameObject{
 
     @Override
     protected void draw(Canvas canvas) {
-        if(needDraw) {
+        if (needDraw) {
             calculateNewPosition(canvas);
 
             rect.left = xPosition;

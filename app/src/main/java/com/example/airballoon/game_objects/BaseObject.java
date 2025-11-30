@@ -6,18 +6,18 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.util.DisplayMetrics;
 
-public class BaseObject{
+public class BaseObject {
+    private final double percentage;
     public Bitmap image;
     protected int xPosition;
     protected int yPosition;
     protected double width;
     protected double height;
-    private final double percentage;
     Activity activity;
     DisplayMetrics displayMetrics;
 
     public BaseObject(Activity activity, DisplayMetrics displayMetrics,
-                              double percentage) {
+                      double percentage) {
         this.activity = activity;
         this.displayMetrics = displayMetrics;
         this.percentage = percentage;

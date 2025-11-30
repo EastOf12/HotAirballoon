@@ -1,4 +1,5 @@
 package com.example.airballoon.managers;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -9,7 +10,6 @@ import android.graphics.Rect;
 import android.media.MediaPlayer;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageButton;
@@ -20,25 +20,21 @@ import android.widget.TextView;
 
 import com.example.airballoon.GamePlayActivity;
 import com.example.airballoon.R;
-import com.example.airballoon.SelectLevelActivity;
 import com.example.airballoon.SelectModeActivity;
 import com.example.airballoon.models.User;
 
 import java.time.Duration;
 import java.time.Instant;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.Random;
 
 public class MenuManager {
-    Activity activity;
-//    private ImageButton buttonSetting;
+    //    private ImageButton buttonSetting;
     private final ImageButton buttonStart;
     private final ImageButton buttonBuy;
     private final View view;
     private final User user;
     private final byte COUNT_AIRBALLOON;
-    private int selectAirballoon = 1;
     private final TextView priceAirballoonView;
     private final int priceAirballoon1 = 5000;
     private final int priceAirballoon2 = 15000;
@@ -48,11 +44,11 @@ public class MenuManager {
     private final Bitmap groupCloudsBitmap;
     private final WindowManager windowManager;
     private final Random random;
-    private boolean running = true;
-
-    private ImageButton selectLevel;
-
+    Activity activity;
     MediaPlayer player;
+    private int selectAirballoon = 1;
+    private boolean running = true;
+    private ImageButton selectLevel;
 
 
     @SuppressLint("ClickableViewAccessibility")
@@ -124,11 +120,11 @@ public class MenuManager {
     }
 
     private void choosePrice() {
-        if(checkAvailableAirBalloon()) {
+        if (checkAvailableAirBalloon()) {
             priceAirballoonView.setVisibility(View.GONE);
         } else {
 
-            if(selectAirballoon == 2) {
+            if (selectAirballoon == 2) {
                 setAirballoonPrice(priceAirballoon1);
             } else {
                 setAirballoonPrice(priceAirballoon2);
@@ -140,26 +136,26 @@ public class MenuManager {
 
     private void useButtonStart(Activity activity) {
 
-        buttonStart.setOnClickListener(new View.OnClickListener(){
+        buttonStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                    stopClouds();
-                    // Отобразить ProgressBar
-                    ProgressBar progressBar = view.findViewById(R.id.progress_bar);
-                    progressBar.setVisibility(View.VISIBLE);
+                stopClouds();
+                // Отобразить ProgressBar
+                ProgressBar progressBar = view.findViewById(R.id.progress_bar);
+                progressBar.setVisibility(View.VISIBLE);
 
-                    // Запустить игру
-                    Intent intent = new Intent(activity, GamePlayActivity.class);
-                    activity.startActivity(intent);
+                // Запустить игру
+                Intent intent = new Intent(activity, GamePlayActivity.class);
+                activity.startActivity(intent);
 
-                    activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+                activity.overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
 
-                    //Убираем анимацию перехода.
+                //Убираем анимацию перехода.
 //                    activity.overridePendingTransition(0, 0);
 
-                    // Завершить текущую активность
-                    activity.finish();
+                // Завершить текущую активность
+                activity.finish();
 
                 player.stop();
             }
@@ -168,12 +164,12 @@ public class MenuManager {
 
     private void useButtonBuy(Activity activity) {
 
-        buttonBuy.setOnClickListener(new View.OnClickListener(){
+        buttonBuy.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if(selectAirballoon == 2) {
-                    if(user.getCoins() >= priceAirballoon1) {
+                if (selectAirballoon == 2) {
+                    if (user.getCoins() >= priceAirballoon1) {
                         user.takeCoins(priceAirballoon1);
                         user.addAirBalloon(selectAirballoon);
                         changStatusButtonStartBuy();
@@ -181,7 +177,7 @@ public class MenuManager {
                         SaveManager.save(activity, user);
                     }
                 } else if (selectAirballoon == 3) {
-                    if(user.getCoins() >= priceAirballoon2) {
+                    if (user.getCoins() >= priceAirballoon2) {
                         user.takeCoins(priceAirballoon2);
                         user.addAirBalloon(selectAirballoon);
                         changStatusButtonStartBuy();
@@ -195,7 +191,7 @@ public class MenuManager {
 
     //Переход на экран выбор уровня
     private void useButtonSelectLevel() {
-        selectLevel.setOnClickListener(new View.OnClickListener(){
+        selectLevel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // Отобразить ProgressBar
@@ -297,15 +293,15 @@ public class MenuManager {
                         timeFinishTouch[0] = Instant.now().toEpochMilli();
                         finishTouchPosition[0] = (int) event.getRawX();
 
-                        if(timeFinishTouch[0] - timeStartTouch[0] <= 150) {
-                            if(startTouchPosition[0] - finishTouchPosition[0] > 100) {
+                        if (timeFinishTouch[0] - timeStartTouch[0] <= 150) {
+                            if (startTouchPosition[0] - finishTouchPosition[0] > 100) {
                                 scrollDirection[0] = ScrollDirection.RIGHT;
                             } else if (startTouchPosition[0] - finishTouchPosition[0] < -100) {
                                 scrollDirection[0] = ScrollDirection.LEFT;
                             }
                         }
 
-                        if(scrollDirection[0] == ScrollDirection.RIGHT && maxIndex != relativeLayouts.length - 1) {
+                        if (scrollDirection[0] == ScrollDirection.RIGHT && maxIndex != relativeLayouts.length - 1) {
                             maxIndex++;
                         } else if (scrollDirection[0] == ScrollDirection.LEFT && maxIndex != 0) {
                             maxIndex--;
@@ -320,14 +316,15 @@ public class MenuManager {
 
                         scrollView.post(new Runnable() {
                             public void run() {
-                                if(user.getSelectAirBalloon() == 1){
+                                if (user.getSelectAirBalloon() == 1) {
                                     scrollView.smoothScrollTo((int) linearLayout1StartW, 0);
                                 } else if (user.getSelectAirBalloon() == 2) {
                                     scrollView.smoothScrollTo((int) linearLayout2StartW, 0);
                                 } else {
                                     scrollView.smoothScrollTo((int) linearLayout3StartW, 0);
                                 }
-                            }});
+                            }
+                        });
 
                         //Отображаем нужную кнопку в зависимости от доступности шарика
                         changStatusButtonStartBuy();
@@ -364,11 +361,9 @@ public class MenuManager {
 
     }
 
-    private enum ScrollDirection{
-        LEFT,
-        RIGHT,
-        NOT_DIRECTION
-    }
+    private boolean checkAvailableAirBalloon() {
+        return user.getAvailableBalls().contains(selectAirballoon);
+    } //Проверяем доступен ли шарик пользователю
 
 //    private void drawSettingButton() {
 //        buttonSetting = activity.findViewById(R.id.button_setting);
@@ -384,12 +379,8 @@ public class MenuManager {
 //        });
 //    }
 
-    private boolean checkAvailableAirBalloon() {
-        return user.getAvailableBalls().contains(selectAirballoon);
-    } //Проверяем доступен ли шарик пользователю
-
     private void changStatusButtonStartBuy() {
-        if(checkAvailableAirBalloon()) {
+        if (checkAvailableAirBalloon()) {
             buttonStart.setVisibility(View.VISIBLE);
             buttonBuy.setVisibility(View.GONE);
         } else {
@@ -409,7 +400,7 @@ public class MenuManager {
         // Изменяем значения матрицы для сдвига
         float currentTranslateX = values[Matrix.MTRANS_X]; // Получаем текущее смещение по X
         float currentTranslateY = values[Matrix.MTRANS_Y];
-        if(currentTranslateX > windowManager.getDefaultDisplay().getWidth()) {
+        if (currentTranslateX > windowManager.getDefaultDisplay().getWidth()) {
             currentTranslateX = random.nextInt(-300 - (-1000) + 1) + (-1000);
             currentTranslateY = random.nextInt(700);
         }
@@ -433,7 +424,7 @@ public class MenuManager {
         // Изменяем значения матрицы для сдвига
         float currentTranslateX = values[Matrix.MTRANS_X]; // Получаем текущее смещение по X
         float currentTranslateY = values[Matrix.MTRANS_Y];
-        if(currentTranslateX > windowManager.getDefaultDisplay().getWidth()) {
+        if (currentTranslateX > windowManager.getDefaultDisplay().getWidth()) {
             currentTranslateX = random.nextInt(-300 - (-1000) + 1) + (-1000);
             currentTranslateY = random.nextInt(700);
         }
@@ -518,6 +509,12 @@ public class MenuManager {
         TextView coinCountView = view.findViewById(R.id.stars_count);
         coinCountView.setText(String.valueOf(user.getStars()));
     } //Отображаем количество звезд
+
+    private enum ScrollDirection {
+        LEFT,
+        RIGHT,
+        NOT_DIRECTION
+    }
 }
 
 

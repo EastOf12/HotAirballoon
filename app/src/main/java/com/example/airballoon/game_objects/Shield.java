@@ -1,7 +1,6 @@
 package com.example.airballoon.game_objects;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.util.DisplayMetrics;
@@ -12,7 +11,7 @@ import com.example.airballoon.managers.GamePlayManager;
 import java.util.Objects;
 import java.util.Random;
 
-public class Shield extends GameObject{
+public class Shield extends GameObject {
     Random random = new Random();
     AirBalloonObject airBalloon;
     private boolean needDraw;
@@ -28,6 +27,7 @@ public class Shield extends GameObject{
         calculateStartPosition();
         createRect();
     }
+
     @Override
     public void calculateStartPosition() {
         xPosition = random.nextInt((int) (displayMetrics.widthPixels - width));
@@ -38,7 +38,7 @@ public class Shield extends GameObject{
     @Override
     public void draw(Canvas canvas) {
 
-        if(needDraw) {
+        if (needDraw) {
             calculateNewPosition(canvas);
             rect.left = xPosition;
             rect.top = yPosition;

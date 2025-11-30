@@ -30,7 +30,7 @@ public class LevelProgressManager {
         progressBar = new ProgressBar(activity, displayMetrics, R.drawable.level_progress, 0.023, progressBarBg, levelNum);
         progressSign = new ProgressSign(activity, displayMetrics, 0.05, progressBarBg);
 
-        for(int i = 1; i < 4; i++) {
+        for (int i = 1; i < 4; i++) {
             StarProgress starProgress = new StarProgress(activity, displayMetrics, R.drawable.star_brown, 0.08, progressBarBg, i, levelNum);
             stars.add(starProgress);
         }
@@ -41,13 +41,13 @@ public class LevelProgressManager {
         progressBar.draw(canvas, distance);
         progressSign.draw(canvas, distance);
 
-        for (StarProgress star: stars) {
+        for (StarProgress star : stars) {
             star.draw(canvas, distance);
         }
     }
 
     public void reboot(Activity activity, DisplayMetrics displayMetrics, int levelNum) {
-        for(int i = 1; i < 4; i++) {
+        for (int i = 1; i < 4; i++) {
             StarProgress starProgress = new StarProgress(activity, displayMetrics, R.drawable.star_brown, 0.08, progressBarBg, i, levelNum);
             stars.add(starProgress);
         }
@@ -117,6 +117,7 @@ class ProgressBar extends BaseObject {
     int maxHeight;
 
     int maxDistance;
+
     public ProgressBar(Activity activity, DisplayMetrics displayMetrics, int resourceId,
                        double percentage, ProgressBarBg progressBarBg, int levelNum) {
         super(activity, displayMetrics, percentage);
@@ -193,7 +194,7 @@ class StarProgress extends BaseObject {
     DisplayMetrics displayMetrics;
 
     public StarProgress(Activity activity, DisplayMetrics displayMetrics, int resourceId,
-                       double percentage, ProgressBarBg progressBarBg, int starNumber, int LevelNum) {
+                        double percentage, ProgressBarBg progressBarBg, int starNumber, int LevelNum) {
         super(activity, displayMetrics, percentage);
         this.starNumber = starNumber;
         this.displayMetrics = displayMetrics;
@@ -205,7 +206,8 @@ class StarProgress extends BaseObject {
         calculateSize(displayMetrics);
 
         int yPos;
-        int xPos = progressBarBg.getXPos() - (int) (width * 0.21);;
+        int xPos = progressBarBg.getXPos() - (int) (width * 0.21);
+        ;
         int bgYPos = progressBarBg.getYPos();
 
 
@@ -225,22 +227,22 @@ class StarProgress extends BaseObject {
     }
 
     public void setImage(int distance) {
-        if(starNumber == 1 && !yellowStar && distance > (yellowStarDistance * 100)) {
+        if (starNumber == 1 && !yellowStar && distance > (yellowStarDistance * 100)) {
             image = yellowStarImage;
             calculateSize(displayMetrics);
-            if(getStars() < 1) {
+            if (getStars() < 1) {
                 addStars();
             }
-        } else if(starNumber == 2 && !yellowStar && distance > (yellowStarDistance * 100)) {
+        } else if (starNumber == 2 && !yellowStar && distance > (yellowStarDistance * 100)) {
             image = yellowStarImage;
             calculateSize(displayMetrics);
-            if(getStars() < 2) {
+            if (getStars() < 2) {
                 addStars();
             }
-        } else if(starNumber == 3 && !yellowStar && distance >= (yellowStarDistance * 100)) {
+        } else if (starNumber == 3 && !yellowStar && distance >= (yellowStarDistance * 100)) {
             image = yellowStarImage;
             calculateSize(displayMetrics);
-            if(getStars() < 3) {
+            if (getStars() < 3) {
                 addStars();
             }
         }

@@ -1,12 +1,11 @@
 package com.example.airballoon.models;
 
-import android.graphics.Bitmap;
-
 import androidx.annotation.NonNull;
 
 public class AirBalloon {
 
     private boolean availability = false;
+
     public AirBalloon() {
         this.availability = false;
     }

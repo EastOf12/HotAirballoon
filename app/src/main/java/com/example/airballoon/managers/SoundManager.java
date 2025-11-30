@@ -15,6 +15,7 @@ public class SoundManager {
     private final MediaPlayer bgSound;
     private final MediaPlayer pause;
     private boolean statusBgSound = true;
+
     public SoundManager(Activity activity) {
         coinSound = MediaPlayer.create(activity, R.raw.get_coin);
         damageSound = MediaPlayer.create(activity, R.raw.get_damage);
@@ -48,7 +49,7 @@ public class SoundManager {
     //Фоновая мелодия
     public void getBgSound() {
         if (bgSound != null) {
-            if(!bgSound.isPlaying()) {
+            if (!bgSound.isPlaying()) {
                 bgSound.start();
                 bgSound.setVolume(0.3f, 0.3f);
             }
@@ -142,7 +143,7 @@ public class SoundManager {
         if (levelCompleted != null) {
             levelCompleted.start();
 
-            if(statusBgSound) {
+            if (statusBgSound) {
                 bgSound.stop();
                 statusBgSound = false;
             }

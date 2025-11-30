@@ -7,23 +7,23 @@ import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.util.DisplayMetrics;
 
-import com.example.airballoon.managers.GamePlayManager;
 import com.example.airballoon.R;
+import com.example.airballoon.managers.GamePlayManager;
 
 import java.util.Objects;
 import java.util.Random;
 
 public class Thorn {
-    protected Activity activity;
-    private DisplayMetrics displayMetrics;
-    protected Bitmap thornImage;
     private final Rect rect;
-    private int xPosition;
-    private int yPosition;
+    protected Activity activity;
+    protected Bitmap thornImage;
     protected double percentage; // Размер изображения относительно экрана
     double width;
     double height;
     AirBalloonObject airBalloon;
+    private DisplayMetrics displayMetrics;
+    private int xPosition;
+    private int yPosition;
     private boolean needDraw;
 
     public Thorn(Activity activity, DisplayMetrics displayMetrics, AirBalloonObject airBalloon) {
@@ -115,27 +115,12 @@ public class Thorn {
     }
 
     public void drawThorn(Canvas canvas) {
-        if(needDraw) {
+        if (needDraw) {
             calculateNewPosition(canvas);
 
             canvas.drawBitmap(thornImage, xPosition, yPosition, null);
         }
     } //Рисуем шип
-
-    public void setYPosition(int yPosition) {
-        this.yPosition = yPosition;
-    }
-
-
-//    public boolean checkCollision() {
-//        boolean result = airBalloon.getRect().intersect(rect);
-//
-//        if (result) {
-//            airBalloon.removeHp();
-//        }
-//
-//        return result;
-//    }
 
     public boolean checkCollision() {
         boolean resultCenter = airBalloon.getRects().get(0).intersect(rect);
@@ -150,6 +135,17 @@ public class Thorn {
 
         return res;
     }
+
+
+//    public boolean checkCollision() {
+//        boolean result = airBalloon.getRect().intersect(rect);
+//
+//        if (result) {
+//            airBalloon.removeHp();
+//        }
+//
+//        return result;
+//    }
 
     public boolean isNeedDraw() {
         return needDraw;
@@ -170,5 +166,9 @@ public class Thorn {
 
     public int getYPosition() {
         return yPosition;
+    }
+
+    public void setYPosition(int yPosition) {
+        this.yPosition = yPosition;
     }
 }

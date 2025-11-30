@@ -7,15 +7,16 @@ import android.graphics.Canvas;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 
+import com.example.airballoon.R;
 import com.example.airballoon.managers.GameStatus;
 import com.example.airballoon.managers.MenuActions;
-import com.example.airballoon.R;
 import com.example.airballoon.models.User;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class GamePlayMenu {
+    private final int levelNumber;
     Activity activity;
     DisplayMetrics displayMetrics;
     Bitmap buttonResume;
@@ -25,7 +26,6 @@ public class GamePlayMenu {
     Bitmap buttonMarketingHp;
     int xPositionButtonResume;
     int yPositionButtonResume;
-
     int xPositionButtonExit;
     int yPositionButtonExit;
     int xPositionButtonRestart;
@@ -54,11 +54,9 @@ public class GamePlayMenu {
     ButtonMarketingHp marketingHp;
     BackGroundLevelCompleted backGroundLevelCompleted;
     ResultText resultText;
-    private final int levelNumber;
-    private int starCount;
     User user;
-
     Cube cube;
+    private int starCount;
 
     public GamePlayMenu(Activity activity, DisplayMetrics displayMetrics, GameStatus gameStatus,
                         int levelNumber, User user) {
@@ -82,7 +80,7 @@ public class GamePlayMenu {
 
         backGroundLevelCompleted = new BackGroundLevelCompleted(activity, displayMetrics,
                 R.drawable.bg_level_completed, 1.5);
-        cube = new Cube(activity, displayMetrics, R.drawable.cube,0.80);
+        cube = new Cube(activity, displayMetrics, R.drawable.cube, 0.80);
         buttonEx = new ButtonExit(activity, displayMetrics, R.drawable.exit_game_play,
                 0.15, cube);
         buttonRest = new ButtonRestart(activity, displayMetrics, R.drawable.button_restart,
@@ -164,14 +162,14 @@ public class GamePlayMenu {
     public void drawLevelCompleted(Canvas canvas, int starCount) {
         this.starCount = starCount;
 
-        if(starCount == 0) {
+        if (starCount == 0) {
             resultText = new ResultText(activity, displayMetrics, R.drawable.result_text_lose, 0.3, cube);
         } else {
             resultText = new ResultText(activity, displayMetrics, R.drawable.result_text, 0.3, cube);
         }
 
-        if(stars.isEmpty()) {
-            for(int i = 1; i < 4; i++) {
+        if (stars.isEmpty()) {
+            for (int i = 1; i < 4; i++) {
                 StarObject starObject;
 
                 double percentage;
@@ -197,7 +195,7 @@ public class GamePlayMenu {
         cube.draw(canvas);
         resultText.draw(canvas);
 
-        for (Map.Entry<Integer, StarObject> st: stars.entrySet()) {
+        for (Map.Entry<Integer, StarObject> st : stars.entrySet()) {
             st.getValue().draw(canvas);
         }
 
@@ -206,11 +204,11 @@ public class GamePlayMenu {
         buttonRest.draw(canvas);
         marketingMoney.draw(canvas);
 
-        if(starCount < 3) {
+        if (starCount < 3) {
             marketingHp.draw(canvas);
         }
 
-        if(levelNumber != 0 && (starCount > 0)) {
+        if (levelNumber != 0 && (starCount > 0)) {
             buttonNext.draw(canvas);
         }
     } //Рисуем экран пройденного уровня
@@ -231,7 +229,7 @@ public class GamePlayMenu {
 
             if (!levelCompleted && touchX >= (int) (displayMetrics.widthPixels * 0.4) && touchX < ((int) (displayMetrics.widthPixels * 0.4) + widthButtonResume) &&
                     touchY >= (int) (displayMetrics.heightPixels * 0.4) && touchY < ((int) (displayMetrics.heightPixels * 0.4) + heightButtonResume)
-            && isPaused) {
+                    && isPaused) {
                 actions = MenuActions.EXIT;
 //                actions = MenuActions.EXIT;
             }
@@ -239,32 +237,32 @@ public class GamePlayMenu {
             //Обрабатываем нажатия на экране завершения уровня
             if (touchX >= buttonEx.xPosition && touchX < (buttonEx.xPosition + buttonEx.width)
                     && touchY >= buttonEx.yPosition && touchY < (buttonEx.yPosition
-                    +  buttonEx.height) && (!isPaused || levelCompleted)) {
+                    + buttonEx.height) && (!isPaused || levelCompleted)) {
                 actions = MenuActions.EXIT;
 //                actions = MenuActions.EXIT;
             }
 
-            if(touchX >= buttonRest.xPosition && touchX <(buttonRest.xPosition + buttonRest.width)
-                    && touchY >= buttonRest.yPosition && touchY < ( buttonRest.yPosition
+            if (touchX >= buttonRest.xPosition && touchX < (buttonRest.xPosition + buttonRest.width)
+                    && touchY >= buttonRest.yPosition && touchY < (buttonRest.yPosition
                     + buttonRest.height) && (!isPaused || levelCompleted)) {
                 actions = MenuActions.RESTART;
             }
 
-            if(touchX >= buttonNext.xPosition && touchX <(buttonNext.xPosition + buttonNext.width)
-                    && touchY >= buttonNext.yPosition && touchY < ( buttonNext.yPosition
+            if (touchX >= buttonNext.xPosition && touchX < (buttonNext.xPosition + buttonNext.width)
+                    && touchY >= buttonNext.yPosition && touchY < (buttonNext.yPosition
                     + buttonNext.height) && (!isPaused || levelCompleted)
                     && levelNumber != 0 && starCount > 0) {
                 actions = MenuActions.NEXT;
             }
 
-            if(touchX >= marketingMoney.xPosition && touchX <(marketingMoney.xPosition + marketingMoney.width)
-                    && touchY >= marketingMoney.yPosition && touchY < ( marketingMoney.yPosition
+            if (touchX >= marketingMoney.xPosition && touchX < (marketingMoney.xPosition + marketingMoney.width)
+                    && touchY >= marketingMoney.yPosition && touchY < (marketingMoney.yPosition
                     + marketingMoney.height) && (!isPaused || levelCompleted)) {
                 actions = MenuActions.MARKETING_MONEY;
             }
 
-            if(touchX >= marketingHp.xPosition && touchX <(marketingHp.xPosition + marketingHp.width)
-                    && touchY >= marketingHp.yPosition && touchY < ( marketingHp.yPosition
+            if (touchX >= marketingHp.xPosition && touchX < (marketingHp.xPosition + marketingHp.width)
+                    && touchY >= marketingHp.yPosition && touchY < (marketingHp.yPosition
                     + marketingHp.height) && (!isPaused || levelCompleted) && starCount < 3) {
                 actions = MenuActions.MARKETING_ADD_HP;
             }
@@ -276,7 +274,7 @@ public class GamePlayMenu {
 
 class BackGroundLevelCompleted extends BaseObject {
     public BackGroundLevelCompleted(Activity activity, DisplayMetrics displayMetrics, int resourceId,
-                      double percentage) {
+                                    double percentage) {
         super(activity, displayMetrics, percentage);
 
         loadImage(activity, resourceId);
@@ -327,7 +325,7 @@ class ButtonNext extends BaseObject {
 
 class ButtonRestart extends BaseObject {
     public ButtonRestart(Activity activity, DisplayMetrics displayMetrics, int resourceId,
-                      double percentage, Cube cube) {
+                         double percentage, Cube cube) {
         super(activity, displayMetrics, percentage);
 
         loadImage(activity, resourceId);
@@ -340,7 +338,7 @@ class ButtonRestart extends BaseObject {
 
 class ButtonMarketingMoney extends BaseObject {
     public ButtonMarketingMoney(Activity activity, DisplayMetrics displayMetrics, int resourceId,
-                         double percentage, Cube cube) {
+                                double percentage, Cube cube) {
         super(activity, displayMetrics, percentage);
 
         loadImage(activity, resourceId);
@@ -353,7 +351,7 @@ class ButtonMarketingMoney extends BaseObject {
 
 class ButtonMarketingHp extends BaseObject {
     public ButtonMarketingHp(Activity activity, DisplayMetrics displayMetrics, int resourceId,
-                                double percentage, Cube cube) {
+                             double percentage, Cube cube) {
         super(activity, displayMetrics, percentage);
 
         loadImage(activity, resourceId);
@@ -364,7 +362,7 @@ class ButtonMarketingHp extends BaseObject {
     }
 }
 
-class StarObject extends BaseObject{
+class StarObject extends BaseObject {
 
     public StarObject(Activity activity, DisplayMetrics displayMetrics, int resourceId,
                       double percentage, int starNumber, Cube cube) {

@@ -10,10 +10,11 @@ import android.util.DisplayMetrics;
 
 import com.example.airballoon.R;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class MagnetIcon extends GameObject{
+public class MagnetIcon extends GameObject {
+    int rotationSpeed = 4;
+    List<Integer> angles;
     private boolean isMagnetActive = false;
     private long magnetDuration; // Длительность щита в миллисекундах
     private long timeLeft; // Оставшееся время
@@ -21,8 +22,7 @@ public class MagnetIcon extends GameObject{
     private CountDownTimer countDownTimer;
     private float xPos = 0;
     private float yPos = 0;
-    int rotationSpeed = 4;
-    List<Integer> angles;
+
     public MagnetIcon(Activity activity, DisplayMetrics displayMetrics) {
         super(activity, displayMetrics);
         setPercentage(0.07);

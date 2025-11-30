@@ -16,6 +16,7 @@ public abstract class GameObject {
     double width;
     double height;
     double percentage; // Размер изображения относительно экрана
+
     public GameObject(Activity activity, DisplayMetrics displayMetrics) {
         this.activity = activity;
         this.displayMetrics = displayMetrics;

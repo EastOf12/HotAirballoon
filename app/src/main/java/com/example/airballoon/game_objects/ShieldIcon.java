@@ -7,16 +7,16 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.CountDownTimer;
-import android.os.Handler;
-import android.os.Looper;
 import android.util.DisplayMetrics;
+
 import com.example.airballoon.R;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 public class ShieldIcon extends GameObject {
+    int rotationSpeed = 4;
+    List<Integer> angles;
     private boolean isShieldActive = false;
     private long shieldDuration; // Длительность щита в миллисекундах
     private long timeLeft; // Оставшееся время
@@ -24,8 +24,6 @@ public class ShieldIcon extends GameObject {
     private CountDownTimer countDownTimer;
     private float xPos = 0;
     private float yPos = 0;
-    int rotationSpeed = 4;
-    List<Integer> angles;
 
     public ShieldIcon(Activity activity, DisplayMetrics displayMetrics) {
         super(activity, displayMetrics);
@@ -99,7 +97,7 @@ public class ShieldIcon extends GameObject {
             // Определение скорости вращения
             angles.set(i, angles.get(i) + rotationSpeed); // Увеличиваем угол для движения
             if (angles.get(i) >= 360) { // Если угол превышает 360 градусов, сбрасываем
-                angles.set(i, angles.get(i) - 360) ;
+                angles.set(i, angles.get(i) - 360);
             }
 
             // Рассчитываем позиции щита по овальной траектории

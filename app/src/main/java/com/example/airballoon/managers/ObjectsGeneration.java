@@ -3,11 +3,7 @@ package com.example.airballoon.managers;
 import android.app.Activity;
 import android.util.DisplayMetrics;
 
-
 import com.example.airballoon.game_objects.AirBalloonObject;
-import com.example.airballoon.game_objects.Coin;
-import com.example.airballoon.game_objects.Shield;
-import com.example.airballoon.game_objects.Thorn;
 import com.example.airballoon.game_objects.Wrapper;
 
 import java.util.ArrayList;
@@ -27,11 +23,11 @@ public class ObjectsGeneration {
     Wrapper magnets;
     Wrapper stars;
 
-    public ObjectsGeneration (Activity activity, DisplayMetrics displayMetrics, AirBalloonObject airBalloon) {
+    public ObjectsGeneration(Activity activity, DisplayMetrics displayMetrics, AirBalloonObject airBalloon) {
         //Создаем обертки для игровых объектов.
         coins = new Wrapper("coin", activity, displayMetrics, airBalloon);
-        thorns = new Wrapper("thorn",  activity, displayMetrics, airBalloon);
-        longThorns = new Wrapper("long_thorn",  activity, displayMetrics, airBalloon);
+        thorns = new Wrapper("thorn", activity, displayMetrics, airBalloon);
+        longThorns = new Wrapper("long_thorn", activity, displayMetrics, airBalloon);
         birds = new Wrapper("bird", activity, displayMetrics, airBalloon);
         shields = new Wrapper("shield", activity, displayMetrics, airBalloon);
         magnets = new Wrapper("magnet", activity, displayMetrics, airBalloon);
@@ -61,7 +57,7 @@ public class ObjectsGeneration {
     } //Создает список объектов, которые будут отрисовываться в игре
 
     private void updateCount() {
-        for(Wrapper object: usedObjects) {
+        for (Wrapper object : usedObjects) {
             object.generateRandomCount();
         }
     } //Обновляет колличество повторений всех объектов в игровой итерации.

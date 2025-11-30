@@ -6,20 +6,15 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.example.airballoon.GamePlayActivity;
 import com.example.airballoon.LoadLevelActivity;
 import com.example.airballoon.R;
-import com.example.airballoon.managers.SaveManager;
-import com.example.airballoon.models.User;
 
 //Описывает уровень в игре
 public class MenuLevel {
@@ -44,7 +39,7 @@ public class MenuLevel {
         loadImageButton();
 
         //В зависимости от доступности уровня отображаем нужный эффект
-        if(levelAvailable) {
+        if (levelAvailable) {
             useButton();
             addLevelNumber();
             addStars();
@@ -73,9 +68,8 @@ public class MenuLevel {
     } //Добавляем на кнопку замок
 
 
-
     private void useButton() {
-        imageButton.setOnClickListener(new View.OnClickListener(){
+        imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -133,7 +127,7 @@ public class MenuLevel {
                 ImageView starImageView = new ImageView(activity);
 
                 //Выбираем какие звезды рисовать
-                if(yellowStars != 0) {
+                if (yellowStars != 0) {
                     starImageView.setImageBitmap(yellowStarBitmap);
                     yellowStars--;
                 } else {

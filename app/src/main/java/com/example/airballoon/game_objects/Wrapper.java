@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.util.DisplayMetrics;
 
 import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Random;
@@ -14,15 +15,12 @@ public class Wrapper {
     private final Activity activity;
     private final DisplayMetrics displayMetrics;
     private final AirBalloonObject airBalloonObject;
-
+    private final String type; //Название объектов
+    Random random;
     private int maxCount; //Максимальное количество объектов
     private int drawCount; //Общее количество доступных объектов на отрисовку в рамках игровой итерации
-    private final String type; //Название объектов
-
     private ArrayList<Object> objects; //Игровые объекты, зависит от переданного типа
     private boolean newIteration;
-
-    Random random;
 
     public Wrapper(String type, Activity activity, DisplayMetrics displayMetrics, AirBalloonObject airBalloonObject) {
         this.type = type;
@@ -71,44 +69,44 @@ public class Wrapper {
         switch (type) {
             case "coin":
                 //Создаем необходимое количество объектов монет
-                for(int i = 0; i <= maxCount - 1; i++) {
+                for (int i = 0; i <= maxCount - 1; i++) {
                     objects.add(new Coin(activity, displayMetrics, airBalloonObject));
                 }
                 break;
             case "thorn":
                 //Создаем необходимое количество объектов шипов
-                for(int i = 0; i <= maxCount; i++) {
+                for (int i = 0; i <= maxCount; i++) {
                     objects.add(new Thorn(activity, displayMetrics, airBalloonObject));
                 }
                 break;
             case "long_thorn":
                 //Создаем необходимое количество длинных шипов
-                for(int i = 0; i <= maxCount; i++) {
+                for (int i = 0; i <= maxCount; i++) {
                     objects.add(new LongThorn(activity, displayMetrics, airBalloonObject));
                 }
                 break;
             case "bird":
                 //Создаем необходимое количество птиц
-                for(int i = 0; i <= maxCount; i++) {
+                for (int i = 0; i <= maxCount; i++) {
                     objects.add(new Bird(activity, displayMetrics, airBalloonObject));
                 }
                 break;
             case "shield":
                 //Создаем необходимое количество щитов
-                for(int i = 0; i <= maxCount; i++) {
+                for (int i = 0; i <= maxCount; i++) {
                     objects.add(new Shield(activity, displayMetrics, airBalloonObject));
                 }
                 break;
             case "magnet":
                 //Создаем необходимое количество магнитов
-                for(int i = 0; i <= maxCount; i++) {
+                for (int i = 0; i <= maxCount; i++) {
                     objects.add(new Magnet(activity, displayMetrics, airBalloonObject));
                 }
                 break;
 
             case "star":
                 //Создаем необходимое количество звезд
-                for(int i = 0; i <= maxCount; i++) {
+                for (int i = 0; i <= maxCount; i++) {
                     objects.add(new Star(activity, displayMetrics, airBalloonObject));
                 }
                 break;
@@ -124,75 +122,76 @@ public class Wrapper {
         generateGameObjects();
 
     }
+
     public boolean drawObjects(Canvas canvas, Integer count, String wrapperType) {
 
         newIteration = true;
 
         //Не даем отрисовать больше чем можем.
-        if(count > drawCount) {
+        if (count > drawCount) {
             count = drawCount;
         }
 
-        if(wrapperType.equals("coin")) {
-            for(int i = 0; i <= count; i++ ) {
+        if (wrapperType.equals("coin")) {
+            for (int i = 0; i <= count; i++) {
                 Coin coin = (Coin) objects.get(i);
                 coin.draw(canvas);
 
-                if(coin.isNeedDraw()) {
+                if (coin.isNeedDraw()) {
                     newIteration = false;
                 }
             }
         } else if (wrapperType.equals("thorn")) {
-            for(int i = 0; i <= count; i++ ) {
+            for (int i = 0; i <= count; i++) {
                 Thorn thorn = (Thorn) objects.get(i);
                 thorn.drawThorn(canvas);
 
-                if(thorn.isNeedDraw()) {
+                if (thorn.isNeedDraw()) {
                     newIteration = false;
                 }
             }
         } else if (wrapperType.equals("long_thorn")) {
-            for(int i = 0; i <= count; i++ ) {
+            for (int i = 0; i <= count; i++) {
                 LongThorn longThorn = (LongThorn) objects.get(i);
                 longThorn.drawThorn(canvas);
 
-                if(longThorn.isNeedDraw()) {
+                if (longThorn.isNeedDraw()) {
                     newIteration = false;
                 }
             }
         } else if (wrapperType.equals("bird")) {
-            for(int i = 0; i <= count; i++ ) {
+            for (int i = 0; i <= count; i++) {
                 Bird bird = (Bird) objects.get(i);
                 bird.draw(canvas);
 
-                if(bird.isNeedDraw()) {
+                if (bird.isNeedDraw()) {
                     newIteration = false;
                 }
             }
         } else if (wrapperType.equals("shield")) {
-            for(int i = 0; i <= count; i++ ) {
+            for (int i = 0; i <= count; i++) {
                 Shield shield = (Shield) objects.get(i);
                 shield.draw(canvas);
 
-                if(shield.isNeedDraw()) {
+                if (shield.isNeedDraw()) {
                     newIteration = false;
                 }
             }
         } else if (wrapperType.equals("magnet")) {
-            for(int i = 0; i <= count; i++ ) {
+            for (int i = 0; i <= count; i++) {
                 Magnet magnet = (Magnet) objects.get(i);
                 magnet.draw(canvas);
 
-                if(magnet.isNeedDraw()) {
+                if (magnet.isNeedDraw()) {
                     newIteration = false;
                 }
             }
         } else if (wrapperType.equals("star")) {
-            for(int i = 0; i <= count; i++ ) {
+            for (int i = 0; i <= count; i++) {
                 Star star = (Star) objects.get(i);
                 star.draw(canvas);
 
-                if(star.isNeedDraw()) {
+                if (star.isNeedDraw()) {
                     newIteration = false;
                 }
             }

@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 
 //Хранит все тяжелые объекты
-public class DataManager extends Thread{
+public class DataManager extends Thread {
     private static HashMap<Integer, Integer> levelsInfo;
 
     //Хранит GamePlayManager по запущенному уровню и по следующему, если такой есть
@@ -30,8 +30,8 @@ public class DataManager extends Thread{
 
     public static GamePlayManager getGamePlayManager(int levelNum) {
 
-        for (int i=gamePlayManagerList.size() - 1; i>=0; i--) {
-            if(gamePlayManagerList.get(i).getLevelNum() == levelNum) {
+        for (int i = gamePlayManagerList.size() - 1; i >= 0; i--) {
+            if (gamePlayManagerList.get(i).getLevelNum() == levelNum) {
                 return gamePlayManagerList.get(i);
             }
         }
@@ -79,7 +79,7 @@ public class DataManager extends Thread{
     //Загружаем следующий уровень
     public static void loadNextLevel(Activity activity, DisplayMetrics displayMetrics, User user, int levelNum) {
         //Создаем менеджер следующего уровня
-        if(levelNum < levelsInfo.size()) {
+        if (levelNum < levelsInfo.size()) {
 
             GamePlayManager gamePlayManagerNext = new GamePlayManager(activity, displayMetrics, user, levelNum + 1);
             gamePlayManagerList.add(gamePlayManagerNext);
@@ -91,7 +91,7 @@ public class DataManager extends Thread{
         DisplayMetrics displayMetrics = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
 
-        if(!gamePlayManagerList.isEmpty()) {
+        if (!gamePlayManagerList.isEmpty()) {
             //Удаляем старые менеджеры, если такие были загружены
             gamePlayManagerList = Collections.synchronizedList(new ArrayList<>());
         }

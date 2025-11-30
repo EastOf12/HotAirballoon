@@ -11,7 +11,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.Optional;
 
 public class SaveManager {
     public static void save(Activity activity, User user) {
@@ -52,7 +51,7 @@ public class SaveManager {
 
 
             //Если не получили информацию по выбранному шарику
-            if(user.getSelectAirBalloon() == 0) {
+            if (user.getSelectAirBalloon() == 0) {
                 user.setSelectAirBalloon(1);
             }
 
